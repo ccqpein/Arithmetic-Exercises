@@ -1,5 +1,19 @@
 (defun putWordsInList (s)
-  (do* ((i 0 (incf i))
-	(c (nth i (coerce s 'list))
-	   (nth i (coerce s 'list)))
-	(word 
+  (let ((stringList (coerce s 'list))
+	(stringR nil)
+	(word nil))
+    (do* ((i 0 (incf i))
+	  (c (nth i stringList)
+	     (nth i stringList))
+	  (word (wordTell c) (wordTell c))
+	  (wordList (cond (pushWord word i s c) (push word wordList))
+		    (cond (pushWord word i s c) (push word wordList)))
+	 ((equal i (- (length stringList) 1))
+	  (return-from putWordsInList (setf stringR wordList)))))))
+
+(defun wordTell (c)
+  (cond ((/= c " ") (return-from wordTell c))))
+
+(defun pushWord (word i s c)
+  (cond ((and (/= word nil) (equal c " ")) (return-from pushWord t))
+	((equal i (- (length s) 1)) (return-from pushWord t))))
