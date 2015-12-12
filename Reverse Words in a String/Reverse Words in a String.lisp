@@ -3,19 +3,23 @@
     (setf charList (coerce str 'list))
     charList))
 
-(defun judgeChar (char word wordsList positionNum)
-  (cond ((and (char/= char #\ ) (/= positionNum 2)) 
+(defun judgeChar (char word wordsList)
+  (cond ((char/= char #\ ) 
          (push char word))
-        ((and (char/= char #\ ) (= positionNum 2))
-         ((push char word) (setf word (reverse word)) (push word wordsList)))
-        ((and (char= char #\ ) (/= positionNum 0))
-         ((push char word) (setf word (reverse word)) (push word wordsList))
-        ))
+        ((char= char #\ )
+         (progn (push char word) (setf word (reverse word)) (push word wordsList)))))
+
+(defun deleteSpacesBeginning (charList)
+  (let ((charList2 charList))
+    (loop for i in charList do
+         (if (char= i #\ )
+             (setf charList2 (cdr charList2))
+             (return-from deleteSpacesBeginning charList2)))))
 
 (defun pushCharToList (charList)
   (let ((wordsList)
         (word)
-        (positionNum))
+        (charList (deleteSpacesBeginning charList)))
     (dolist (char charList)
-      (judgeChar char word wordsList)
-            
+      (judgeChar char word wordsList))
+    wordsList))
