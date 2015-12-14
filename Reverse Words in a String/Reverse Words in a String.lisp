@@ -4,16 +4,17 @@
     charList))
 
 (defun judgeChar (char word)
-  (cond ((char/= char #\Space)
+  (cond ((typep char 'null)
+         (progn (cons #\Space word) (setf word (reverse word))
+                  (return-from judgeChar word)))
+        ((char/= char #\Space)
          (progn
-           (push char word)
+           (cons char word)
            (return-from judgeChar word)))
         ((char= char #\Space)
-         (progn (push char word) (setf word (reverse word))
+         (progn (cons char word) (setf word (reverse word))
                 (return-from judgeChar word)))
-        ((eql char nil)
-         (progn (push #\Space word) (setf word (reverse word))
-                  (return-from judgeChar word)))))
+        ))
 
 (defun deleteSpacesBeginning (charList)
   (let ((charList2 charList))
@@ -26,25 +27,20 @@
        do
          (setf charList2 (butlast charList2)))
     (return-from deleteSpacesBeginning charList2)))
-
-(defun changeWordslistToString (wordsList)
-  (return-from changeWordslistToString wordsList))
-;  (let ((FinalString))
-;    (loop for word in wordsList do
        
-
 (defun pushCharToList (charList)
-  "charlist cannot be empty"
-  (do* ((charList (deleteSpacesBeginning (changeStringtoChar charList))
-                  (cdr charList))
-        (char (car charList)
-              (car charList))
+  (do* ((charList2 (deleteSpacesBeginning (changeStringtoChar charList))
+                  (cdr charList2))
+        (char (car charList2)
+              (car charList2))
         (word (list char)
               (judgeChar char word))
         (wordsList (list )
-                   (if (or (char= char #\Space) (eql char nil))
-                       (push word wordsList))))
-       ((eql char nil) (let ((FinalString))
+                   (if (or (char= char #\Space) (typep char 'null))
+                       (cons word wordsList))))
+       ((typep char 'null) (let ((FinalString))
                            (setf FinalString (changeWordslistToString wordsList))
                            (return-from pushCharToList FinalString)))))
-;;;;The value NIL is not of type CHARACTER.
+
+(defun changeWordslistToString (wordsList)
+  (format t wordsList))
