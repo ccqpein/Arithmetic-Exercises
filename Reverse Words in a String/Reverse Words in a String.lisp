@@ -5,14 +5,14 @@
 
 (defun judgeChar (char word)
   (cond ((typep char 'null)
-         (progn (cons #\Space word) (setf word (reverse word))
+         (progn (push #\Space word) (setf word (reverse word))
                   (return-from judgeChar word)))
         ((char/= char #\Space)
          (progn
-           (cons char word)
+           (push char word)
            (return-from judgeChar word)))
         ((char= char #\Space)
-         (progn (cons char word) (setf word (reverse word))
+         (progn (push char word) (setf word (reverse word))
                 (return-from judgeChar word)))
         ))
 
@@ -37,7 +37,7 @@
               (judgeChar char word))
         (wordsList (list )
                    (if (or (char= char #\Space) (typep char 'null))
-                       (cons word wordsList))))
+                       (push word wordsList))))
        ((typep char 'null) (let ((FinalString))
                            (setf FinalString (changeWordslistToString wordsList))
                            (return-from pushCharToList FinalString)))))
