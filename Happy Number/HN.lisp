@@ -11,14 +11,14 @@
                    numList))))
     sumNum))
 
+(defvar *numListRemember* nil)
+
 (defun isHappy (num)
   (let* ((numList (splitNumber num))
-         (numListRemember)
          (isHappyy (numReturn numList)))
-    ;;;;;fix
-    (if (= (length numList) 1)
+    (if (member isHappyy *numListRemember*)
+        (return-from isHappy 'nil)
         (if (= isHappyy 1)
-            (return-from isHappy 'true)
-            (return-from isHappy 'nil))
-        (isHappy isHappyy))))
-        
+            (return-from isHappy 'true)))
+    (push isHappyy *numListRemember*)
+    (isHappy isHappyy)))
