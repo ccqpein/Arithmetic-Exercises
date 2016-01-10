@@ -1,13 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
-func MoveZero(nums List)  {
-	for i := nums.Front(); i != nil; i = i.Next() {
-		fmt.Print(i)
-	}
-}
+var nums []int
 
 func main() {
-	MoveZero([1,2,3,4,5])
+	nums := []int{1, 2, 3}
+	for i := 0; i < len(nums); i++ {
+		fmt.Print(nums[i])
+	}
 }
