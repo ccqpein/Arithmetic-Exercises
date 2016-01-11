@@ -3,9 +3,21 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
-func MoveZeros(nums ...int) []int {
+var args []string = os.Args[1:]
+
+func ChangeStringToInt(args []string) []int {
+	var nums []int
+	for _, i := range args {
+		i, _ := strconv.Atoi(i)
+		nums = append(nums, i)
+	}
+	return nums
+}
+
+func MoveZeros(nums []int) []int {
 	//nums := []int{1, 2, 3}
 	x := 1
 	for i := 0; i < len(nums); i++ {
@@ -21,5 +33,5 @@ func MoveZeros(nums ...int) []int {
 	return nums
 }
 func main() {
-	MoveZeros(os.Args[1:])
+	MoveZeros(ChangeStringToInt(args))
 }
