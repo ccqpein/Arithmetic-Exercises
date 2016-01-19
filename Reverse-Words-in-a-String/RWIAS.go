@@ -2,28 +2,30 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
-func ReverseWords(stringR string) []string {
-	//indexSpace = make([]int, 0)
-	var wordsList []string
-	/**
-	for i, s := range stringR {
-		if s == " " {
-			indexSpace = append(indexSpace, i)
-		}
-	}
-	for i, _ := range indexSpace {
-		if i < len(indexSpace)-1; indexSpace[i+1]-indexSpace[i] >= 2 {
-			wordsList = append(wordsList, stringR[indexSpace[i]:indexSpace[i+1]])
-		}
-	}*/
+var args []string = os.Args[1:]
 
-	wordsList = strings.Split(stringR, " ")
-	return wordsList
+func ReverseWords(stringR string) []string {
+
+	wordsList := strings.Split(stringR, " ")
+	var newWordsList []string
+	//fmt.Println(wordsList)
+
+	for i := len(wordsList) - 1; i >= 0; i = i - 1 {
+		newWordsList = append(newWordsList, wordsList[i])
+		//fmt.Println(wordsList[i])
+	}
+	return newWordsList
 }
 
 func main() {
-	fmt.Print(ReverseWords("ccQ nihao"))
+	var result string
+	for _, i := range args {
+		result = result + i + " "
+	}
+	result = strings.TrimSuffix(result, " ")
+	fmt.Print(ReverseWords(result))
 }
