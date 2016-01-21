@@ -13,7 +13,12 @@ func splitString(s string) []string {
 }
 
 func RomanToInt(s string) int {
-	return 6
+	charList := splitString(s)
+	sumNumber := 0
+	for i := 0; i < len(charList)-1; i++ {
+
+	}
+
 }
 
 func main() {
@@ -28,4 +33,5 @@ func main() {
 	}
 	fmt.Println(dicOfLetters)
 	fmt.Println(splitString("XIIX"))
+	fmt.Println(RomanToInt("XIIX"))
 }
