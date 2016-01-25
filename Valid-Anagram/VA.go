@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
+
+var args []string = os.Args[1:]
 
 type Mystring struct {
 	string string
@@ -20,9 +23,24 @@ func isAnagram(s string, t string) {
 	tt := new(Mystring)
 	tt.string = t
 	t = tt.reversed()
-	fmt.Println(s, t)
+	index := 0
+	for _, c := range t {
+		if rune(s[index]) == c {
+			index = index + 1
+			continue
+		} else {
+			fmt.Println("False")
+			break
+		}
+	}
+	//fmt.Println(index)
+	if index == len(t) {
+		fmt.Println("True")
+	}
+
+	//fmt.Println(s, t)
 }
 
 func main() {
-	isAnagram("aaa", "asd")
+	isAnagram(args[0], args[1])
 }
