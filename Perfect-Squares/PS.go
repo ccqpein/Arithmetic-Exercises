@@ -8,15 +8,18 @@ type numInput int
 
 func (num numInput) GeneTabel() [][]int {
 	var squaresList []int
-	for i := 1; i < int(num); i++ {
+	for i := 1; i <= int(num); i++ {
 		squaresList = append(squaresList, i*i)
 	}
+	fmt.Println(squaresList)
 
 	var squaresTable [][]int
-	for r, s := range squaresList {
-		for c, ss := range squaresList {
-			squaresTable[r][c] = s + ss
+	for _, s := range squaresList {
+		var row []int
+		for _, ss := range squaresList {
+			row = append(row, ss+s)
 		}
+		squaresTable = append(squaresTable, row)
 	}
 	return squaresTable
 
