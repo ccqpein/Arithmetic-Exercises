@@ -1,10 +1,11 @@
 from math import factorial
+import sys
 
 
 def genList(n):
     resultList = []
-    for i in xrange(n):
-        ii = i + 1
+    for i in xrange(n + 1):
+        ii = i
         if (n - ii) % 2 == 0:
             resultList.append((ii, (n - ii) / 2))
     print(resultList)
@@ -18,5 +19,16 @@ def cNquM(n, m):
     return nn / mm
 
 
-def main():
-    print("ddd")
+def CS(n):
+    resultList = genList(n)
+    allwaysNum = 0
+    for ii in [i for i in resultList]:
+        allwaysNum += cNquM(sum(ii), ii[0])
+    return allwaysNum
+
+
+def main(n):
+    print("There are {0} ways".format(CS(n)))
+
+if __name__ == "__main__":
+    main(int(sys.argv[1]))
