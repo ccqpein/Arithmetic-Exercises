@@ -1,6 +1,9 @@
 (defpackage :Climbing-Stairs
   (:use :cl)
-  (:export :factorial))
+  (:export :factorial
+           :CS))
+
+(in-package :Climbing-Stairs)
 
 (defun factorial (n &optional m &key (c 'nil))
   "C n qu m"
@@ -22,10 +25,12 @@
        do (if (= (mod (- n i) 2) 0)
               (setf resultList
                     (append resultList (list (list i (/ (- n i) 2)))))))
+    (print resultList)
     (return-from genList resultList)))
 
 (defun CS (n)
   (let ((resultList (genList n))
         (allWaysSum 0))
     (loop for i in resultList
-         do (factorial (sum (first     
+       do (setf allWaysSum (+ allWaysSum (factorial (reduce #'+ i) (first i) :c t))))
+    (return-from CS allWaysSum)))
