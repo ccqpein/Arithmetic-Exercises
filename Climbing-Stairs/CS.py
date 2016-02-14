@@ -4,7 +4,7 @@ import sys
 
 def genList(n):
     resultList = []
-    for i in xrange(n + 1):
+    for i in range(n + 1):
         ii = i
         if (n - ii) % 2 == 0:
             resultList.append((ii, (n - ii) / 2))
