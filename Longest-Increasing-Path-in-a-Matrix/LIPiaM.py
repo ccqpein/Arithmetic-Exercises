@@ -13,4 +13,23 @@ def changeDataToList(matrix):
 
 def findAround(matrix, row, col):
     try:
-        a = matrix[row][col]
+        if matrix[row][col]:
+            return True
+    except:
+        return False
+
+
+def main(m):
+    sortedList = changeDataToList(m)
+    startIndex = []
+    temp1, temp2 = 0, 0
+
+    for i in m:
+        temp2 = 0
+        for ii in i:
+            if ii == sortedList[0]:
+                startIndex.append([temp1, temp2])
+            temp2 += 1
+        temp1 += 1
+
+    return startIndex
