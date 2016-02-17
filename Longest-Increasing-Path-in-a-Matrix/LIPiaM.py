@@ -19,7 +19,24 @@ def findAround(matrix, row, col):
         return False
 
 
+def pointMatrix(twoDimMatrix):
+    def _first(func):
+        def _sencond():
+            row = 0
+            for i in twoDimMatrix:
+                col = 0
+                for ii in i:
+                    print(row)
+                    print(col)
+                    func()
+                    col += 1
+                row += 1
+        return _sencond
+    return _first
+
+
 def main(m):
+
     sortedList = changeDataToList(m)
     startIndex = []
     temp1, temp2 = 0, 0
@@ -32,4 +49,6 @@ def main(m):
             temp2 += 1
         temp1 += 1
 
-    return startIndex
+    print(startIndex)
+
+#    for i in startIndex:
