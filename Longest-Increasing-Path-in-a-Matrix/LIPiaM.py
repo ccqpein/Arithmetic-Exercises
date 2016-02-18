@@ -19,36 +19,26 @@ def findAround(matrix, row, col):
         return False
 
 
-def pointMatrix(twoDimMatrix):
+def pointMatrix(twoDimMatrix, rowNum, colNum):
     def _first(func):
         def _sencond():
-            row = 0
-            for i in twoDimMatrix:
-                col = 0
-                for ii in i:
-                    print(row)
-                    print(col)
-                    func()
-                    col += 1
-                row += 1
+            func
         return _sencond
     return _first
+
+
+def genList(matrix, row, col, parentList):
+    for changeNum in [-1, 1]:
+        if findAround(matrix, row + changeNum, col) and \
+           matrix[row][col] < matrix[row + changeNum][col]:
+            pass
+        if findAround(matrix, row, col + changeNum) and \
+           matrix[row][col] < matrix[row][col + changeNum]:
+               :
+            pass
 
 
 def main(m):
 
     sortedList = changeDataToList(m)
-    startIndex = []
-    temp1, temp2 = 0, 0
-
-    for i in m:
-        temp2 = 0
-        for ii in i:
-            if ii == sortedList[0]:
-                startIndex.append([temp1, temp2])
-            temp2 += 1
-        temp1 += 1
-
     print(startIndex)
-
-#    for i in startIndex:
