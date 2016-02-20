@@ -34,7 +34,7 @@ def genList(matrix, row, col, parentList):
             pass
         if findAround(matrix, row, col + changeNum) and \
            matrix[row][col] < matrix[row][col + changeNum]:
-               :
+               
             pass
 
 
