@@ -31,11 +31,10 @@ def genList(matrix, row, col, parentList):
     for changeNum in [-1, 1]:
         if findAround(matrix, row + changeNum, col) and \
            matrix[row][col] < matrix[row + changeNum][col]:
-            pass
+            print(matrix[row + changeNum][col])
         if findAround(matrix, row, col + changeNum) and \
            matrix[row][col] < matrix[row][col + changeNum]:
-               
-            pass
+            print(matrix[row][col + changeNum])
 
 
 def main(m):
