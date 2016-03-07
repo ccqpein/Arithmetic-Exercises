@@ -1,4 +1,5 @@
 # -*- coding=utf-8 -*-
+import sys
 
 
 def findEleP(matrix, row, col):
@@ -82,10 +83,16 @@ def findLongest(matrix, indexDic, row, col):
 
 
 if __name__ == "__main__":
-    matrix = [[9, 9, 4], [6, 6, 8], [2, 1, 1]]
-    indexDic = makeDic(matrix)
-    print(findLongest(matrix, indexDic, 2, 1))
+    #    matrix = [[9, 9, 4], [6, 6, 8], [2, 1, 1]]
+    if len(sys.argv) == 1:
+        matrix = [[3, 4, 5], [3, 2, 6], [2, 2, 1]]
+    else:
+        matrix = sys.argv[1]  # It not work
 
-    matrix = [[3, 4, 5], [3, 2, 6], [2, 2, 1]]
     indexDic = makeDic(matrix)
-    print(findLongest(matrix, indexDic, 0, 1))
+    resutleTemp = []
+    for i in range(len(matrix)):
+        for ii in range(len(matrix[i])):
+            # print(findLongest(matrix, indexDic, i, ii))
+            resutleTemp.append(findLongest(matrix, indexDic, i, ii))
+    print(max(resutleTemp))
