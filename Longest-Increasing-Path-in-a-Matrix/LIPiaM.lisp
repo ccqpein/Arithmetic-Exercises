@@ -1,3 +1,5 @@
+(defvar *matrix* '((9 9 4) (6 6 8) (2 1 1)))
+
 (defun find-Ele (matrix row col)
   (let ((ele (nth col (nth row matrix))))
   (if ele
@@ -18,9 +20,14 @@
     result))
 
 (defun how-many-larger (resultFromDoAround)
+  "return lagerest number and the index"
   (let ((thisNum (caar resultFromDoAround))
         (lastList (cdr resultFromDoAround))
-        (largerNum 0))
-    (dolist (i lastList largerNum)
+        (largerNum 0)
+        (largerIndex '()))
+    (dolist (i lastList (list largerNum largerIndex))
       (if (> (car i) thisNum)
-          (incf largerNum)))))    
+          (progn (incf largerNum)
+                (setf largerIndex (append largerIndex (list (cadr i))))
+          )))))
+
