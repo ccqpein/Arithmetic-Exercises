@@ -35,7 +35,7 @@
 
 (defmacro change-index-to-string (r c)
   "return value type is r-c"
-  `(coerce (list (code-char (+ 48 ,r)) #\- (code-char (+ 48 ,c))) 'string))
+  `(intern (coerce (list (code-char (+ 48 ,r)) #\- (code-char (+ 48 ,c))) 'string)))
 
 (defun main (matrix)
   (let ((rowNum (length matrix))
@@ -43,8 +43,8 @@
         (indexHash (make-hash-table)))
     (loop for r from 0 to (1- rowNum) do
        (loop for c from 0 to (1- colNum) do
-            (progn (print (list r c))
-              (setf (gethash (list r c) indexHash)
+            (progn (print (change-index-to-string r c))
+              (setf (gethash (change-index-to-string r c) indexHash)
                 (how-many-larger (do-around 'find-ele *matrix* r c)))
-         (print (gethash (list r c) indexHash)))))
-    (print indexHash)))
+         (print (gethash (change-index-to-string r c) indexHash)))))
+    ))
