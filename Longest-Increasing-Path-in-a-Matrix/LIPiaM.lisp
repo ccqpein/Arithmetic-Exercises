@@ -33,6 +33,10 @@
                 (setf largerIndex (append largerIndex (list (cadr i))))
           )))))
 
+(defmacro change-index-to-string (r c)
+  "return value type is r-c"
+  `(coerce (list (code-char (+ 48 ,r)) #\- (code-char (+ 48 ,c))) 'string))
+
 (defun main (matrix)
   (let ((rowNum (length matrix))
         (colNum (length (car matrix)))
