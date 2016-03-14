@@ -9,8 +9,8 @@
                 (return-from find-Ele nil)))))
 
 (defun do-around (func matrix row col)
-  (let ((rowlist (list (+ 1 row) (- 1 row)))
-        (collist (list (+ 1 col) (- 1 col)))
+  (let ((rowlist (list (1+ row) (1- row)))
+        (collist (list (1+ col) (1- col)))
         (result))
     (setf result (remove 'nil
           (list
@@ -43,10 +43,24 @@
         (indexHash (make-hash-table)))
     (loop for r from 0 to (1- rowNum) do
        (loop for c from 0 to (1- colNum) do
-            (progn (print (change-index-to-string r c))
+            (progn ;(print (change-index-to-string r c))
               (setf (gethash (change-index-to-string r c) indexHash)
                 (how-many-larger (do-around 'find-ele *matrix* r c))))))
     indexHash))
+
+(defun sum-list (list)
+  (let ((summation 0))
+    (dolist (i list summation)
+      (setf summation (+ i summation)))))
+
+(defun longest-list (&rest llist)
+  (let ((length-list '()))
+    (loop for i in llist do
+         (setf length-list (append length-list (length i))))
+    (max 
+
+         
+  
 
 (defun tree-search-matrix (indexTable r c)
   (let ((this-hash (gethash (change-index-to-string r c) indexTable))
@@ -55,11 +69,27 @@
          (return '(1) ))
         ((= 1 (car this-hash))
          (return (setf result
-                       (append '(1) (tree-search-matrix indexTable (caaadr this-hash) (cdaadr this-hash))))))
+                       (append '(1) (tree-search-matrix indexTable
+                                                        (nth 1 (nth 1 (this-hash)))
+                                                        (nth 2 (nth 1 (this-hash))))))))
         ((= 2 (car this-hash))
-         (setf result
+         (return (setf result (longest-list 
+                       (append '(1) (tree-search-matrix indexTable
+                                                        (nth 1 (nth 1 (this-hash)))
+                                                        (nth 2 (nth 1 (this-hash)))))
+                       (append '(1) (tree-search-matrix indexTable
+                                                        (nth 1 (nth 2 (this-hash)))
+                                                        (nth 2 (nth 2 (this-hash)))))))))
+        ((= 2 (car this-hash))
+         (return (setf result (longest-list 
+                       (append '(1) (tree-search-matrix indexTable
+                                                        (nth 1 (nth 1 (this-hash)))
+                                                        (nth 2 (nth 1 (this-hash)))))
+                       (append '(1) (tree-search-matrix indexTable
+                                                        (nth 1 (nth 2 (this-hash)))
+                                                        (nth 2 (nth 2 (this-hash)))))))
         
-
+#|
 (defun main (matrix)
   (let ((resultList '())
         (indexTable (gen-index-table matrix))
@@ -68,3 +98,4 @@
     (loop for r from 0 to (1- rowNum) do
          (loop for c from 0 to (1- colNum) do
               (
+|#
