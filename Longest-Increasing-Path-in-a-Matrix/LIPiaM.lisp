@@ -1,3 +1,13 @@
+(defpackage #:matrix-operate
+  (:use #:CL)
+  (:nicknames #:MX)
+  (:export #:do-around
+           #:sum-list
+           #:max-list
+           #:longest-list))
+
+(in-package #:matrix-operate)
+
 (defvar *matrix* '((9 9 4) (6 6 8) (2 1 1)))
 (defvar *matrix2* '((3 4 5) (3 2 2) (2 2 1)))
 
