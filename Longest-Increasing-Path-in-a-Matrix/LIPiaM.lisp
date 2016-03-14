@@ -37,7 +37,7 @@
   "return value type is r-c"
   `(intern (coerce (list (code-char (+ 48 ,r)) #\- (code-char (+ 48 ,c))) 'string)))
 
-(defun main (matrix)
+(defun gen-index-table (matrix)
   (let ((rowNum (length matrix))
         (colNum (length (car matrix)))
         (indexHash (make-hash-table)))
@@ -45,6 +45,26 @@
        (loop for c from 0 to (1- colNum) do
             (progn (print (change-index-to-string r c))
               (setf (gethash (change-index-to-string r c) indexHash)
-                (how-many-larger (do-around 'find-ele *matrix* r c)))
-         (print (gethash (change-index-to-string r c) indexHash)))))
-    ))
+                (how-many-larger (do-around 'find-ele *matrix* r c))))))
+    indexHash))
+
+(defun tree-search-matrix (indexTable r c)
+  (let ((this-hash (gethash (change-index-to-string r c) indexTable))
+        (result))
+  (cond ((= 0 (car this-hash))
+         (return '(1) ))
+        ((= 1 (car this-hash))
+         (return (setf result
+                       (append '(1) (tree-search-matrix indexTable (caaadr this-hash) (cdaadr this-hash))))))
+        ((= 2 (car this-hash))
+         (setf result
+        
+
+(defun main (matrix)
+  (let ((resultList '())
+        (indexTable (gen-index-table matrix))
+        (rowNum (length matrix))
+        (colNum (length (car matrix))))
+    (loop for r from 0 to (1- rowNum) do
+         (loop for c from 0 to (1- colNum) do
+              (
