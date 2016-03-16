@@ -19,3 +19,12 @@
          ;(print strList)
          (setf result (append result (list (subseq strList 0 i)))))
     result))
+
+(defun get-index-number (str)
+  (let ((pre-table (get-pattern-from-head str))
+        (bot-table (reverse (get-pattern-from-back str)))
+        (indexNum 0))
+    ;(print pre-table)
+    ;(print bot-table)
+    (mapcar #'equal pre-table bot-table)
+    ())
