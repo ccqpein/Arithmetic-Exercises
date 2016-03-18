@@ -27,22 +27,24 @@
   (let ((pre-table (get-pattern-from-head str))
         (bot-table (reverse (get-pattern-from-back str)))
         (indexNum 0))
-    (print pre-table)
-    (print bot-table)
+    ;(print pre-table)
+    ;(print bot-table)
     (setf indexNum
           (mapcar #'(lambda (list1 list2)
                       (let ((num 0))
                         (if (equal list1 list2)
                             (setf num (length list1)))
                   num)) pre-table bot-table))
-    (print indexNum)
+    ;(print indexNum)
     (setf indexNum (max-list indexNum))))
 
 (defun make-index-table (p)
-  (let ((pList (coerce p 'list))) 
-    (do ((subStr (car pList) (list subStr (car restStr)))
-         (restStr (cdr pList) (cdr restStr)))
-        ((
+  (let ((pList (coerce p 'list))
+        (indexTable '()))
+    (loop for i from 1 to (length pList) do
+         (setf indexTable (append indexTable
+                                  (list (get-index-number (subseq p 0 i))))))
+    indexTable))
 
 (defun do-kmp (s p)
   (let* ((strList (coerce s 'list))
