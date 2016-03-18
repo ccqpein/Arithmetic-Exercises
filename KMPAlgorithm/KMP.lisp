@@ -1,7 +1,13 @@
 (defpackage #:KMP
+  (:export #:do-kmp
+           #:*test-string*
+           #:*test-pattern*)
   (:use #:CL))
 
 (in-package #:KMP)
+
+(defvar *test-string* "bbc abcdab abcdabcdabde")
+(defvar *test-pattern* "abcdabd")
 
 ;;; make the string index table
 (defun get-pattern-from-back (str)
@@ -27,8 +33,7 @@
   (let ((pre-table (get-pattern-from-head str))
         (bot-table (reverse (get-pattern-from-back str)))
         (indexNum 0))
-    ;(print pre-table)
-    ;(print bot-table)
+    ;(progn (print pre-table) (print bot-table))
     (setf indexNum
           (mapcar #'(lambda (list1 list2)
                       (let ((num 0))
@@ -40,8 +45,8 @@
 
 (defun make-index-table (p)
   (let ((pList (coerce p 'list))
-        (indexTable '()))
-    (loop for i from 1 to (length pList) do
+        (indexTable '(-1)))
+    (loop for i from 1 to (1- (length pList)) do
          (setf indexTable (append indexTable
                                   (list (get-index-number (subseq p 0 i))))))
     indexTable))
@@ -49,9 +54,8 @@
 (defun do-kmp (s p)
   (let* ((strList (coerce s 'list))
          (patList (coerce p 'list))
-         (indexTable (get-index-number p)))
-    (print strList)
-    (print patList)
-    (print indexTable)#|
-    (do ((sPoint (car strList))
-         (pPoint (car |#))
+         (indexTable (make-index-table p))
+         (lenPatList (length patList)))
+    ;(progn (print strList) (print patList) (print indexTable))
+    
+    ))
