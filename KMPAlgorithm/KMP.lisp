@@ -38,3 +38,6 @@
                         num)) pre-table bot-table))
     ;(print indexNum)
     (setf indexNum (max-list indexNum))))
+
+(defun do-kmp (s p)
+  )
