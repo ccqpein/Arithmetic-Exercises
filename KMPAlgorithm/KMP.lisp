@@ -56,6 +56,16 @@
          (patList (coerce p 'list))
          (indexTable (make-index-table p))
          (lenPatList (length patList)))
-    ;(progn (print strList) (print patList) (print indexTable))
-    
+    (progn (print strList) (print patList) (print indexTable))
+    (do* ((strPoint (car strList) (cond ((= patPointNum 0)
+                                         strPoint)
+                                        ((char/= (nth patPointNum patList) strPoint)
+                                         
+          (patPointNum 0 (cond ((char= (nth patPointNum patList) strPoint)
+                                (incf patPointNum))
+                               ((= (nth patPointNum indexTable) 0)
+                                0)
+                               ((= (nth patPointNum indexTable) -1)
+                                0)
+                               (t (nth patPointNum indexTable)))
     ))
