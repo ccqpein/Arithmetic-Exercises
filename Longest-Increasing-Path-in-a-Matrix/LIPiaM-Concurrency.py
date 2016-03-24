@@ -1,5 +1,7 @@
 # -*- coding=utf-8 -*-
 import sys
+# import threading
+import multiprocessing as mul
 
 
 def findEleP(matrix, row, col):
@@ -93,8 +95,16 @@ if __name__ == "__main__":
 
     indexDic = makeDic(matrix)
     resutleTemp = []
+    pool = mul.Pool(4)
     for i in range(len(matrix)):
         for ii in range(len(matrix[i])):
             # print(findLongest(matrix, indexDic, i, ii))
-            resutleTemp.append(findLongest(matrix, indexDic, i, ii))
-    print(max(resutleTemp))
+            resutleTemp.append(
+                pool.apply_async(findLongest, args=(matrix, indexDic, i, ii)))
+            # resutleTemp.append(a)
+    pool.close()
+    pool.join()
+    resulte = []
+    for r in resutleTemp:
+        resulte.append(r.get())
+    print(max(resulte))
