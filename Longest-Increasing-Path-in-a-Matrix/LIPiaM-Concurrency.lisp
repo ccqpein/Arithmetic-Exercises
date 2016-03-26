@@ -86,7 +86,7 @@
            (if (= largerNum (nth i length-list))
                (return-from longest-list (nth i llist)))))))
 
-(defun tree-search-matrix (indexTable r c chan)
+(defun tree-search-matrix (indexTable r c)
   (let ((this-hash (gethash (change-index-to-string r c) indexTable))
         (result))
     ;(print (nth 1 this-hash))
@@ -116,7 +116,7 @@
                        (append '(1) (tree-search-matrix indexTable
                                                         (nth 0 (nth 2 (nth 1 this-hash)))
                                                         (nth 1 (nth 2 (nth 1 this-hash)))))))))))
-  (chanl:send chan result)))
+  result))
         
 #|
 (defun main (matrix)
