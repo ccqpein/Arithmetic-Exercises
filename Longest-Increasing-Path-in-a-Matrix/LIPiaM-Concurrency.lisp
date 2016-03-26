@@ -4,7 +4,9 @@
   (:export #:do-around
            #:sum-list
            #:max-list
-           #:longest-list))
+           #:longest-list
+           #:*matrix*
+           #:*matrix2*))
 
 (in-package #:matrix-operate)
 
@@ -130,6 +132,9 @@
                                                            (tree-search-matrix indexTable r c)))))))
     (return-from main (max-list resultList))))|#
 
+(defun foreplay (chan indexTable r c)
+  (chanl:send chan (sum-list (tree-search-matrix indexTable r c))))
+
 (defun main-concurrency (matrix)
   (let ((resultList '())
         (indexTable (gen-index-table matrix))
@@ -138,6 +143,9 @@
         (chan (make-instance 'chanl:channel)))
     (loop for r from 0 to (1- rowNum) do
          (loop for c from 0 to (1- colNum) do
-              (chanl:pexec (sum-list
-                             (tree-search-matrix indexTable r c chan)))))
-    (return-from main (max-list resultList))))
+              (chanl:pexec () (foreplay chan indexTable r c))))
+    (loop for i from 1 to (* rowNum colNum) do
+         (progn 
+           (setf resultList (append resultList (list (chanl:recv chan))))
+           (print resultList)))
+    (return-from main-concurrency (max-list resultList))))

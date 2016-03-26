@@ -24,7 +24,7 @@
       (format t "Completed request in ~a ms: ~a~%" elapsed url))))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
 
 (defun do-request-chan (url chan)
   (let ((start-time (get-internal-real-time)))

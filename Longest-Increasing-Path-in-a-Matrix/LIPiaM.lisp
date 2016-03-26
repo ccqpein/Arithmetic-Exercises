@@ -4,7 +4,9 @@
   (:export #:do-around
            #:sum-list
            #:max-list
-           #:longest-list))
+           #:longest-list
+           #:*matrix*
+           #:*matrix2*))
 
 (in-package #:matrix-operate)
 
