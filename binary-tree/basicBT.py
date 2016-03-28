@@ -1,3 +1,6 @@
+__doc__ = "https://github.com/qiwsir/algorithm/blob/master/binary_tree.md"
+
+
 class Node():
 
     def __init__(self, data):
@@ -48,7 +51,35 @@ class Node():
                 else:
                     parent.right = None
                 del node
+            elif children_count == 1:
+                if node.left:
+                    n = node.left
+                else:
+                    n = node.right
+                if parent:
+                    if parent.left is node:
+                        parent.left = n
+                    else:
+                        parent.right = n
+                    del node
+            else:
+                parent = node
+                successor = node.right
+                while successor.left:
+                    parent = successor
+                    successor = successor.left
+                node.data = successor.data
+                if parent.left == successor:
+                    parent.left = successor.right
+                else:
+                    parent.right = successor.right
 
+    def print_tree(self):
+        if self.left:
+            self.left.print_tree()
+        print(str(self.data))
+        if self.right:
+            self.right.print_tree()
 
 root = Node(8)
 root.insert(3)
