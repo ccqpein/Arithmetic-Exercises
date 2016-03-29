@@ -50,6 +50,17 @@ func (n *Node) Lookup(data int) (*Node, *Node) {
 	return rn, p
 }
 
+func (n *Node) ChildrenCount() int {
+	cnt := 0
+	if n.ChildrenNode[0] != nil {
+		cnt++
+	}
+	if n.ChildrenNode[1] != nil {
+		cnt++
+	}
+	return cnt
+}
+
 func main() {
 	root := Node{Data: 8}
 
