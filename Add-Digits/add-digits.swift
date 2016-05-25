@@ -18,15 +18,3 @@ func AddDigit(numIn:Int) -> Int {
 
 AddDigit(19745)
 
-    /*
-    for c in charList {
-        reNum = Int(c) + reNum
-    }
-
-    if reNum<10 {
-        return reNum
-    }else{
-        reNum = AddDigit(reNum)
-        return reNum
-    }*/
-
