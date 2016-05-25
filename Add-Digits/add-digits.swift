@@ -1,20 +1,23 @@
 func AddDigit(numIn:Int) -> Int {
     //var reNum:Int?
     let temp:String = String(numIn)
-    var charList = [String]()
+    //var charList = [Int]()
+    var sumNum:Int = 0
     for c in temp.characters {
-        let cc = String(c)
-        charList += [cc]
-        print(charList)
+        let cc:Int? = Int(String(c))
+        sumNum += cc!
     }
 
-    return 10
+    print(sumNum)
+    if sumNum < 10{
+        return sumNum
+    } else{
+        return AddDigit(sumNum)
+    }
 }
 
-func main(){
+AddDigit(19745)
 
-    AddDigit(15)
-}
     /*
     for c in charList {
         reNum = Int(c) + reNum
