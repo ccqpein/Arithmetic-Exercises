@@ -12,9 +12,7 @@
   (let ((time 0)
 	(a a)
 	(b b))
-    (loop
-       for item in b
-       when (< item a)
-       do  (incf time))
+    (loop for item in b when (< item a) do
+         (incf time))
     (return-from telltime (list time))))
 	 
