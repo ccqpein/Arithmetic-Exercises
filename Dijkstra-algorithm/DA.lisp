@@ -3,6 +3,7 @@
 
 #|
 Example:
+
   |A B C D E F
  A|0 6 3 n n n
  B|6 0 2 5 n n
@@ -42,12 +43,14 @@ Example:
 ;;;;;;; Borrow tools finished ;;;;;;;;;;;;;;;
 
 (defmacro second-last-position (l)
-  "return second last element index in list. And the l should be a symbel but expression"
-  (let ((l1 (eval l))
-        (l2 (gensym)))
+  "return second last element index in list."
+  (let* ((l0 (eval l))
+         (l1 (remove 'nil l0))
+         (l2 (gensym)))
     `(let* ((,l2 (list ,@l1)))
-       (position (cadr (sort ,l2 #'<)) '(,@l1)))))
+       (position (cadr (sort ,l2 #'<)) '(,@l0)))))
 
 (defun dijkstra (start end)
   "start and end are the index in matrix"
   
+  )
