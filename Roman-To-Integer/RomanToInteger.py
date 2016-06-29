@@ -14,9 +14,8 @@ def romanToInt(s):
             sumNumber -= 2
         elif (char2 == 1000 or char2 == 500) and char1 == 100:
             sumNumber -= 200
-        elif (char2 == 100 or char2 ==50) and char1 == 10:
+        elif (char2 == 100 or char2 == 50) and char1 == 10:
             sumNumber -= 20
         char1 = char2
 
     return sumNumber
-    

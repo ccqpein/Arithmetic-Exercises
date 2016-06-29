@@ -39,16 +39,15 @@ Example:
                    (loop for id from 0 to (1- colNum) collect
                         (aref ,mm ,ii id))))))
 
-;;;;;;; Borrow tools finished
-
+;;;;;;; Borrow tools finished ;;;;;;;;;;;;;;;
 
 (defmacro second-last-position (l)
   "return second last element index in list. And the l should be a symbel but expression"
-  (with-gensyms (l1 l2)
-    `(let* ((,l1 ,l)
-            (,l2 (list ,@l1)))
+  (let ((l1 (eval l))
+        (l2 (gensym)))
+    `(let* ((,l2 (list ,@l1)))
        (position (cadr (sort ,l2 #'<)) '(,@l1)))))
 
 (defun dijkstra (start end)
   "start and end are the index in matrix"
-  )
+  
