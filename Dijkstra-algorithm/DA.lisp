@@ -70,9 +70,10 @@ Example:
                              (nth second l)))))
     sum))
 
-(defun dijkstra (start end)
+(defun dijkstra (start end &optional (m *Example))
   "start and end are the index in matrix"
   (let ((s '())
-        (u '()))
-    
-  )
+        (u (loop for i from 0 to (1- (car (array-dimensions m))) collect i))
+        (storeList '()))
+
+  ))
