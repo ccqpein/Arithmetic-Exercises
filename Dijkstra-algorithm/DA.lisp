@@ -40,8 +40,17 @@ Example:
                    (loop for id from 0 to (1- colNum) collect
                         (aref ,mm ,ii id))))))
 
+(defmacro aappend (l &rest eles)
+  "l must be symbol not expression. For example, (aappend a 2 3 4) is fine, (aappend '(1 2) 2 3) and (aappend (list 2 3) 2 2) will issue error"
+  (with-gensyms (elel)
+    `(let ((,elel (list ,@eles)))
+       (loop for i in ,elel do
+            (setf ,l (append ,l (list i))))
+       ,l)))
+
 ;;;;;;; Borrow tools finished ;;;;;;;;;;;;;;;
 
+;; This function can be more flexible than now, I might change it later
 (defmacro second-last-position (l)
   "return second last element index in list."
   (let* ((l0 (eval l))
@@ -50,7 +59,20 @@ Example:
     `(let* ((,l2 (list ,@l1)))
        (position (cadr (sort ,l2 #'<)) '(,@l0)))))
 
+(defun get-val (l &optional (m *Example))
+  "l is index-list for store all index numbers, this function is get the sum val follow l index points"
+  (let ((sum 0)
+        (len (length l)))
+    (do ((first 0 (1+ first))
+         (second 1 (1+ second)))
+        ((= second len))
+      (setf sum (+ sum (aref m (nth first l)
+                             (nth second l)))))
+    sum))
+
 (defun dijkstra (start end)
   "start and end are the index in matrix"
-  
+  (let ((s '())
+        (u '()))
+    
   )
