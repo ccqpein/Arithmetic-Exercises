@@ -72,8 +72,17 @@ Example:
 
 (defun dijkstra (start end &optional (m *Example))
   "start and end are the index in matrix"
-  (let ((s '())
+  (let ((s) ;s is the smallest index in each step
         (u (loop for i from 0 to (1- (car (array-dimensions m))) collect i))
         (storeList '()))
-    (labels
+    (print s) (print u) (print storeList)
+    (do ((l1 (list start) (aappend l1 s))
+         (l2 u (delete s l2)))
+        ((eql l2 nil) (print "done"))
+      (let ((tempStore))
+        (loop for el in l2 do
+             (aappend tempStore (cons (append l1 el)
+                                      (get-val (append l1 el) m))))
+        
+               
   ))
