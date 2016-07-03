@@ -77,30 +77,38 @@ Example:
   "start and end are the index in matrix"
   (let ((s) ;s is the smallest index in each step
         (u (loop for i from 0 to (1- (car (array-dimensions m))) collect i))
-        (storeList '()))
-    (do ((l1 (list start) (aappend l1 s))
+        (storeList '())
+        (smallest '()))
+    (do ((l1 (list start))
          (l2 (delete start u) (delete s l2)))
         ((not l2) (print "done"))
       (let ((tempStore)
             (smallOne))
-        (print "start") (print "This is L1") (print l1) (print "This is L2") (print l2)
+        ;(print "start") (print "This is L1") (print l1) (print "This is L2") (print l2)
         (loop for el in l2 do
              (let ((val (get-val (append l1 (list el)) m)))
-               (print (append l1 (list el))) (print val) (print tempStore) (print smallOne)
-               (if val
-                   (loop for i in storeList for vv = (cdr i) do
-                        (if (and (= (cadar i) el) (< vv val))
-                            (setf smallOne i)
-                   (aappend tempStore (cons (append l1 (list el)) val)))
+               ;(print (append l1 (list el))) (print val)
+               (if val (progn
+                         (loop for i in storeList for vv = (cdr i) do
+                              (if (and (= (car (last (car i))) el) (< vv val))
+                                  (setf smallOne i)))
+                         (aappend tempStore (cons (append l1 (list el)) val))))
                (if (and smallOne val)
                    (if (< val (cdr smallOne))
                        (setf smallOne (cons (append l1 (list el)) val)))
                    (if val
                        (setf smallOne (cons (append l1 (list el)) val))))))
-        (print "here is tempstore")
+        (setf s (car (last (car smallOne))))
+        #|(print "here is tempstore")
         (print tempStore)
         (print "this is smallone")
-        (print smallOne)
-        (setf s (cadar smallOne))
-        (setf storeList (append storeList tempStore))))
-      storeList))
+        (print smallOne)        
+        (print "this is s")
+        (print s)|#
+        (setf l1 (car smallOne))
+        (setf storeList (append storeList tempStore))
+        (aappend smallest smallOne)
+        ))
+    ;(print storeList)
+    smallest
+    ))
