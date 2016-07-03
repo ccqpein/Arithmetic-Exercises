@@ -47,8 +47,8 @@ Example:
        (loop for i in ,elel do
             (setf ,l (append ,l (list i))))
        ,l)))
-
 ;;;;;;; Borrow tools finished ;;;;;;;;;;;;;;;
+
 
 ;; This function can be more flexible than now, I might change it later
 (defmacro second-last-position (l)
@@ -66,23 +66,41 @@ Example:
     (do ((first 0 (1+ first))
          (second 1 (1+ second)))
         ((= second len))
-      (setf sum (+ sum (aref m (nth first l)
-                             (nth second l)))))
+      (let ((val (aref m (nth first l)
+                       (nth second l))))
+      (setf sum (if val
+                    (+ sum val)
+                    (return-from get-val nil)))))
     sum))
 
-(defun dijkstra (start end &optional (m *Example))
+(defun dijkstra (start &optional (m *Example))
   "start and end are the index in matrix"
   (let ((s) ;s is the smallest index in each step
         (u (loop for i from 0 to (1- (car (array-dimensions m))) collect i))
         (storeList '()))
-    (print s) (print u) (print storeList)
     (do ((l1 (list start) (aappend l1 s))
-         (l2 u (delete s l2)))
-        ((eql l2 nil) (print "done"))
-      (let ((tempStore))
+         (l2 (delete start u) (delete s l2)))
+        ((not l2) (print "done"))
+      (let ((tempStore)
+            (smallOne))
+        (print "start") (print "This is L1") (print l1) (print "This is L2") (print l2)
         (loop for el in l2 do
-             (aappend tempStore (cons (append l1 el)
-                                      (get-val (append l1 el) m))))
-        
-               
-  ))
+             (let ((val (get-val (append l1 (list el)) m)))
+               (print (append l1 (list el))) (print val) (print tempStore) (print smallOne)
+               (if val
+                   (loop for i in storeList for vv = (cdr i) do
+                        (if (and (= (cadar i) el) (< vv val))
+                            (setf smallOne i)
+                   (aappend tempStore (cons (append l1 (list el)) val)))
+               (if (and smallOne val)
+                   (if (< val (cdr smallOne))
+                       (setf smallOne (cons (append l1 (list el)) val)))
+                   (if val
+                       (setf smallOne (cons (append l1 (list el)) val))))))
+        (print "here is tempstore")
+        (print tempStore)
+        (print "this is smallone")
+        (print smallOne)
+        (setf s (cadar smallOne))
+        (setf storeList (append storeList tempStore))))
+      storeList))
