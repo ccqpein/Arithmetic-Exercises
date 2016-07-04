@@ -51,13 +51,13 @@ Example:
 
 
 ;; This function can be more flexible than now, I might change it later
-(defmacro second-last-position (l)
+#|(defmacro second-last-position (l) ;this function doesnt need anymore.
   "return second last element index in list."
   (let* ((l0 (eval l))
          (l1 (remove 'nil l0))
          (l2 (gensym)))
     `(let* ((,l2 (list ,@l1)))
-       (position (cadr (sort ,l2 #'<)) '(,@l0)))))
+       (position (cadr (sort ,l2 #'<)) '(,@l0)))))|#
 
 (defun get-val (l &optional (m *Example))
   "l is index-list for store all index numbers, this function is get the sum val follow l index points"
@@ -75,12 +75,12 @@ Example:
 
 (defun dijkstra (start &optional (m *Example))
   "start and end are the index in matrix"
-  (let ((s) ;s is the smallest index in each step
+  (let ((s)  ;s is the smallest index in each step, translate s from l2 to l1
         (u (loop for i from 0 to (1- (car (array-dimensions m))) collect i))
-        (storeList '())
-        (smallest '()))
-    (do ((l1 (list start))
-         (l2 (delete start u) (delete s l2)))
+        (storeList '())  ;store all paths in the proccessing
+        (smallest '()))  ;store the smallest path in each step
+    (do ((l1 (list start)) ;the path set for next step, updated by "smallest"
+         (l2 (delete start u) (delete s l2)))  ;the set including points which not been searched
         ((not l2) (print "done"))
       (let ((tempStore)
             (smallOne))
@@ -110,5 +110,4 @@ Example:
         (aappend smallest smallOne)
         ))
     ;(print storeList)
-    smallest
-    ))
+    smallest))
