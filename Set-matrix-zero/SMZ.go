@@ -18,6 +18,11 @@ func setZeroes(matrix [][]int) {
 			}
 		}
 		if testI != 0 {
+			for rei := 0; rei < i; rei++ {
+				for _, ii := range colZeroIndex {
+					matrix[rei][ii] = 0
+				}
+			}
 			matrix[i] = zeroRow
 		} else {
 			for _, ii := range colZeroIndex {
@@ -36,4 +41,11 @@ func main() {
 		[]int{1, 2, 3, 4, 5, 6},
 	}
 	setZeroes(matrix)
+
+	matrix2 := [][]int{
+		[]int{1, 2, 3, 3, 4, 5},
+		[]int{0, 4, 5, 6, 7, 8},
+		[]int{1, 2, 3, 4, 5, 6},
+	}
+	setZeroes(matrix2)
 }
