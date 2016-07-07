@@ -20,19 +20,20 @@
          (colNum (array-dimension m 1))
          (colZeroIndex '()))
     (loop for i from 0 to (1- rowNum) do
-         (let ((ifZero nil))
-           (loop for ii from 0 to (1- colNum) when (= 0 (aref m i ii)) do
-                ;(if (= 0 ele)
-                    (progn (setf ifZero t) (aappend colZeroIndex ii)
-                           (print colZeroIndex)))
-                ;)
-           (if ifZero (progn
-               (loop for rei from 0 to i do
-                    (loop for ii in colZeroIndex do
-                         (setf (aref m rei ii) 0)))
-               (loop for ii from 0 to (1- colNum) do
-                    (setf (aref m i ii) 0)))
-               (loop for ii from 0 to (1- colNum) do
-                    (setf (aref m i ii) 0)))
-           colZeroIndex))))
+         (progn
+           (let ((ifZero nil))
+             (loop for ii from 0 to (1- colNum) when (= 0 (aref m i ii)) do
+                                        ;(if (= 0 ele)
+                  (progn (setf ifZero t) (aappend colZeroIndex ii)
+                         (print colZeroIndex)))
+                                        ;)
+             (if (not ifZero)
+                 (progn (loop for rei from 0 to (1- i) do
+                             (loop for ii in colZeroIndex do
+                                  (setf (aref m rei ii) 0)))
+                        (loop for ii from 0 to (1- colNum) do
+                             (setf (aref m i ii) 0)))
+                 (loop for ii from 0 to (1- colNum) do
+                      (setf (aref m i ii) 0)))
+           )))))
                     
