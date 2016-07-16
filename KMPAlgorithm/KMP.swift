@@ -1,3 +1,5 @@
+//Using swift3 beta
+
 import Foundation
 
 var testS:String = "bbc abcdab abcdabcdabde"
