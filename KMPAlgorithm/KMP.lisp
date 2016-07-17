@@ -27,10 +27,6 @@
          ;(print strList)
          (setf result (append result (list (subseq strList 0 i)))))
     result))
-#|
-(defun max-list (list)
-      (loop for element in list maximizing element))
-|#
 
 (defun get-index-number (str)
   (let ((pre-table (get-pattern-from-head str))
@@ -74,10 +70,8 @@
                             (t 0)))
           (tellStat (matchp (nth strPoint strList) (nth patPoint patList))
                     (matchp (nth strPoint strList) (nth patPoint patList)))
-          ;(testP (progn (print strPoint) (print patPoint) (print tellStat)) (progn (print strPoint) (print patPoint) (print tellStat)))
           )
          ((and (= patPoint (1- lenPatList)) (= tellStat 0))
           (print strList) (print patList)
           (print (+ (- strPoint lenPatList) 2))
           ))))
-
