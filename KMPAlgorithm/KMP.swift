@@ -25,12 +25,25 @@ func makeIndexTable(pattern: String) -> Array<Int>{
     return indexTable
 }
 
-func do-kmp(str:String, pattern:String) ->Bool{
+func do-kmp (str:String, pattern:String) ->Bool{
     let pIndexT = makeIndexTable(pattern)
+    let pA = Array(pattern)
     let lenIndexT = pIndexT.count
+    var pI = 0
+    
     let strA = Array(str)
+    let lenStr = strA.count
+    var sI = 0
     
-    
+    while (pI!= lenIndexT) {
+
+        if (strA[sI]== pA[pI]){
+            pI++
+            sI++
+        }else {
+            pI = pI- 
+        }
+    }
 }
 
 print(makeIndexTable(pattern:testP))
