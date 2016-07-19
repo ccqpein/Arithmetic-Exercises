@@ -46,15 +46,11 @@ func doKmp (str:String, pattern:String) ->Bool{
         }
     }
 
-    var result = false
-    return {() -> Bool in
-               if pI == lenIndexT {
-                   return true
-               }else{
-                   return false
-               }
-           }
-//    return result
+    if pI == lenIndexT {
+        return true
+    }else{
+        return false
+    }
 }
 
 print(makeIndexTable(pattern:testP))
