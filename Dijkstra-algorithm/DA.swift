@@ -16,5 +16,23 @@ let example2:[[Int?]] = [
     [14, nil, 2, nil, 9, 0,],
 ]
 
+struct pathResult {
+    var val:Int?
+    var pathList:Array<Int>?
+}
+
+func delete<T>(_ ele: inout T, _ array: inout [T]){
+    for object in array{
+        if object == ele{
+            array.removeAtIndex(array.indexOf(ele)!)
+        }
+    }
+}
+
+func dijkstra(start:Int, matrix m:[[Int?]]) -> [pathResult]{
+    var s:[Int] = [start]
+    var u:[Int] = m.count
+}
+
 print(example1)
 print(example2)
