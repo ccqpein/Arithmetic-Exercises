@@ -57,16 +57,6 @@ Example:
        ,l)))
 ;;;;;;; Borrow tools finished ;;;;;;;;;;;;;;;
 
-
-;; This function can be more flexible than now, I might change it later
-#|(defmacro second-last-position (l) ;this function doesnt need anymore.
-  "return second last element index in list."
-  (let* ((l0 (eval l))
-         (l1 (remove 'nil l0))
-         (l2 (gensym)))
-    `(let* ((,l2 (list ,@l1)))
-       (position (cadr (sort ,l2 #'<)) '(,@l0)))))|#
-
 (defun get-val (l &optional (m *Example))
   "l is index-list for store all index numbers, this function is get the sum val follow l index points"
   (let ((sum 0)
@@ -92,10 +82,8 @@ Example:
         ((not l2) (print "done"))
       (let ((tempStore)
             (smallOne))
-        ;(print "start") (print "This is L1") (print l1) (print "This is L2") (print l2)
         (loop for el in l2 do
              (let ((val (get-val (append l1 (list el)) m)))
-               ;(print (append l1 (list el))) (print val)
                (if val (progn
                          (loop for i in storeList for vv = (cdr i) do
                               (if (and (= (car (last (car i))) el) (< vv val))
@@ -107,15 +95,8 @@ Example:
                    (if val
                        (setf smallOne (cons (append l1 (list el)) val))))))
         (setf s (car (last (car smallOne))))
-        #|(print "here is tempstore")
-        (print tempStore)
-        (print "this is smallone")
-        (print smallOne)        
-        (print "this is s")
-        (print s)|#
         (setf l1 (car smallOne))
         (setf storeList (append storeList tempStore))
         (aappend smallest smallOne)
         ))
-    ;(print storeList)
     smallest))
