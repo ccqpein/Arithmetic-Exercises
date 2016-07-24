@@ -21,11 +21,17 @@ struct pathResult {
     var pathList:Array<Int>?
 }
 
-func delete<T>(_ ele: inout T, _ array: inout [T]){
-    for object in array{
-        if object == ele{
-            array.removeAtIndex(array.indexOf(ele)!)
+func delete(_ ele: inout Int, _ array: inout [Int]){
+    var removeL = [Int]()
+    for i in (0..<array.count) {
+        if array[i] == ele{
+            removeL.append(i)
         }
+    }
+
+    removeL = removeL.reversed()
+    for i in removeL {
+        array.remove(at:i)
     }
 }
 
