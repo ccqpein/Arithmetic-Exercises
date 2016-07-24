@@ -16,9 +16,13 @@ let example2:[[Int?]] = [
     [14, nil, 2, nil, 9, 0,],
 ]
 
-struct pathResult {
+struct PathResult {
     var val:Int?
     var pathList:Array<Int>?
+}
+
+enum GetValError:ErrorProtocol{
+case noVal(String)
 }
 
 func delete(_ ele: inout Int, _ array: inout [Int]){
@@ -28,17 +32,41 @@ func delete(_ ele: inout Int, _ array: inout [Int]){
             removeL.append(i)
         }
     }
-
     removeL = removeL.reversed()
     for i in removeL {
         array.remove(at:i)
     }
 }
 
-func dijkstra(start:Int, matrix m:[[Int?]]) -> [pathResult]{
+func getVal(pathRoot:[Int], pathP:Int, m:[[Int?]] = example1) throws -> PathResult{
+    var pathTemp = pathRoot
+    pathTemp.append(pathP)
+    var pathVal = 0
+    let valTest = m[pathRoot.last!][pathP]
+    guard valTest != nil else{
+        throw GetValError.noVal("No value")
+    }
+    for i in (1..<pathTemp.count) {
+        pathVal = pathVal + m[pathTemp[i-1]][pathTemp[i]]!
+    }
+    return PathResult(val:pathVal, pathList:pathTemp)
+}
+
+/*
+func dijkstra(start:Int, matrix m:[[Int?]]) -> [PathResult]{
     var s:[Int] = [start]
     var u:[Int] = m.count
 }
+*/
 
-print(example1)
-print(example2)
+var test1 = [0,1,2]
+var test2 = 5
+
+do{
+    try getVal(pathRoot:test1, pathP:test2)
+}catch GetValError.noVal(let errs) {
+    print(errs)
+}
+
+//print(example1)
+//print(example2)
