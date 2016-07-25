@@ -74,10 +74,12 @@ func dijkstra(start:Int, matrix m:[[Int?]]) -> [PathResult]{
                 for oldP in largeL where oldP.pathList.last! == e {
                     tempOldVal.append(oldP.val)
                 }
-                if thisPath.val < tempOldVal.min() {
+                if tempOldVal.min() == nil {
                     tempResultList.append(thisPath)
-                }else{
-                    
+                }else if thisPath.val < tempOldVal.min()! {
+                    tempResultList.append(thisPath)
+                }else {
+                    tempResultList.append(oldP)
                 }
             }catch GetValError.noVal(){
                 continue
