@@ -22,10 +22,10 @@ struct PathResult {
 }
 
 enum GetValError:ErrorProtocol{
-case noVal(String)
+case noVal
 }
 
-func delete(_ ele: inout Int, _ array: inout [Int]){
+func delete(_ ele:Int, _ array: inout [Int]){
     var removeL = [Int]()
     for i in (0..<array.count) {
         if array[i] == ele{
@@ -44,7 +44,7 @@ func getVal(pathRoot:[Int], pathP:Int, m:[[Int?]] = example1) throws -> PathResu
     var pathVal = 0
     let valTest = m[pathRoot.last!][pathP]
     guard valTest != nil else{
-        throw GetValError.noVal("No value")
+        throw GetValError.noVal
     }
     for i in (1..<pathTemp.count) {
         pathVal = pathVal + m[pathTemp[i-1]][pathTemp[i]]!
@@ -52,7 +52,7 @@ func getVal(pathRoot:[Int], pathP:Int, m:[[Int?]] = example1) throws -> PathResu
     return PathResult(val:pathVal, pathList:pathTemp)
 }
 
-func dijkstra(start:Int, matrix m:[[Int?]]) -> [PathResult]{
+func dijkstra(start:Int, matrix m:[[Int?]] = example1) -> [PathResult]{
     // initialize
     var s:[Int] = [start]
     var u:[Int] = []
@@ -65,44 +65,38 @@ func dijkstra(start:Int, matrix m:[[Int?]]) -> [PathResult]{
     var smallL:[PathResult] = [startResult]
     var largeL:[PathResult] = []
 
-    for t in 0..<u.count {
+    for _ in 0..<u.count {
         var tempResultList:[PathResult] = []
         for e in u {
+            var thisPath:PathResult?
             do{
-                thisPath = try getVal(pathRoot:smallL.last!.pathList, pathP:e)
-                var tempOldVal:[Int] = []
-                for oldP in largeL where oldP.pathList.last! == e {
-                    tempOldVal.append(oldP.val)
-                }
-                if tempOldVal.min() == nil {
-                    tempResultList.append(thisPath)
-                }else if thisPath.val < tempOldVal.min()! {
-                    tempResultList.append(thisPath)
-                }else {
-                    tempResultList.append(oldP)
-                }
-            }catch GetValError.noVal(){
+                thisPath = try getVal(pathRoot:smallL.last!.pathList, pathP:e, m:m)
+            }catch {
                 continue
+            }
+            
+            var tempOldVal:[PathResult] = []
+            for oldP in largeL where oldP.pathList.last! == e && oldP.val < thisPath!.val {
+                tempOldVal.append(oldP)
+            }
+            tempOldVal.sort{ $0.val < $1.val }
+            if tempOldVal.first == nil {
+                tempResultList.append(thisPath!)
+            }else {
+                tempResultList.append(tempOldVal.first!)
             }
         }
         tempResultList.sort{ $0.val < $1.val }
+        
+        s.append(tempResultList.first!.pathList.last!)
+        delete(tempResultList.first!.pathList.last!, &u)
+        
         smallL.append(tempResultList.first!)
-        largeL = largeL + tempResultList.dropFirst()
+        largeL = largeL + tempResultList.dropFirst() // may issues
     }
+
+    return smallL
 }
 
+print(dijkstra(start:0))
 
-/*var test1 = [0,1,2]
-var test2 = 5*/
-
-var test1 = [0,1,]
-var test2 = 2
-
-do{
-    print(try getVal(pathRoot:test1, pathP:test2))
-}catch GetValError.noVal(let errs) {
-    print(errs)
-}
-
-//print(example1)
-//print(example2)
