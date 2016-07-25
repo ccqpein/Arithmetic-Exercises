@@ -65,12 +65,13 @@ func dijkstra(start:Int, matrix m:[[Int?]] = example1) -> [PathResult]{
     var smallL:[PathResult] = [startResult]
     var largeL:[PathResult] = []
 
+    // core code
     for _ in 0..<u.count {
         var tempResultList:[PathResult] = []
         for e in u {
-            var thisPath:PathResult?
+            var thisPath:PathResult? // get the val, maybe can use {get} in future
             do{
-                thisPath = try getVal(pathRoot:smallL.last!.pathList, pathP:e, m:m)
+                thisPath = try getVal(pathRoot:smallL.last!.pathList, pathP:e, m:m) //be careful for errer handler
             }catch {
                 continue
             }
@@ -79,13 +80,15 @@ func dijkstra(start:Int, matrix m:[[Int?]] = example1) -> [PathResult]{
             for oldP in largeL where oldP.pathList.last! == e && oldP.val < thisPath!.val {
                 tempOldVal.append(oldP)
             }
-            tempOldVal.sort{ $0.val < $1.val }
+            tempOldVal.sort{ $0.val < $1.val
+            }
             if tempOldVal.first == nil {
                 tempResultList.append(thisPath!)
             }else {
                 tempResultList.append(tempOldVal.first!)
             }
         }
+        
         tempResultList.sort{ $0.val < $1.val }
         
         s.append(tempResultList.first!.pathList.last!)
