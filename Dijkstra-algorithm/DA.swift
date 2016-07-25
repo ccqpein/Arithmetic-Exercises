@@ -17,8 +17,8 @@ let example2:[[Int?]] = [
 ]
 
 struct PathResult {
-    var val:Int?
-    var pathList:Array<Int>?
+    var val:Int
+    var pathList:Array<Int>
 }
 
 enum GetValError:ErrorProtocol{
@@ -52,18 +52,52 @@ func getVal(pathRoot:[Int], pathP:Int, m:[[Int?]] = example1) throws -> PathResu
     return PathResult(val:pathVal, pathList:pathTemp)
 }
 
-/*
 func dijkstra(start:Int, matrix m:[[Int?]]) -> [PathResult]{
+    // initialize
     var s:[Int] = [start]
-    var u:[Int] = m.count
-}
-*/
+    var u:[Int] = []
+    for i in 0..<m.count where i != start {
+        u.append(i)
+    }
 
-var test1 = [0,1,2]
-var test2 = 5
+    // make a temp list for result
+    let startResult = PathResult(val:0, pathList:[start])
+    var smallL:[PathResult] = [startResult]
+    var largeL:[PathResult] = []
+
+    for t in 0..<u.count {
+        var tempResultList:[PathResult] = []
+        for e in u {
+            do{
+                thisPath = try getVal(pathRoot:smallL.last!.pathList, pathP:e)
+                var tempOldVal:[Int] = []
+                for oldP in largeL where oldP.pathList.last! == e {
+                    tempOldVal.append(oldP.val)
+                }
+                if thisPath.val < tempOldVal.min() {
+                    tempResultList.append(thisPath)
+                }else{
+                    
+                }
+            }catch GetValError.noVal(){
+                continue
+            }
+        }
+        tempResultList.sort{ $0.val < $1.val }
+        smallL.append(tempResultList.first!)
+        largeL = largeL + tempResultList.dropFirst()
+    }
+}
+
+
+/*var test1 = [0,1,2]
+var test2 = 5*/
+
+var test1 = [0,1,]
+var test2 = 2
 
 do{
-    try getVal(pathRoot:test1, pathP:test2)
+    print(try getVal(pathRoot:test1, pathP:test2))
 }catch GetValError.noVal(let errs) {
     print(errs)
 }
