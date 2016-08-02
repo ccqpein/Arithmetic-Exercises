@@ -30,9 +30,17 @@ Example:
                                          (nil nil nil 6 0 9)
                                          (14 nil 2 nil 9 0))))
 
+(defvar *Example3 (make-array '(7 7) :initial-contents
+                                       '((0 7 nil 5 nil nil nil)
+                                         (7 0 8 9 7 nil nil)
+                                         (nil 8 0 nil 5 nil nil)
+                                         (5 9 nil 0 15 6 nil)
+                                         (nil 7 5 15 0 8 9)
+                                         (nil nil nil 6 8 0 11)
+                                         (nil nil nil nil 9 11 0))))
+
 ;;; The marcos below come from the machine learning package toolsbox
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defmacro with-gensyms ((&rest names) &body body)
   `(let ,(loop for n in names collect `(,n (gensym)))
      ,@body))
@@ -84,19 +92,23 @@ Example:
             (smallOne))
         (loop for el in l2 do
              (let ((val (get-val (append l1 (list el)) m)))
-               (if val (progn
-                         (loop for i in storeList for vv = (cdr i) do
-                              (if (and (= (car (last (car i))) el) (< vv val))
-                                  (setf smallOne i)))
-                         (aappend tempStore (cons (append l1 (list el)) val))))
+               (if val
+                   (progn
+                     (loop for i in storeList for vv = (cdr i) do
+                          (if (and (= (car (last (car i))) el) (< vv val))
+                              (setf smallOne i)))
+                     (aappend tempStore (cons (append l1 (list el)) val))))
                (if (and smallOne val)
                    (if (< val (cdr smallOne))
                        (setf smallOne (cons (append l1 (list el)) val)))
                    (if val
-                       (setf smallOne (cons (append l1 (list el)) val))))))
+                       (setf smallOne (cons (append l1 (list el)) val))))
+               ))
+        
         (setf s (car (last (car smallOne))))
         (setf l1 (car smallOne))
         (setf storeList (append storeList tempStore))
+        ;(print smallOne)
         (aappend smallest smallOne)
         ))
     smallest))
