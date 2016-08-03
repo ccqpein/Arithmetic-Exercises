@@ -79,8 +79,9 @@ Example:
                     (return-from get-val nil)))))
     sum))
 
-(defun dijkstra (start &optional (m *Example))
-  "start and end are the index in matrix"
+(defun dijkstra (start &optional (m *Example) &key show)
+  "start and end are the index in matrix.
+\"show\" key design to show all store path to fix the bug which in Example3 that 3-2 path doesnt be found"
   (let ((s)  ;s is the smallest index in each step, translate s from l2 to l1
         (u (loop for i from 0 to (1- (car (array-dimensions m))) collect i))
         (storeList '())  ;store all paths in the proccessing
@@ -104,11 +105,10 @@ Example:
                    (if val
                        (setf smallOne (cons (append l1 (list el)) val))))
                ))
-        
         (setf s (car (last (car smallOne))))
         (setf l1 (car smallOne))
         (setf storeList (append storeList tempStore))
-        ;(print smallOne)
         (aappend smallest smallOne)
         ))
+    (if show (print storeList))
     smallest))
