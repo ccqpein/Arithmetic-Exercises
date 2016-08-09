@@ -10,4 +10,7 @@ func leapYear(_ y:Int) -> Bool {
     }
 }
 
+func dateToNum(Month m:Int, Day d:Int, Year y:Int) -> Int{ //return the day numbers from the 2000
+    
 
+}

@@ -60,4 +60,3 @@
 
 (defun date+ (d m y n)
   (num->date (+ (date->num d m y) n)))
-      
