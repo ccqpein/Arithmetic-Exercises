@@ -20,8 +20,7 @@ struct Date {
 // Can use switch to make algorithm add date by year (now is by month)
 // Todo: make this function have ability to decrease the date if input the num is negetive
 func addDate(_ days:Int, _ input:Date) -> (reDate:Date, daysLeft:Int) {
-    var isleep:Bool = leapYear(input.y)
-    var monthTable:[Int] = isleep ? monthDayL : monthDay
+    var monthTable:[Int] = leapYear(input.y) ? monthDayL : monthDay
     
     var sumDays:Int = days + input.d
     var reDate = Date(d:0, m:0, y:0)
