@@ -21,17 +21,46 @@ struct Date {
 // Todo: make this function have ability to decrease the date if input the num is negetive
 func addDate(_ days:Int, _ input:Date) -> (reDate:Date, daysLeft:Int) {
     var monthTable:[Int] = leapYear(input.y) ? monthDayL : monthDay
-    
-    var sumDays:Int = days + input.d
-    var reDate = Date(d:0, m:0, y:0)
+
+    let sumDays:Int = days + input.d
+    var reDate:Date = input
     var daysLeft:Int = 0
+    
+    if sumDays > monthTable[input.m - 1] {
+        reDate.m += 1
+        daysLeft = sumDays - monthTable[input.m - 1] - 1
+        reDate.d = 1
 
-    if sumDays > monthTable[input.m] {
-        reMon += 1
-        daysLeft = sumDays - monthTable[input.m]
+        if reDate.m > 12 {
+            reDate.y += 1
+            reDate.m -= 12
+        }
+        
+    } else {
+        reDate.d = sumDays
     }
+
+    return (reDate, daysLeft)
 }
 
-func main(_ days:Int, dateInput date:Date) -> () {
+
+func main(_ days:Int, dateInput date:Date) -> Date {
+    var daysLeft = days
+    var reDate = date
+
+    while daysLeft > 0 {
+        (reDate, daysLeft) = addDate(daysLeft, reDate)
+    }
+
+    return reDate
     
 }
+
+
+/*let testa = Date(d:25, m:2, y:2004)
+let testb = Date(d:25, m:12, y:2004)
+let testc = Date(d:1, m:1, y:2005)
+
+print(main(370, dateInput:testa))
+print(main(7, dateInput:testb))*/
+
