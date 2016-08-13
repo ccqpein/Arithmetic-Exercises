@@ -2,11 +2,17 @@
 
 ## Arithmetic Exercise
 
-Find arithmetic questions from the internet, code them with different language.
+Search arithmetic questions from the Web, code them using different languages for practising and learning.
+
+## Languages
+
++ Python
++ Go
++ Common Lisp
++ Swift
 
 ## Source
 
-+ [leetcode](leetcode.com)
-+ ANSI Common Lisp
++ [Leetcode](leetcode.com)
++ ~~ANSI Common Lisp~~
 + Other sources
-
