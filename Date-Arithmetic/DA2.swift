@@ -17,6 +17,5 @@ class Date {
     var m:Int
     var y:Int
 
-    func addDate(_ days:Int) -> 
     
 }
