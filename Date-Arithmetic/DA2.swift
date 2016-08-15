@@ -17,5 +17,38 @@ class Date {
     var m:Int
     var y:Int
 
+    init(days:Int, month:Int, year:Int) {
+        self.d = days
+        self.m = month
+        self.y = year
+    }
     
+    func addDate(days:Int) {
+
+        var daysLeft:Int = days + self.d
+        
+        while daysLeft > 0 {
+            var monthTable:[Int] = leapYear(self.y) ? monthDayL : monthDay
+
+            if daysLeft > monthTable[self.m - 1] {
+                self.m += 1
+                daysLeft = daysLeft - monthTable[self.m - 1] - 1
+                self.d = 1
+                
+                if self.m > 12 {
+                    self.y += 1
+                    self.m -= 12
+                }
+                
+            } else {
+                self.d = daysLeft
+                daysLeft = 0
+            }
+            
+        }
+    }
 }
+
+var testa = Date(days:25, month:2, year:2004)
+
+testa.addDate(days:370)
