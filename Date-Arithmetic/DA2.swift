@@ -31,8 +31,8 @@ class Date {
             var monthTable:[Int] = leapYear(self.y) ? monthDayL : monthDay
 
             if daysLeft > monthTable[self.m - 1] {
+                daysLeft = daysLeft - monthTable[self.m - 1]
                 self.m += 1
-                daysLeft = daysLeft - monthTable[self.m - 1] - 1
                 self.d = 1
                 
                 if self.m > 12 {
@@ -44,11 +44,13 @@ class Date {
                 self.d = daysLeft
                 daysLeft = 0
             }
-            
+            print(self.d)
+            print(self.m)
+            print(self.y)
+            print(daysLeft)
         }
     }
 }
 
 var testa = Date(days:25, month:2, year:2004)
-
 testa.addDate(days:370)
