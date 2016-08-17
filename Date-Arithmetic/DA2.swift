@@ -44,11 +44,21 @@ class Date {
                 self.d = daysLeft
                 daysLeft = 0
             }
-            print(self.d)
-            print(self.m)
-            print(self.y)
-            print(daysLeft)
         }
+    }
+
+    func reduceDate(days:Int) {
+
+        var daysLeft:Int = self.d - days
+
+        if daysLeft > 0 {
+            self.d = daysLeft
+        }else if daysLeft == 0 {
+            self.m -= 1
+            
+        }
+
+
     }
 }
 
