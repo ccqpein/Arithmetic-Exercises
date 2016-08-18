@@ -37,7 +37,6 @@ func addDate(days int, input *Date) {
 
 			if input.m > 12 {
 				input.y += 1
-				fmt.Println("here we go")
 				input.m -= 12
 			}
 		} else {
@@ -49,12 +48,33 @@ func addDate(days int, input *Date) {
 
 }
 
+func reduceDate(days int, input *Date) {
+	daysLeft := input.d - days
+
+	for daysLeft <= 0 {
+		monthTable := leepYear(input.y)
+
+		input.m -= 1
+		if input.m < 1 {
+			input.y -= 1
+			input.m = 12
+		}
+
+		daysLeft += monthTable[input.m-1]
+	}
+
+	input.d = daysLeft
+}
+
 func main() {
 	testa := Date{d: 25, m: 2, y: 2004}
 	testb := Date{d: 25, m: 12, y: 2004}
 
 	addDate(370, &testa)
 	addDate(7, &testb)
+
+	reduceDate(370, &testa)
+	reduceDate(370, &testa)
 
 	fmt.Println(testa)
 	fmt.Println(testb)

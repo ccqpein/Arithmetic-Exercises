@@ -51,16 +51,23 @@ class Date {
 
         var daysLeft:Int = self.d - days
 
-        if daysLeft > 0 {
-            self.d = daysLeft
-        }else if daysLeft == 0 {
+        while daysLeft <= 0 {
+            var monthTable:[Int] = leapYear(self.y) ? monthDayL : monthDay
+
             self.m -= 1
+            if self.m < 1 {
+                self.y -= 1
+                self.m = 12
+            }
             
+            daysLeft += monthTable[self.m - 1]
         }
 
+        self.d = daysLeft
 
     }
 }
 
 var testa = Date(days:25, month:2, year:2004)
 testa.addDate(days:370)
+testa.reduceDate(days:370)
