@@ -2,40 +2,54 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type NestedInteger struct {
 	value   int
-	NestedL NestedInteger
+	NestedL *NestedInteger
 }
-
-func (n NestedInteger) IsInteger() bool {
-
-}
-
-func (n NestedInteger) GetInteger() int {}
-
-func (n *NestedInteger) SetInteger(value int) {}
-
-func (n *NestedInteger) Add(elem NestedInteger) {}
-
-func (n NestedInteger) GetList() []*NestedInteger {}
 
 func deserialize(s string) *NestedInteger {
-	if s[0] != "[" {
-		val, _ := strconv.Atoi(s)
+	str := []byte(s)
+	if str[0] != '[' {
+		val, _ := strconv.Atoi(string(str))
 		a := NestedInteger{value: val}
 		return &a
 	} else {
-		ss := s[1 : len(s)-1]
-		inTemp := string("")
+		ss := str[1 : len(str)-1]
+		fmt.Print("this string: ")
+		fmt.Println(string(ss))
+		var inTemp []byte
+		var breakInd int
+
+	lo:
 		for i, v := range ss {
-
+			fmt.Println(string(v))
+			switch string(v) {
+			case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+				inTemp = append(inTemp, v)
+			case "[":
+				breakInd = i
+				break lo
+			}
 		}
-	}
 
+		val, _ := strconv.Atoi(string(inTemp))
+		nextss := ss[breakInd:]
+
+		a := NestedInteger{value: val, NestedL: deserialize(string(nextss))}
+		return &a
+	}
 }
 
-func main(s string) {
+func main() {
+	s1 := "324"
+	s2 := "[123,[456,[789]]]"
 
+	a := *deserialize(s1)
+	b := *deserialize(s2)
+
+	fmt.Println(a)
+	fmt.Println(b)
 }
