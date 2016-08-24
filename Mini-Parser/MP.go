@@ -18,8 +18,8 @@ func deserialize(s string) *NestedInteger {
 		return &a
 	} else {
 		ss := str[1 : len(str)-1]
-		fmt.Print("this string: ")
-		fmt.Println(string(ss))
+		//fmt.Print("this string: ")
+		//fmt.Println(string(ss))
 		var inTemp []byte
 		var breakInd int
 
