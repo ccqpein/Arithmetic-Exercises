@@ -1,4 +1,5 @@
-(defvar nums '(1 2 3))
+;;; switch the design
+
 (setf *random-state* (make-random-state t))
 
 (defun gen-random-num (n times)
@@ -20,17 +21,16 @@
          (setf result (append result (list x)))))
     ))
 
+(defvar solution (make-hash-table))
+
 (defun constructor (nums)
-  (loop for n in nums
-     for i from 0 to (- (length nums) 1)
-       collect (list i n))
-  )
+  (loop for i from 0 to (- (length nums) 1)
+     do (setf (gethash i solution) (nth i nums))))
 
-(defun shuffle (nums)
-  (let* ((len (length nums))
-         (rendomL (gen-random-num len len)))
-    (loop for i in rendomL
-         collect (second (nth i nums)))
-    ))
+(defun reset (solution)
+  (loop for i from 0 to (- (hash-table-count solution) 1)
+     collect (gethash i solution)))
 
-(defun reset ()) ;Dont need reset function
+(defun shuffle (solution)
+  (loop for i in (gen-random-num (hash-table-count solution) (hash-table-count solution))
+     collect (gethash i solution)))
