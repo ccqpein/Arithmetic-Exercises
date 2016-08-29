@@ -20,11 +20,15 @@
          (setf result (append result (list x)))))
     ))
 
-(defun Shuffle (nums)
-  (let* ((len (length nums))
-         (random-list (gen-random-num len len)))    
-    (loop for i in random-list
-       collect (nth i nums)))
+(defun constructor (nums)
+  (loop for n in nums
+     for i from 0 to (- (length nums) 1)
+       collect (list i n))
   )
 
-
+(defun shuffle (nums)
+  (let* ((len (length nums))
+         (rendomL (gen-random-num len len)))
+    (loop for i in rendomL
+         collect (second (nth i nums)))
+    ))
