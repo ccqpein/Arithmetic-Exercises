@@ -60,15 +60,24 @@ func (m *matrix) lookforLargerAround(c coord) aroundRe {
 	return this
 }
 
-func (m *matrix) makeLargerAroundTable() []aroundRe { // Can use goroute futrue
-	var this []aroundRe
+func (m *matrix) makeLargerAroundTable() map[coord]aroundRe { // Can use goroute futrue
+	var this = map[coord]aroundRe{}
 	for i, r := range *m {
 		for ii, _ := range r {
 			c := coord{i, ii}
-			this = append(this, m.lookforLargerAround(c))
+			this[c] = m.lookforLargerAround(c)
 		}
 	}
 	return this
+}
+
+func (table *map[coord]aroundRe) getLargestPath(c coord) (int, coord) {
+	nextNum := *table[c].num
+	number := 1
+
+	for nextNum != 0 {
+
+	}
 }
 
 func main() {
