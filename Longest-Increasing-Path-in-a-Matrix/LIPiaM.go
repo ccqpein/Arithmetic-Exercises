@@ -10,12 +10,35 @@ type matrix [][]int
 type coord [2]int
 
 type aroundRe struct {
-	num       int //How many results
+	num       int // How many larger point around this point
 	selfCoord coord
-	coordL    []coord //Results coordinate
+	coordL    []coord // Results coordinate
+	longestP  int     // The longest path number (included this point) for store the results have done before
 }
 
-func (m *matrix) getVal(c coord) (int, error) {
+type mapTable map[coord]*aroundRe // Use *aroudRe because cannot change the value in struct which in map
+
+func maxSlice(l []int) (int, int) { // Little useful function
+	max := l[0]
+	maxInd := 0
+	for i, value := range l {
+		if value > max {
+			max = value
+			maxInd = i
+		}
+	}
+	return maxInd, max
+}
+
+func PrintMM(m mapTable) { // Little function to print the *struct in map
+	for i, v := range m {
+		Print(i)
+		Print(":")
+		Println(*v)
+	}
+}
+
+func getVal(m *matrix, c coord) (int, error) { // Get around point num
 	v := *m
 
 	if (c[0] < 0 || c[0] >= len(v)) || (c[1] >= len(v[0]) || c[1] < 0) {
@@ -25,17 +48,17 @@ func (m *matrix) getVal(c coord) (int, error) {
 	}
 }
 
-func (m *matrix) lookforLargerAround(c coord) aroundRe {
-	this := aroundRe{selfCoord: c}
+func lookforLargerAround(m *matrix, c coord) aroundRe {
+	this := aroundRe{selfCoord: c, longestP: -1}
 	num := 0
-	val, _ := m.getVal(c)
+	val, _ := getVal(m, c)
 
 	var coordL []coord
 
 	for i, v := range c {
 		newC1 := c
 		newC1[i] = v + 1
-		val1, err := m.getVal(newC1)
+		val1, err := getVal(m, newC1)
 		if err == nil {
 			if val1 > val {
 				num += 1
@@ -45,7 +68,7 @@ func (m *matrix) lookforLargerAround(c coord) aroundRe {
 
 		newC2 := c
 		newC2[i] = v - 1
-		val2, err := m.getVal(newC2)
+		val2, err := getVal(m, newC2)
 		if err == nil {
 			if val2 > val {
 				num += 1
@@ -60,24 +83,70 @@ func (m *matrix) lookforLargerAround(c coord) aroundRe {
 	return this
 }
 
-func (m *matrix) makeLargerAroundTable() map[coord]aroundRe { // Can use goroute futrue
-	var this = map[coord]aroundRe{}
+func makeLargerAroundTable(m *matrix) mapTable { // Can use goroute futrue
+	var this = mapTable{}
 	for i, r := range *m {
 		for ii, _ := range r {
 			c := coord{i, ii}
-			this[c] = m.lookforLargerAround(c)
+			tt := lookforLargerAround(m, c)
+			this[c] = &tt // Save address of struct aroundRe
 		}
 	}
 	return this
 }
 
-func (table *map[coord]aroundRe) getLargestPath(c coord) (int, coord) {
-	nextNum := *table[c].num
-	number := 1
+func findLargestPath(c coord, table mapTable) (int, []coord) {
+	this := table[c]
+	reCoordList := []coord{this.selfCoord} // Struct-point can access struct directly.
 
-	for nextNum != 0 {
-
+	// If this point have been computed before, return the result directly.
+	if this.longestP != -1 {
+		return this.longestP, reCoordList
 	}
+
+	// num == 0 means this point is end point
+	if this.num == 0 {
+		return this.num + 1, reCoordList
+	}
+
+	// Recursion body
+	tempCoordList := [][]coord{}
+	tempResultInt := []int{}
+	for _, p := range this.coordL {
+		rr, cc := findLargestPath(p, table)
+		tempResultInt = append(tempResultInt, rr)
+		tempCoordList = append(tempCoordList, cc)
+	}
+
+	// Find the maximal value index
+	maxInd, _ := maxSlice(tempResultInt)
+
+	// Add return coord to result coord list
+	for _, cc := range tempCoordList[maxInd] {
+		reCoordList = append(reCoordList, cc)
+	}
+
+	this.longestP = tempResultInt[maxInd] + 1
+
+	return this.longestP, reCoordList
+
+}
+
+// Flow function
+func flow(m matrix) {
+	table := makeLargerAroundTable(&m)
+	resultVal := []int{}
+	resultPath := [][]coord{}
+	for i, _ := range table {
+		a, b := findLargestPath(i, table)
+		resultVal = append(resultVal, a)
+		resultPath = append(resultPath, b)
+	}
+	maxInd, v := maxSlice(resultVal)
+	Println(v)
+	pp := resultPath[maxInd]
+	Println(pp)
+	PrintMM(table)
 }
 
 func main() {
@@ -85,9 +154,12 @@ func main() {
 		{9, 9, 4},
 		{6, 6, 8},
 		{2, 1, 1}}
-	//test2 := matrix{{3, 4, 5}, {3, 2, 2}, {2, 2, 1}}
+	test2 := matrix{
+		{3, 4, 5},
+		{3, 2, 2},
+		{2, 2, 1}}
 
-	//cccc := coord{1, 1}
-	//Println(test1.lookforLargerAround(cccc))
-	Println(test1.makeLargerAroundTable())
+	flow(test1)
+	flow(test2)
+
 }
