@@ -1,4 +1,4 @@
-package main
+package LIPiaM
 
 import (
 	"errors"
@@ -148,6 +148,7 @@ func flow(m matrix) {
 	PrintMM(table)
 }
 
+/*
 func main() {
 	test1 := matrix{
 		{9, 9, 4},
@@ -162,3 +163,4 @@ func main() {
 	flow(test2)
 
 }
+*/
