@@ -5,6 +5,7 @@ import (
 	. "fmt"
 )
 
+// Define some types
 type matrix [][]int
 
 type coord [2]int
@@ -122,9 +123,7 @@ func findLargestPath(c coord, table mapTable) (int, []coord) {
 	maxInd, _ := maxSlice(tempResultInt)
 
 	// Add return coord to result coord list
-	for _, cc := range tempCoordList[maxInd] {
-		reCoordList = append(reCoordList, cc)
-	}
+	reCoordList = append(reCoordList, tempCoordList[maxInd]...)
 
 	this.longestP = tempResultInt[maxInd] + 1
 
