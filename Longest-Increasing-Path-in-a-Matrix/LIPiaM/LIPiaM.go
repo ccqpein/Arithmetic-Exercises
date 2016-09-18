@@ -6,7 +6,7 @@ import (
 )
 
 // Define some types
-type matrix [][]int
+type Matrix [][]int
 
 type coord [2]int
 
@@ -39,7 +39,7 @@ func PrintMM(m mapTable) { // Little function to print the *struct in map
 	}
 }
 
-func getVal(m *matrix, c coord) (int, error) { // Get around point num
+func getVal(m *Matrix, c coord) (int, error) { // Get around point num
 	v := *m
 
 	if (c[0] < 0 || c[0] >= len(v)) || (c[1] >= len(v[0]) || c[1] < 0) {
@@ -49,7 +49,7 @@ func getVal(m *matrix, c coord) (int, error) { // Get around point num
 	}
 }
 
-func lookforLargerAround(m *matrix, c coord) aroundRe {
+func lookforLargerAround(m *Matrix, c coord) aroundRe {
 	this := aroundRe{selfCoord: c, longestP: -1}
 	num := 0
 	val, _ := getVal(m, c)
@@ -84,7 +84,7 @@ func lookforLargerAround(m *matrix, c coord) aroundRe {
 	return this
 }
 
-func makeLargerAroundTable(m *matrix) mapTable { // Can use goroute futrue
+func makeLargerAroundTable(m *Matrix) mapTable { // Can use goroute futrue
 	var this = mapTable{}
 	for i, r := range *m {
 		for ii, _ := range r {
@@ -132,7 +132,7 @@ func findLargestPath(c coord, table mapTable) (int, []coord) {
 }
 
 // Flow function
-func flow(m matrix) {
+func Flow(m Matrix) {
 	table := makeLargerAroundTable(&m)
 	resultVal := []int{}
 	resultPath := [][]coord{}
@@ -150,17 +150,17 @@ func flow(m matrix) {
 
 /*
 func main() {
-	test1 := matrix{
+	test1 := Matrix{
 		{9, 9, 4},
 		{6, 6, 8},
 		{2, 1, 1}}
-	test2 := matrix{
+	test2 := Matrix{
 		{3, 4, 5},
 		{3, 2, 2},
 		{2, 2, 1}}
 
-	flow(test1)
-	flow(test2)
+	Flow(test1)
+	Flow(test2)
 
 }
 */
