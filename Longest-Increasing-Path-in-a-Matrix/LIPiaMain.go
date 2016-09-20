@@ -16,4 +16,5 @@ func main() {
 
 	Flow(test1)
 	Flow(test2)
+	FlowC(test1)
 }
