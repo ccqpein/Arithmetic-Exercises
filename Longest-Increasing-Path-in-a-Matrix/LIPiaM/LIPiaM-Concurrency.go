@@ -1,4 +1,4 @@
-package main
+package LIPiaM
 
 import (
 	"errors"
@@ -160,10 +160,11 @@ func FlowC(m *Matrix) {
 	PrintMM(table)
 }
 
-func main() {
+/*func main() {
 	test1 := Matrix{
 		{9, 9, 4},
 		{6, 6, 8},
 		{2, 1, 1}}
 	FlowC(&test1)
 }
+*/
