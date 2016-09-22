@@ -1,53 +1,9 @@
 package LIPiaM
 
 import (
-	"errors"
 	. "fmt"
+	"time"
 )
-
-// Define some types
-type Matrix [][]int
-
-type coord [2]int
-
-type aroundRe struct {
-	num       int // How many larger point around this point
-	selfCoord coord
-	coordL    []coord // Results coordinate
-	longestP  int     // The longest path number (included this point) for store the results have done before
-}
-
-type mapTable map[coord]*aroundRe // Use *aroudRe because cannot change the value in struct which in map
-
-func maxSlice(l []int) (int, int) { // Little useful function
-	max := l[0]
-	maxInd := 0
-	for i, value := range l {
-		if value > max {
-			max = value
-			maxInd = i
-		}
-	}
-	return maxInd, max
-}
-
-func PrintMM(m mapTable) { // Little function to print the *struct in map
-	for i, v := range m {
-		Print(i)
-		Print(":")
-		Println(*v)
-	}
-}
-
-func getVal(m *Matrix, c coord) (int, error) { // Get around point num
-	v := *m
-
-	if (c[0] < 0 || c[0] >= len(v)) || (c[1] >= len(v[0]) || c[1] < 0) {
-		return 0, errors.New("no value")
-	} else {
-		return v[c[0]][c[1]], nil
-	}
-}
 
 func lookforLargerAround(m *Matrix, c coord) aroundRe {
 	this := aroundRe{selfCoord: c, longestP: -1}
@@ -84,7 +40,7 @@ func lookforLargerAround(m *Matrix, c coord) aroundRe {
 	return this
 }
 
-func makeLargerAroundTable(m *Matrix) mapTable { // Can use goroute futrue
+func MakeLargerAroundTable(m *Matrix) mapTable { // Can use goroute futrue
 	var this = mapTable{}
 	for i, r := range *m {
 		for ii, _ := range r {
@@ -133,7 +89,11 @@ func findLargestPath(c coord, table mapTable) (int, []coord) {
 
 // Flow function
 func Flow(m Matrix) {
-	table := makeLargerAroundTable(&m)
+	time1 := time.Now()
+	table := MakeLargerAroundTable(&m)
+	time2 := time.Now()
+	Println(time2.Sub(time1))
+
 	resultVal := []int{}
 	resultPath := [][]coord{}
 	for i, _ := range table {
@@ -145,7 +105,7 @@ func Flow(m Matrix) {
 	Println(v)
 	pp := resultPath[maxInd]
 	Println(pp)
-	PrintMM(table)
+	//PrintMM(table)
 }
 
 /*

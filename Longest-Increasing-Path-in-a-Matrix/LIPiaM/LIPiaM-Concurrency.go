@@ -1,55 +1,11 @@
 package LIPiaM
 
 import (
-	"errors"
 	. "fmt"
+	"time"
 )
 
-// Define some types
-type Matrix [][]int
-
-type coord [2]int
-
-type aroundRe struct {
-	num       int // How many larger point around this point
-	selfCoord coord
-	coordL    []coord // Results coordinate
-	longestP  int     // The longest path number (included this point) for store the results have done before
-}
-
-type mapTable map[coord]*aroundRe // Use *aroudRe because cannot change the value in struct which in map
-
-func maxSlice(l []int) (int, int) { // Little useful function
-	max := l[0]
-	maxInd := 0
-	for i, value := range l {
-		if value > max {
-			max = value
-			maxInd = i
-		}
-	}
-	return maxInd, max
-}
-
-func PrintMM(m mapTable) { // Little function to print the *struct in map
-	for i, v := range m {
-		Print(i)
-		Print(":")
-		Println(*v)
-	}
-}
-
-func getVal(m *Matrix, c coord) (int, error) { // Get around point num
-	v := *m
-
-	if (c[0] < 0 || c[0] >= len(v)) || (c[1] >= len(v[0]) || c[1] < 0) {
-		return 0, errors.New("no value")
-	} else {
-		return v[c[0]][c[1]], nil
-	}
-}
-
-func lookforLargerAround(m *Matrix, c coord, aroundReChan chan aroundRe) {
+func lookforLargerAroundC(m *Matrix, c coord, aroundReChan chan aroundRe) {
 	this := aroundRe{selfCoord: c, longestP: -1}
 	num := 0
 	val, _ := getVal(m, c)
@@ -84,11 +40,11 @@ func lookforLargerAround(m *Matrix, c coord, aroundReChan chan aroundRe) {
 	aroundReChan <- this
 }
 
-func makeLargerAroundTable(table mapTable, around aroundRe) {
+func MakeLargerAroundTableC(table mapTable, around aroundRe) {
 	table[around.selfCoord] = &around
 }
 
-func findLargestPath(c coord, table mapTable) (int, []coord) {
+func findLargestPathC(c coord, table mapTable) (int, []coord) {
 	this := table[c]
 	reCoordList := []coord{this.selfCoord} // Struct-point can access struct directly.
 
@@ -106,7 +62,7 @@ func findLargestPath(c coord, table mapTable) (int, []coord) {
 	tempCoordList := [][]coord{}
 	tempResultInt := []int{}
 	for _, p := range this.coordL {
-		rr, cc := findLargestPath(p, table)
+		rr, cc := findLargestPathC(p, table)
 		tempResultInt = append(tempResultInt, rr)
 		tempCoordList = append(tempCoordList, cc)
 	}
@@ -127,28 +83,31 @@ func findLargestPath(c coord, table mapTable) (int, []coord) {
 func FlowC(m *Matrix) {
 	aroundReChan := make(chan aroundRe)
 
+	time1 := time.Now()
 	go func(m *Matrix) {
 		for i, r := range *m {
 			for ii, _ := range r {
 				c := coord{i, ii}
-				lookforLargerAround(m, c, aroundReChan)
+				lookforLargerAroundC(m, c, aroundReChan)
 			}
 		}
 		close(aroundReChan)
 	}(m)
+	time2 := time.Now()
+	Println(time2.Sub(time1))
 
 	table := mapTable{}
 
 	func(table mapTable, cc chan aroundRe) {
 		for arr := range cc {
-			makeLargerAroundTable(table, arr)
+			MakeLargerAroundTableC(table, arr)
 		}
 	}(table, aroundReChan)
 
 	resultVal := []int{}
 	resultPath := [][]coord{}
 	for i, _ := range table {
-		a, b := findLargestPath(i, table)
+		a, b := findLargestPathC(i, table)
 		resultVal = append(resultVal, a)
 		resultPath = append(resultPath, b)
 	}
@@ -157,7 +116,7 @@ func FlowC(m *Matrix) {
 	Println(v)
 	pp := resultPath[maxInd]
 	Println(pp)
-	PrintMM(table)
+	//PrintMM(table)
 }
 
 /*func main() {
