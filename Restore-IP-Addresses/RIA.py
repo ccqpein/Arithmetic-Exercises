@@ -8,5 +8,3 @@ def restoreIpAddresses(s):
             index = 0
             if len(ss) != 0:
                 index = len(ss) - i
-
-            if ss[index] <= 2:
