@@ -1,10 +1,18 @@
 testStr = "25525511135"
 
 
-def restoreIpAddresses(s):
-    strPool = ["", ]
-    for i in range(4):
-        for ss in strPool:
-            index = 0
-            if len(ss) != 0:
-                index = len(ss) - i
+class Solution(object):
+
+    def test(self, s):
+        print(s)
+
+    def restoreIpAddresses(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        self.test(s)
+
+if __name__ == "__main__":
+    a = Solution()
+    a.restoreIpAddresses(testStr)
