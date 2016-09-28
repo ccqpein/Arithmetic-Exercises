@@ -4,6 +4,7 @@
 (defvar *test4 "101023")
 
 (defun cut-ip (str)
+  "\"0000\" => ((\"0\" \"000\") (\"00\" \"00\") (\"000\" \"0\"))"
   (loop
      for i from 0 to (- (min (length str) 4) 2)
      collect (list (subseq str 0 (1+ i)) (subseq str (1+ i)))
@@ -15,22 +16,23 @@
         ((= (length (car (last strL))) 1)
          (list strL))
         (t
-         (loop for i in (cut-ip (car (last strL))) collect
-              (append (butlast strL) i)))))
+         (loop
+            for i in (cut-ip (car (last strL)))
+            collect (append (butlast strL) i)))))
 
 (defun all-less-255? (l)
   (loop
-     for i in l do
-       (if (> (parse-integer i) 255)
-           (return-from all-less-255? nil)))
+     for i in l
+     do (if (> (parse-integer i) 255)
+            (return-from all-less-255? nil)))
   t)
 
 (defun tell-zero-head? (l)
   (loop
-     for i in l do
-       (if (and (> (length i) 1)
-                (char= (elt i 0) #\0))
-           (return-from tell-zero-head? nil)))
+     for i in l
+     do (if (and (> (length i) 1)
+                 (char= (elt i 0) #\0))
+            (return-from tell-zero-head? nil)))
   t)
 
 (defun merge-ip (l)
