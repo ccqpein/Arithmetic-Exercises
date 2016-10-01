@@ -18,8 +18,12 @@ class Solution {
               [s[startIndex..<cutIndex],s[cutIndex..<endIndex]]
             )
         }
-        print(reStrList)
+        //print(reStrList)
         return reStrList
+    }
+
+    func nextCut(_ strL:[String]) -> [[String]] {
+        
     }
     
     func restoreIpAddresses(_ s: String) -> [String] {
