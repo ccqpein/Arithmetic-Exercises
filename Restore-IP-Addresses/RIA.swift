@@ -27,15 +27,20 @@ class Solution {
             return cutIp(strL.last!)
         }
 
-        if strL.last!.count == 1{
-            return Array<[String]>(strL)
+        var reStrList = [[String]]()
+        if strL.last!.characters.count == 1{
+            reStrList.append(strL)
+        }else {
+            for i in cutIp(strL.last!) {
+                var temp = strL.dropLast()
+                temp.append(contentsOf:i)
+                reStrList.append(
+                  Array(temp)
+                )
+            }
         }
 
-        var reStrList = [[String]]()
-        for i in cutIp(strL.last!) {
-            reStrList.append(
-              Array(strL.dropLast(),i))
-        }
+        return reStrList
     }
     
     func restoreIpAddresses(_ s:String) -> [String] {
@@ -45,4 +50,5 @@ class Solution {
 
 
 var a = Solution()
-a.nextCut(["0", "000"])
+var testS = ["0", "000"]
+print(a.nextCut(testS))
