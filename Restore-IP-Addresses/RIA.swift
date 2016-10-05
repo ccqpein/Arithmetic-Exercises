@@ -33,7 +33,7 @@ class Solution {
         }else {
             for i in cutIp(strL.last!) {
                 var temp = strL.dropLast()
-                temp.append(contentsOf:i)
+                temp.append(contentsOf:i) // temp is a slice
                 reStrList.append(
                   Array(temp)
                 )
@@ -42,13 +42,63 @@ class Solution {
 
         return reStrList
     }
+
+    func mergeIp(_ l:[String]) -> String{
+        var str = l.reduce("", {$0 + "." + $1})
+        str.remove(at:str.startIndex)
+        return str
+    }
+
+    func headZero (_ sL:[String]) -> Bool{
+        for s in sL {
+            if (s.characters[s.startIndex] == "0"
+                  && s.characters.count > 1) {
+                return false
+            }
+        }
+        return true
+    }
+    
+    func less255(_ sL:[String]) -> Bool{
+        for s in sL {
+            if Int(s)! > 255{
+                return false
+            }
+        }
+        return true
+    }
+    
     
     func restoreIpAddresses(_ s:String) -> [String] {
-        return ["a"]
+        var tempStr = [[s]]
+
+        for _ in 1...3 {
+            var temp = [[String]]()
+            
+            for l in tempStr {
+                temp.append(contentsOf: self.nextCut(l))
+            }
+            tempStr = temp
+        }
+
+        var reStr:[String] = []
+        for l in tempStr {
+            if (l.count == 4 &&
+                  self.less255(l) &&
+                  self.headZero(l)) {
+                reStr.append(self.mergeIp(l))
+            }
+        }
+        
+        //print(tempStr)
+        return reStr
     }
 }
 
 
 var a = Solution()
-var testS = ["0", "000"]
-print(a.nextCut(testS))
+
+print(a.restoreIpAddresses(testStr))
+print(a.restoreIpAddresses(testStr2))
+print(a.restoreIpAddresses(testStr3))
+print(a.restoreIpAddresses(testStr4))
