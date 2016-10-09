@@ -1,5 +1,6 @@
 (defvar test1 "hello world")
 (defvar test2 "a ")
+(defvar test3 "a")
 
 (defun delete-ending-space (str)
   (do ((ind (1- (length str)) (1- ind)))
