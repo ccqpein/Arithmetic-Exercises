@@ -16,6 +16,7 @@ def Entropy(l):  # l is the list included times of each variable
 
 
 class Leaf():
+    leaf = {}
 
     def __init__(self, **kwargs):
         self.leaf = kwargs
@@ -45,13 +46,13 @@ def main():
 
     a = Node("outlook?")
     b1 = Node("humidity?")
-    b2 = Leaf("play": 4, "noPlay": 0)
+    b2 = Leaf("play"=4, "noPlay"=0)
     b3 = Node("windy?")
 
-    c1 = Leaf("play": 2, "noPlay": 0)
-    c2 = Leaf("play": 0, "noPlay": 3)
-    c3 = Leaf("play": 0, "noPlay": 2)
-    c4 = Leaf("play": 3, "noPlay": 0)
+    c1 = Leaf("play"=2, "noPlay"=0)
+    c2 = Leaf("play"=0, "noPlay"=3)
+    c3 = Leaf("play"=0, "noPlay"=2)
+    c4 = Leaf("play"=3, "noPlay"=0)
 
     a.addNode("sunny", b1)
     a.addNode("rain", b3)
