@@ -25,13 +25,14 @@ class Leaf():
 
 class Node():
 
-    def __init__(self, tag):
+    def __init__(self, tag, thisleaf):
         self.this = tag
         self.childList = []
         self.childNode = {}
         self.leaves = {}
+        self.leaves["thisLeaf"] = thisleaf
 
-    def addNode(self, chileWay, childNode):  # might be changed futrue
+    def addNode(self, chileWay, childNode):
         self.childNode[chileWay] = childNode
         self.childList.append(chileWay)
 
@@ -40,15 +41,28 @@ class Node():
         self.childList.append(chileWay)
 
     def search(self, *attributions):
-        pass
+        nextPoint = self
+        for a in attributions:
+            print(nextPoint.this)
+            print(nextPoint.leaves["thisLeaf"].leaf)
+            print(a)
+            print("|")
+            print("V")
+            try:
+                nextPoint = self.childNode[a]
+            except:
+                nextPoint = self.leaves[a]
+                break
+
+        print(nextPoint.leaf)
 
 
 def main():
 
-    a = Node("outlook?")
-    b1 = Node("humidity?")
+    a = Node("outlook?", Leaf({"play": 9, "noPlay": 5}))
+    b1 = Node("humidity?", Leaf({"play": 2, "noPlay": 3}))
     b2 = Leaf({"play": 4, "noPlay": 0})
-    b3 = Node("windy?")
+    b3 = Node("windy?", Leaf({"play": 3, "noPlay": 2}))
 
     c1 = Leaf({"play": 2, "noPlay": 0})
     c2 = Leaf({"play": 0, "noPlay": 3})
@@ -65,7 +79,7 @@ def main():
     b3.addLeaf("true", c3)
     b3.addLeaf("false", c4)
 
-    print(c1.leaf)
+    print(a.search("sunny", ">70"))
 
 
 if __name__ == "__main__":
