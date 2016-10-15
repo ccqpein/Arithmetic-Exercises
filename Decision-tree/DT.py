@@ -68,7 +68,7 @@ def main():
     # c4 = Leaf({"play": 3, "noPlay": 0})
     #
     # a.addNode("sunny", b1)
-    a.addNode("rain", b3)
+    a.addNode("rain", b3)  # this change a.leaves, I do not know why
     # a.addLeaf("overcast", b2)
     #
     # b1.addLeaf("<=70", c1)
