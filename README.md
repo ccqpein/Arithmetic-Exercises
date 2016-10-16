@@ -10,9 +10,12 @@ Search arithmetic questions from the Web, code them using different languages fo
 + Go
 + Common Lisp
 + Swift
++ Haskell
 
 ## Source
 
 + [Leetcode](leetcode.com)
 + ~~ANSI Common Lisp~~
 + Other sources
+
+
