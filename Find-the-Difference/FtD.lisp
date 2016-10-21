@@ -1,8 +1,9 @@
-(defmacro hash+1 (key hashT)
+(defun hash+1 (key hashT)
   "plus 1 if key-vaule existed, else new let key-value be 1"
-  `(if (gethash ,key ,hashT)
-      (incf (gethash ,key ,hashT))
-      (setf (gethash ,key ,hashT) 1)))
+  (if (gethash key hashT)
+      (incf (gethash key hashT))
+      (setf (gethash key hashT) 1)))
+
 
 (defun make-ftd-hash (s)
   (let ((sh (make-hash-table)))
