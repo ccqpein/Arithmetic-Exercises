@@ -1,5 +1,8 @@
 import qualified Data.Map.Lazy as M
 
---hashAdd1 :: k -> M.Map -> M.Map
---hashAdd1 k m
---  | member k m =
+mm = M.empty
+
+hashAdd1 :: (Ord k, Num a) => k -> M.Map k a -> M.Map k a
+hashAdd1 k m
+  | M.member k m = M.insertWith (+) k 1 m
+  | otherwise = M.insert k 1 m
