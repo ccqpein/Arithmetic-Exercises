@@ -1,4 +1,5 @@
 type PlayList = [Int]
+
 data Leaf = Leaf {tag      :: String
                  ,playList :: PlayList
                  } deriving (Ord, Eq, Show, Read)
@@ -20,3 +21,4 @@ b3 = DTree rain [(DTree windy [])
                 ,(DTree no_windy [])]
 
 a1 = DTree root [b1,b2,b3]
+
