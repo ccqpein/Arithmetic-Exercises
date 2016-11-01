@@ -1,7 +1,10 @@
-factorial' :: (Enum a, Eq a, Num a, Fractional a) => a -> a
-factorial' n = product [1..n]
+permutations' :: (Fractional a, Enum a, Num a) => a -> a -> a
+permutations' a b = let aa = a-b+1 in
+  (product [aa..a])/ (product [1..b])
 
-permutations' :: (Enum a, Eq a, Num a, Fractional a) => a -> a -> a
-permutations' a b = (factorial' a) / ((factorial' b) * (factorial' (a-b)))
+genList :: (Fractional a, Enum a, Num a, Integral a) => a -> [a]
+genList a = [1..(div a 2)]
 
-
+climbS :: (Fractional a, Enum a, Num a, Integral a) => a -> a
+climbS a = let llist = (genList a) in
+  sum [permutations' a n | n <- llist]
