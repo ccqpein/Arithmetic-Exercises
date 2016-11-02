@@ -7,3 +7,15 @@
         (/ result (factorial n))
         result)))
 
+(defun climbS (n)
+  (let ((result 0))
+    (do* ((num2 (floor n 2))
+          (2Stair num2 (1- 2Stair))
+          (1Stair (- n (* 2 2Stair))
+                  (- n (* 2 2Stair)))
+          (numSet (+ 2Stair 1Stair)
+                  (+ 2Stair 1Stair)))
+         ((= 2Stair 0) (return-from climbS (+ result 1)))
+      (print 2Stair)
+      (setf result
+            (+ result (factorial numSet 2Stair :c t))))))
