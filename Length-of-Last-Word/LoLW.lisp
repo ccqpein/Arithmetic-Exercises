@@ -6,8 +6,8 @@
   (do ((ind (1- (length str)) (1- ind)))
       ((or (= -1 ind)
            (char/= #\  (elt str ind)))
-       (subseq str 0 (1+ ind))))
-  )
+       (subseq str 0 (1+ ind)))
+    ))
 
 (defun lolw (str)
   (let* ((sstr (delete-ending-space str))
