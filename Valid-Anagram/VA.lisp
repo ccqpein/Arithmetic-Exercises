@@ -1,8 +1,8 @@
 (defun isAnagram (s tt)
   (let ((ss (coerce s 'list))
         (ttt (reverse (coerce tt 'list))))
-    (print ss)
-    (print ttt)
+    ;(print ss)
+    ;(print ttt)
     (return-from isAnagram (listpp ss ttt))))
 
 (defun listpp (list1 list2)
