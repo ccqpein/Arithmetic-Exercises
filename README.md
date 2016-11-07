@@ -17,5 +17,6 @@ Search arithmetic questions from the Web, code them using different languages fo
 + [Leetcode](leetcode.com)
 + ~~ANSI Common Lisp~~
 + Other sources
++ encrypt algorithm
 
 
