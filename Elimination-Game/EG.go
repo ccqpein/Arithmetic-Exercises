@@ -19,7 +19,6 @@ func lastRemaining(n int) int {
 			}
 		}
 		fmt.Println(tempL)
-		//fmt.Println(len(tempL))
 		if len(tempL) == 1 {
 			l = tempL
 			break

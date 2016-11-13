@@ -5,7 +5,6 @@
 (defun last-remaining (n)
   (let ((l (loop for i from 1 to n collect i)))
     (labels ((temp (ll)
-               ;(print ll)
                (if (/= (length ll) 1)
                    (temp (reverse (filter-sequence ll)))
                    (car ll))))
