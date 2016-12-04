@@ -10,3 +10,11 @@
     ))
 
 
+(defun soe (n)
+  (let ((nL (loop for i from 1 to n collect i))
+        (endNum (multiple-value-bind (a) (ceiling (my-sqrt n)) a)))
+    (loop for i from 2 to endNum
+       do (delete-if (lambda (x)
+                       (and (/= x i) (= (mod x i) 0)))
+                     nL))
+    (cdr nL)))
