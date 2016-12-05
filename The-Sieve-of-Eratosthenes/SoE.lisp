@@ -1,4 +1,3 @@
-
 ;; this code come from ../Sqrt-x
 (defun my-sqrt (x)
   (cond ((= x 1) (return-from my-sqrt 1))
