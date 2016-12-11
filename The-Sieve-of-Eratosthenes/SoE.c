@@ -2,49 +2,29 @@
 #include <math.h>
 #include <stdlib.h>
 
+int judge (int n, int endNum)
+{ // if is,return n; if not, return 0;
+  for (int i = 2; i <= endNum; i++){
+    if ((n%i == 0) && (n != i)){
+      return 0;
+    }else{
+      continue;
+    }
+  }
+  return n;
+}
+
 int main ()
 {
-  int tttnum = 50;
-  int nL[tttnum];
+  int n = 50;
+  int endNum = (int)(ceil(sqrt((double)n)));
 
-  for (int i = 1; i<= tttnum; i++) {
-    nL[i-1] = i;
-  }
-
-  for (int i = 0; i < sizeof(nL)/sizeof(nL[0]); i++){
-    printf("%d ", nL[i]);
-  }
-  printf("\n");
-
-  int endNum = (int)(ceil(sqrt((double)tttnum)));
-  int LSize = tttnum;
-
-  // printf("%d,%d \n",endNum,LSize); //right
-
-  // have problem, I think it is array symbol scope issues
-  for (int i = 2;i <= endNum; i++){
-    int tempL[LSize];
-    double d = (double) i;
-    int num  = 0;
-    
-    for (int ii = 0; ii < LSize; ii++){
-      if ((modf(((double) nL[ii]), &d) != 0) || (nL[ii] == i)){
-        tempL[num] = nL[ii];
-        num++;
-        }
+  for (int i = 2; i <= n; i++){
+    if (judge(i,endNum) != 0){
+      printf("%d ",i);
+    }else{
+      continue;
     }
-    *nL = *tempL;
-
-    for (int i = 0; i < sizeof(nL)/sizeof(nL[0]); i++){
-      printf("%d ", nL[i]);
-    }
-    printf("\n");    
-
-    LSize = num;
   }
-  
-  for (int i = 0; i < sizeof(nL)/sizeof(nL[0]); i++){
-    printf("%d ", nL[i]);
-  }
-  printf("\n");
 }
+
