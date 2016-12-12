@@ -1,0 +1,2 @@
+SN :: [Int] -> [Int]
+map
