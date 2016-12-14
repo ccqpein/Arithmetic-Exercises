@@ -1,5 +1,9 @@
-import qualified Data.Map.Lazy as Map
+import qualified Data.Map.Lazy as M
 
-makeTable :: [Int] -> HashMap Int Int
-makeTable (x:xs)
-  | 
+let hs = M.empty
+
+makeTable :: Int -> M.Map Int Int -> M.Map Int Int
+makeTable a hs
+  | M.member a hs = M.update a ((1+) $ lookup a hs)
+  | otherwise = M.insert a 1 hs
+
