@@ -13,6 +13,7 @@ class Solution(object):
         :rtype: int
         """
         maxT = 0
+        result = 0
         try:
             minT = prices[0]
             testV = prices[1]
@@ -25,7 +26,7 @@ class Solution(object):
                 minT = i
                 print("now, min is {0}".format(i))
             else:
-                if i - minT > maxT - minT:
+                if i - minT > result:
                     maxT = i
                     print("now, max is {0}".format(i))
                     result = maxT - minT
