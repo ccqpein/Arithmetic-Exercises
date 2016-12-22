@@ -11,8 +11,17 @@ func maxProfit(_ prices:[Int]) -> Int {
     var minT = prices[0]
 
     for i in prices {
-        switch i - minT {
-            
+        switch (i - minT) {
+        case let a where a < 0:
+            minT = i
+        case let a where a > result:
+            maxT = i
+            result = maxT - minT
+        default:
+            continue
         } 
     }
+
+    result = (result<0) ? 0 : result
+    return result
 }
