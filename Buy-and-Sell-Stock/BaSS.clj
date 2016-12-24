@@ -5,36 +5,18 @@
 (def *test5 '(2 4 1))
 
 (defn max-profit [prices]
-  (let [maxv 0
-        result 0
-        minv (first prices)]
-    (doseq [i prices]
-      (print i)
-      (cond
-        (< (- i minv) 0) (def minv i)
-        (> (- i minv) result) (do (def maxv i)
-                                  (def result (- maxv minv))
-                                  (print result)))
-      (print maxv minv))
-    (def result (if (< result 0) 0 result))
-    result))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  (def ^:dynamic maxv 0)
+  (def ^:dynamic minv (first prices))
+  (def ^:dynamic result 0)
+  (def restl (pop prices))
+  (doseq [i restl]
+    (println i)
+    (cond
+      (< i minv) (set! minv i)
+      (> (- i minv) result) (do (set! maxv i)
+                                (set! result (- maxv minv))
+                                (print "hi" result)))
+    (print "{" maxv minv "}"))
+  (set! result (if (< result 0) 0 result))
+  result)
 
