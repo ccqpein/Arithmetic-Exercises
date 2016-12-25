@@ -7,11 +7,14 @@ public class ListNode {
     }
 }
 
+// test cases
 var a = ListNode(2)
 var b = ListNode(1)
 var c = ListNode(3)
 a.next = b
 c.next = a
+
+// code below
 class Solution {
     func insertionSortList(_ head: ListNode?) -> ListNode? {
         var thisNode = head
