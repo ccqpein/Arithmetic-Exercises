@@ -15,3 +15,4 @@ insertionSList a (x:xs) = insertionSList (insertList a x) xs where
     | a < x = a:x:xs
     | a >= x = x:(insertList xs a)
 
+-- test: insertionSList [] [2,3,1]
