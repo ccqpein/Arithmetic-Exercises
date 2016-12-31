@@ -15,6 +15,13 @@
              finally (setf rowNum (1+ rowNum))))
     (delete-duplicates zRow)
     (delete-duplicates zCol)
-    (print zRow) (print zCol)
-    
-    ))
+    (loop with colNum = (length (car m))
+       for r from 0 to (1- (length m))
+       for row in m
+       collect (if (find r zRow)
+                  (make-list colNum :initial-element 0)
+                  (loop for c from 0 to (1- colNum)
+                     for col in row
+                     collect (if (find c zCol)
+                                0
+                                col))))))
