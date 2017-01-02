@@ -25,5 +25,3 @@
     (loop for i from 2 to 4 do
          (if (member n (gene-table i basicSquaresTable))
              (return-from ps i)))))
-
-
