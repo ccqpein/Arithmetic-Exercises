@@ -22,18 +22,4 @@ class Solution {
         return result
     }
 
-    func diffHam2(_ n1:Int, _ n2:Int) -> Int{
-        return abs(ham(n1)-ham(n2))
-    }
-    
-    func ham(_ num:Int) -> Int {
-        var oneSet = 1
-        var n = num
-        while(n>1) {
-            oneSet += n%2
-            n = n/2
-            print(n)
-        }
-        return oneSet
-    }
 }

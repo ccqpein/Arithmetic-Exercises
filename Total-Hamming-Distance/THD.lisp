@@ -1,0 +1,18 @@
+(defun total-ham-dist (nl)
+  (loop with result = 0
+     for i from 0 to (1- (length nl))
+     do (loop for ii from (1+ i) to (1- (length nl))
+             do (setf result (+ result (diff-hem (nth i nl) (nth ii nl)))))
+     finally (return result)))
+
+(defun diff-hem (x y)
+  (do ((a x (/ a 2))
+       (b y (/ b 2))
+       (result 0))
+      ((and (= 0 a) (= 0 b)) result)
+    (let ((moda (mod a 2))
+          (modb (mod b 2)))
+      (if (/= moda modb)
+          (setf result (1+ result)))
+      (setf a (- a moda)
+            b (- b modb)))))
