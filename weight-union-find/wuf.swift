@@ -1,14 +1,13 @@
 class Node{
     var value:Int
     var node:Node?
+    var root:Node?
 
     init(_ initvalue:Int){
         self.value = initvalue
-        self.node = nil
-    }
-
-    func addNode(_ otherNode:Node) {
-        self.node = otherNode
     }
 }
 
+func connected(_ a:Node, _ b:Node)  -> [Int] {
+    
+}
