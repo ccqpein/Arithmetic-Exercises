@@ -47,6 +47,9 @@ func connected(_ a:Node, _ b:Node){
     }
 }
 
+func connected2(){ // function connected might be improved
+}
+
 // test cases
 
 var n0 = Node(0)
