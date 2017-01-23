@@ -47,7 +47,21 @@ func connected(_ a:Node, _ b:Node){
     }
 }
 
-func connected2(){ // function connected might be improved
+func connected2(_ a:Node, _ b:Node){ // function connected might be improved
+    var aroot = findRoot(a)
+    var broot = findRoot(b)
+
+    if aroot.numberOfLevel > broot.numberOfLevel {
+        aroot.node.append(broot)
+        broot.root = aroot
+    }else if aroot.numberOfLevel == broot.numberOfLevel{
+        aroot.node.append(broot)
+        broot.root = aroot
+        aroot.numberOfLevel += 1
+    }else{
+        broot.node.append(aroot)
+        aroot.root = broot
+    }
 }
 
 // test cases
@@ -76,4 +90,28 @@ connected(n6,n2)
 
 connected(n4,n0)
 
-print(n0,n1,n2,n3,n4,n5,n6,n7,n8,n9)
+//print(n0,n1,n2,n3,n4,n5,n6,n7,n8,n9)
+print(n6)
+
+var n02 = Node(0)
+var n12 = Node(1)
+var n22 = Node(2)
+var n32 = Node(3)
+var n42 = Node(4)
+var n52 = Node(5)
+var n62 = Node(6)
+var n72 = Node(7)
+var n82 = Node(8)
+var n92 = Node(9)
+
+connected(n42,n32)
+connected(n42,n82)
+connected(n82,n92)
+connected(n22,n12)
+connected(n72,n12)
+connected(n62,n02)
+connected(n62,n52)
+connected(n62,n22)
+connected(n42,n02)
+
+print(n62)
