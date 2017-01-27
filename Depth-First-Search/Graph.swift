@@ -1,17 +1,19 @@
 protocol Graph{
     associatedtype ItemType:Hashable
-    var pointSet:ItemType {set get}
-    var pathSet:Set<ItemType> {set get}
-    init (V points:ItemType, E paths:Set<ItemType>)
+    var pointSet:Set<ItemType> {set get}
+
+    associatedtype PathType 
+    var pathSet:PathType {set get}
+    init (V points:Set<ItemType>, E paths:PathType)
 }
 
-class UndirGraph:Graph {
-    typealias ItemType = Set<Int>
+class UndirGraph<U:Hashable>:Graph{
+    var pointSet:Set<U>
 
-    var pointSet:Set<Int>
-    var pathSet:Set<Set<Int>>
+    typealias PathType = Set<Set<U>>
+    var pathSet:PathType
 
-    required init(V points:Set<Int>, E paths:Set<Set<Int>>){
+    required init(V points:Set<U>, E paths:PathType){
         self.pointSet = points
         self.pathSet = paths
     }
