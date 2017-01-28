@@ -47,4 +47,10 @@ class UndirGraph<U:Hashable>:Graph{
     }
 }
 
-//func BFS
+var a = UndirGraph(V:Set([1,2,3,4,5]), E:[1:Set([2,5]),
+                                          2:Set([1,3,4,5]),
+                                          3:Set([2,4]),
+                                          4:Set([2,3,5]),
+                                          5:Set([1,2,4])])
+
+// func BFS
