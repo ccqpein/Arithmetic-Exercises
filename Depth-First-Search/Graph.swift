@@ -24,6 +24,14 @@ class UndirGraph<U:Hashable>:Graph{
         }
     }
 
+    init(E paths:PathType) {
+        self.pathDic = paths
+        self.pointSet = []
+        for (k, p) in paths {
+            self.pointSet.insert(k)
+        }
+    }
+
     func addConnect(from s:U, _ pathSet:Set<U>) {
         guard self.pointSet.contains(s) else {
             print("\(s) is not the node in graph");return
@@ -47,10 +55,18 @@ class UndirGraph<U:Hashable>:Graph{
     }
 }
 
-var a = UndirGraph(V:Set([1,2,3,4,5]), E:[1:Set([2,5]),
-                                          2:Set([1,3,4,5]),
-                                          3:Set([2,4]),
-                                          4:Set([2,3,5]),
-                                          5:Set([1,2,4])])
+var g = UndirGraph(V:Set([1,2,3,4,5]),
+                   E:[1:Set([2,5]),
+                      2:Set([1,3,4,5]),
+                      3:Set([2,4]),
+                      4:Set([2,3,5]),
+                      5:Set([1,2,4])])
 
-// func BFS
+//var gg = UndirGraph(E:[1:Set([2,5]),
+//                       2:Set([1,3,4,5]),
+//                       3:Set([2,4]),
+//                       4:Set([2,3,5]),
+//                       5:Set([1,2,4])]) 
+
+
+//func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {}
