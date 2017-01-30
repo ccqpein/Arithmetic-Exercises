@@ -69,4 +69,22 @@ var g = UndirGraph(V:Set([1,2,3,4,5]),
 //                       5:Set([1,2,4])]) 
 
 
-//func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {}
+func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
+    var doneNode:Set<T> = [s]
+//    var thisNode:Set<T> = []
+    var nextNodes:Set<T> = [s]
+
+    while(!nextNodes.isEmpty) {
+        var tempNext:Set<T> = []
+        let thisNode = nextNodes
+        doneNode = doneNode.union(thisNode)
+        
+        for n in thisNode{
+            print("this node is \(n)")
+            tempNext = tempNext.union(g.pathDic[n]!.subtracting(doneNode))
+        }
+        
+        print(tempNext)
+        nextNodes = tempNext
+    }
+}
