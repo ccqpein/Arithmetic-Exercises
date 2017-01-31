@@ -55,6 +55,9 @@ class UndirGraph<U:Hashable>:Graph{
     }
 }
 
+
+//class DirGraph
+
 var g = UndirGraph(V:Set([1,2,3,4,5]),
                    E:[1:Set([2,5]),
                       2:Set([1,3,4,5]),
@@ -68,10 +71,12 @@ var g = UndirGraph(V:Set([1,2,3,4,5]),
 //                       4:Set([2,3,5]),
 //                       5:Set([1,2,4])]) 
 
+var ga = UndirGraph(V:Set(["s","a","b","c","d"]),
+                    E:["s":Set(["a","b"]),
+                       "a":Set(["c","d","s"])])
 
 func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
     var doneNode:Set<T> = [s]
-//    var thisNode:Set<T> = []
     var nextNodes:Set<T> = [s]
 
     while(!nextNodes.isEmpty) {
@@ -83,8 +88,15 @@ func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
             print("this node is \(n)")
             tempNext = tempNext.union(g.pathDic[n]!.subtracting(doneNode))
         }
-        
-        print(tempNext)
         nextNodes = tempNext
+    }
+}
+
+func DFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
+    var stack = [s]
+    var doneNode:Set<T> = [s]
+
+    while(!g.pointSet.subtracting(doneNode).isEmpty){
+        
     }
 }
