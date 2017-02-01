@@ -65,6 +65,7 @@ var g = UndirGraph(V:Set([1,2,3,4,5]),
                       4:Set([2,3,5]),
                       5:Set([1,2,4])])
 
+// Second way to create the graph
 //var gg = UndirGraph(E:[1:Set([2,5]),
 //                       2:Set([1,3,4,5]),
 //                       3:Set([2,4]),
@@ -94,9 +95,15 @@ func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
 
 func DFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
     var stack = [s]
-    var doneNode:Set<T> = [s]
+    var doneNode:Set<T> = []
 
-    while(!g.pointSet.subtracting(doneNode).isEmpty){
-        
+    func innerDFS(g:UndirGraph<T>, s:T){
+        var root = s
+        var nodes = g.pathDic[s]
+        if !nodes!.subtracting(doneNode).isEmpty {
+            
+        }else{
+            
+        }
     }
 }
