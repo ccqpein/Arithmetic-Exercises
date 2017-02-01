@@ -74,7 +74,9 @@ var g = UndirGraph(V:Set([1,2,3,4,5]),
 
 var ga = UndirGraph(V:Set(["s","a","b","c","d"]),
                     E:["s":Set(["a","b"]),
-                       "a":Set(["c","d","s"])])
+                       "a":Set(["c","d","s"]),
+                       "d":Set(["a"]),
+                       "c":Set(["a"])])
 
 func BFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
     var doneNode:Set<T> = [s]
@@ -98,12 +100,23 @@ func DFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
     var doneNode:Set<T> = []
 
     func innerDFS(g:UndirGraph<T>, s:T){
+        print(s)
+        guard !stack.isEmpty else {return}
         var root = s
+        doneNode.insert(s)
         var nodes = g.pathDic[s]
-        if !nodes!.subtracting(doneNode).isEmpty {
-            
+
+        if nodes!.subtracting(doneNode).isEmpty {
+            stack.removeLast()
         }else{
-            
+            var next = nodes!.subtracting(doneNode).first!
+            stack.append(next)
+        }
+        if !stack.isEmpty{
+            innerDFS(g:g, s:stack.last!)
         }
     }
+    innerDFS(g:g,s:s)
 }
+
+// DFS(graph:ga, start:"s")
