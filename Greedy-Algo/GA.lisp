@@ -12,3 +12,12 @@
                 result (append result (list this)))
           ;(print this)
           ))))
+
+(defun GA2 (data)
+  (let ((sortedData (sort data #'< :key #'cadr)))
+    (reduce (lambda (a b)
+              (if (>= (car b) (cadar (last a)))
+                  (append a (list b))
+                  a))
+            (cdr sortedData)
+            :initial-value (list (car sortedData)))))
