@@ -24,58 +24,6 @@ class Graph():
                 self.pathDic[i] = []
 
 
-# test
-test1set = ["u", "v", "w", "x", "y", "z", ]
-test1path = {"u": ["x", "v"],
-             "v": ["y"],
-             "w": ["y", "z"],
-             "x": ["v"],
-             "y": ["x"],
-             "z": ["z"],
-             }
-
-# test1 = Graph(test1set, test1path)
-
-
-# q1 data
-q1set = ["s", "v", "w", "q", "t", "x", "z", "y", "r", "u", ]
-q1path = {"s": ["v"],
-          "v": ["w"],
-          "w": ["s"],
-          "q": ["s", "w", "t"],
-          "t": ["x", "y"],
-          "x": ["z"],
-          "z": ["x"],
-          "y": ["q"],
-          "r": ["u", "y"],
-          "u": ["y"],
-          }
-
-# q1 = Graph(q1set, q1path)
-
-
-# q2 data
-q2set = ["m", "n", "q", "o", "p", "r", "s",
-         "t", "u", "v", "w", "x", "y", "z", ]
-q2path = {"m": ["x", "q", "r", ],
-          "n": ["o", "q", "u", ],
-          "q": ["t", ],
-          "o": ["r", "s", "v", ],
-          "p": ["o", "s", "z", ],
-          "r": ["u", "y", ],
-          "s": ["r", ],
-          "t": [],
-          "u": ["t", ],
-          "v": ["x", "w", ],
-          "w": ["z", ],
-          "x": [],
-          "y": ["v", ],
-          "z": [],
-          }
-
-# q2 = Graph(q2set,q2path)
-
-
 def DFS(g):
     time = 0
     greyMark = set()  # grey set for storing all points in recursive
@@ -134,6 +82,49 @@ def topologicalSort(g):
     return "done"
 
 if __name__ == "__main__":
+    # test
+    test1set = ["u", "v", "w", "x", "y", "z", ]
+    test1path = {"u": ["x", "v"],
+                 "v": ["y"],
+                 "w": ["y", "z"],
+                 "x": ["v"],
+                 "y": ["x"],
+                 "z": ["z"],
+                 }
+
+    # q1 data
+    q1set = ["s", "v", "w", "q", "t", "x", "z", "y", "r", "u", ]
+    q1path = {"s": ["v"],
+              "v": ["w"],
+              "w": ["s"],
+              "q": ["s", "w", "t"],
+              "t": ["x", "y"],
+              "x": ["z"],
+              "z": ["x"],
+              "y": ["q"],
+              "r": ["u", "y"],
+              "u": ["y"],
+              }
+
+    # q2 data
+    q2set = ["m", "n", "q", "o", "p", "r", "s",
+             "t", "u", "v", "w", "x", "y", "z", ]
+    q2path = {"m": ["x", "q", "r", ],
+              "n": ["o", "q", "u", ],
+              "q": ["t", ],
+              "o": ["r", "s", "v", ],
+              "p": ["o", "s", "z", ],
+              "r": ["u", "y", ],
+              "s": ["r", ],
+              "t": [],
+              "u": ["t", ],
+              "v": ["x", "w", ],
+              "w": ["z", ],
+              "x": [],
+              "y": ["v", ],
+              "z": [],
+              }
+
     # test1 = Graph(test1set, test1path)
     q1 = Graph(q1set, q1path)
     q2 = Graph(q2set, q2path)
