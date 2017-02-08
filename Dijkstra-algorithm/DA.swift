@@ -21,7 +21,7 @@ struct PathResult {
     var pathList:Array<Int>
 }
 
-enum GetValError:ErrorProtocol{
+enum GetValError:Error{
 case noVal
 }
 
