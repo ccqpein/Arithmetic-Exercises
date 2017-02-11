@@ -35,16 +35,22 @@ class PathGraph():
 
 def Dijkstra(g, start):
     tempSet = set(g.pointSet)
-    tempSet.remove(start)
 
     while len(tempSet) != 0:
-        for v in sorted(a.pathLen[start]["val"], key=lambda x: x[1]):
+        for v in sorted(a.pathLen[start]["val"].items(), key=lambda x: x[1]):
             if v[0] in tempSet:
                 thisPoint = v[0]
                 break
-        for (k, v) in g.pathLen[thisPoint]["val"].items:
+        for (k, v) in g.pathLen[thisPoint]["val"].items():
+            sumValue = g.path(start, thisPoint) + g.path(thisPoint, k)
+            try:
+                if sumValue < g.path(start, k):
+                    g.pathLen[start]["val"][k] = sumValue
+            except:
+                g.add_path(start, k, sumValue)
+        tempSet.remove(thisPoint)
 
-            # if __name__ == "__main__":
+# if __name__ == "__main__":
 qset = ["s", "t", "y", "x", "z"]
 a = PathGraph(qset)
 
