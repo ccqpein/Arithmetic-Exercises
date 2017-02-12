@@ -11,7 +11,10 @@ class PathGraph():
         self.pathLen[start]["val"][to] = length
         self.pathLen[start]["shortest"] = False
 
-    def path(self, start, to):
+    def path(self, start, to=None):
+        if not to:
+            return self.pathLen[start]["val"]
+
         try:
             return self.pathLen[start]["val"][to]
         except:
@@ -37,15 +40,15 @@ def Dijkstra(g, start):
     tempSet = set(g.pointSet)
 
     while len(tempSet) != 0:
-        for v in sorted(a.pathLen[start]["val"].items(), key=lambda x: x[1]):
+        for v in sorted(a.path(start).items(), key=lambda x: x[1]):
             if v[0] in tempSet:
                 thisPoint = v[0]
                 break
-        for (k, v) in g.pathLen[thisPoint]["val"].items():
+        for (k, v) in g.path(thisPoint).items():
             sumValue = g.path(start, thisPoint) + g.path(thisPoint, k)
             try:
                 if sumValue < g.path(start, k):
-                    g.pathLen[start]["val"][k] = sumValue
+                    g.path(start)[k] = sumValue
             except:
                 g.add_path(start, k, sumValue)
         tempSet.remove(thisPoint)
