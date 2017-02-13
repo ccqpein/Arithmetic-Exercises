@@ -11,12 +11,13 @@ Search arithmetic questions from the Web, code them using different languages fo
 + Common Lisp
 + Swift
 + Haskell
++ Clojure
 
 ## Source
 
 + [Leetcode](leetcode.com)
-+ ~~ANSI Common Lisp~~
++ Algorithm class
 + Other sources
-+ encrypt algorithm
+
 
 
