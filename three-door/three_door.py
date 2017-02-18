@@ -34,6 +34,6 @@ if __name__ == "__main__":
 switch win: {1} {2:.0%}
 stay: {3}
 stay_win:{4} {5:.0%}'''
-          .format(switch_time, switch_win, switch_win / 100000.0,
-                  stay_time, stay_win, stay_win / 100000.0)
+          .format(switch_time, switch_win, switch_win / switch_time,
+                  stay_time, stay_win, stay_win / stay_time)
           )
