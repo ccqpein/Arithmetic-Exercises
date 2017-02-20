@@ -77,6 +77,18 @@ class Heap<T:Hashable & Comparable> {
         
         self.maxHeapify(nextIndex)
     }
+
 }
 
 var a = Heap([16,4,10,14,7,9,3,2,8,1])
+
+func buildMaxHeap<T:Hashable & Comparable>(_ h:Heap<T>) -> Heap<T>{
+    let len = h.value.count
+
+    for i in (0..<len).reversed() {
+        let parentI = h.parent(i).0
+        h.maxHeapify(parentI)
+    }
+
+    return h
+}
