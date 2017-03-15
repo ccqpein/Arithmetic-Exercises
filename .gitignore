@@ -3,3 +3,6 @@
 .DS*
 TAGS
 a.out
+GPATH
+GRTAGS
+GTAGS
