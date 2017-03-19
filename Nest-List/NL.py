@@ -9,6 +9,8 @@ def NL(lis):
     for l in lis:
         if type(l) != list:
             tempList.append(l)
+        elif l == []:
+            pass
         else:
             tempList += NL(l)
     return tempList
