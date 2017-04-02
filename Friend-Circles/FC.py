@@ -19,23 +19,20 @@ class Solution(object):
         """
         stuNum = len(M)
         stuInd = {i for i in range(stuNum)}
-        storeDone = set()
         circle = 0
 
         # print(stuInd, stuNum)
-
-        def giveIndex(M, indexSet, stack):
-            if len((indexSet)) == 0:
-                return stack
-            else:
-                this = M[indexSet.pop()]
-                for i in range(stuNum):
-                    if this[i] == 1:
-                        stack.add(i)
-                return giveIndex(M, indexSet, stack)
+        def doIndex(ind):
+            print(stuInd)
+            for i in range(stuNum):
+                if M[ind][i] == 1 and i in stuInd:
+                    stuInd.discard(i)
+                    doIndex(i)
 
         while(stuInd):
-            giveIndex(M, stuInd, storeDone)
+            print(stuInd)
+            this = stuInd.pop()
+            doIndex(this)
             circle += 1
 
-            return circle
+        return circle
