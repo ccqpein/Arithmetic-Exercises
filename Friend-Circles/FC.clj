@@ -15,6 +15,21 @@
              [1 1 0]
              [0 0 1]]) ; 2
 
+(defn doIndex [ind m pool]
+  (let [result (atom pool)]
+    (doseq [singleset (for [i (range 0 (count m))
+                       :when 
+                       (and (= 1 (nth (nth m ind) i))
+                            (not (contains? pool i)))]
+                        (doIndex i m (conj pool i)))]
+      (swap! result clojure.set/union singleset))
+    @result))
 
 
+(defn friend-circle [m]
+  (let [stuNum (count m)
+        pool (atom #{})]
+    (doseq [ind (range 0 stuNum)]
+      (if (not (contains? @pool ind))
+        (reset! pool (doIndex ind m pool))))))
 
