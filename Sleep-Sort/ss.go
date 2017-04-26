@@ -24,4 +24,6 @@ func main() {
 		Println(<-cc)
 	}
 
+	close(cc)
+
 }
