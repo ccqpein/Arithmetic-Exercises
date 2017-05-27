@@ -7,3 +7,13 @@
 (def test5 '())
 (def test6 '(3 2 1))
 
+(defn find-unsorted-subarray [nums]
+  (let [newNums (sort < nums)
+        result (atom 0)]
+    (doseq [[n o]
+            (map list newNums nums)
+            :when (not= n o)]
+      (swap! result inc))
+    @result))
+
+(find-unsorted-subarray test3)
