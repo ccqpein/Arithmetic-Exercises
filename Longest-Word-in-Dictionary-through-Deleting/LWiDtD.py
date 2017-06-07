@@ -33,4 +33,4 @@ a = Solution()
 print(a.findLongestWord("abpcplea", [
       "ale", "apple", "monkey", "plea"]))  # apple
 print(a.findLongestWord("abpcplea", ["a", "b", "c"]))  # a
-print(a.findLongestWord("apple", ["zxc", "vbn"]))  # a
+print(a.findLongestWord("apple", ["zxc", "vbn"]))  # ""
