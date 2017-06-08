@@ -1,6 +1,5 @@
 (defn find-Longest-Word [s d]
   (let [newD (sort-by count > d) ; newD is a list
-        tempList (atom [])
         scan-Word (fn [sIn s]
                     (if (> (count s) (count sIn))
                       nil
@@ -12,6 +11,8 @@
                                 true
                                 (recur (rest a) (rest b)))
                               :else (recur (rest a) b)))))]
+    ;; main part is different from python version
+    ;; because newD is sorted by alphabet in clojure, but reversed-alphabet in python version
     (loop [sIn s
            words newD]
       (cond (empty? words) ""
