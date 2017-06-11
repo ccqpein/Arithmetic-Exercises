@@ -21,5 +21,5 @@ class Solution(object):
         return res
 
 a = Solution()
-print(a.nextGreaterElements([1, 2, 1]))
-print(a.nextGreaterElements([5, 3, 4, 6, 7]))
+print(a.nextGreaterElements([1, 2, 1]))  # [2,-1,2]
+print(a.nextGreaterElements([5, 3, 4, 6, 7]))  # [6,4,6,7,-1]
