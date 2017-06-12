@@ -6,8 +6,9 @@
            indexs (concat inds inds)]
       (cond (empty? indexs)
             @res
-            (and (not (empty? stack)) (< (nth nums (last stack))
-                            (nth nums (first indexs))))
+            (and (not (empty? stack))
+                 (< (nth nums (last stack))
+                    (nth nums (first indexs))))
             (do (swap! res assoc (last stack) (nth nums (first indexs)))
                 (recur (butlast stack) indexs))
             :else
