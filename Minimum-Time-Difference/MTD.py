@@ -37,5 +37,5 @@ class Solution(object):
 
 
 a = Solution()
-print(a.findMinDifference(["23:59", "00:00", "22:34"]))
-print(a.findMinDifference(["22:27", "18:42", "09:57", "09:24", "09:26"]))
+print(a.findMinDifference(["23:59", "00:00", "22:34"]))  # 1
+print(a.findMinDifference(["22:27", "18:42", "09:57", "09:24", "09:26"]))  # 2
