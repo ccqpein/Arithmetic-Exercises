@@ -1,4 +1,4 @@
-func SN (_ nL:[Int]) -> Int {
+func SN(_ nL:[Int]) -> Int {
     var tb = [Int: Int]()
 
     for i in nL {
@@ -17,3 +17,4 @@ func SN (_ nL:[Int]) -> Int {
 
     return 0
 }
+
