@@ -4,7 +4,7 @@
         left (if (>= leftind (count nl)) nil (nth nl leftind))
         rightind (+ 2 (* 2 ind))
         right (if (>= rightind (count nl)) nil (nth nl rightind))]
-    (cond
+    (cond ; find largest and exchange value in nl
       (nil? left) [nl nil]
       (and (func parent left)
            (if (nil? right) true (func parent right)))
@@ -19,8 +19,10 @@
 ;(print (heapify >= [4 1 3 2 16 9 10 14 8 7] 4))
 
 (defn parent-ind [ind]
+  "find this index's parent index"
   (if (= -1 ind) -1
       (-> ind dec (/ 2) int)))
+
 
 (defn build-heap [func arr]
   (loop [arr arr
@@ -43,7 +45,7 @@
     (cond (= [nil] arr) result
           :else
           (let [[this & remaining] (build-heap func arr)]
-            (print remaining)
+            ;(print remaining)
             (recur (conj result this)
                    (into [] (conj (butlast remaining) (last remaining))))))))
 
