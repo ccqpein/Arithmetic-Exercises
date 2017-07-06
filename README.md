@@ -12,12 +12,11 @@ Search arithmetic questions from the Web, code them using different languages fo
 + Swift
 + Haskell
 + Clojure
++ Scala
 
 ## Source
 
 + [Leetcode](leetcode.com)
 + Algorithm class
 + Other sources
-
-
 
