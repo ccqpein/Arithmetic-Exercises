@@ -15,6 +15,7 @@ class Solution(object):
         n = int(n)
         for l in range(int(math.log(n, 2)) + 1, 2, -1):
             k = int(math.pow(n, 1 / (l - 1)))
+            print(l, k)
             if (k ** l - 1) / (k - 1) == n:
                 return str(k)
         return str(n - 1)
