@@ -8,8 +8,8 @@ import (
 func findLHS(nums []int) int {
 	dic := map[int]int{}
 	for _, v := range nums {
-		if va, ok := dic[v]; ok {
-			dic[v] = 1 + va
+		if _, ok := dic[v]; ok {
+			dic[v] += 1
 		} else {
 			dic[v] = 1
 		}
