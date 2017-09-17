@@ -7,7 +7,7 @@
       (cond (empty? l) (str (dec num))
             (== num (/ (dec (Math/pow k (first l))) (dec k)))
             (str k)
-            (= 1 (count l)) ;when l only has one element ':else' will has issue
+            (= 1 (count l)) ;when l only has one element ':else' will have issue
             (str (dec num))
             :else
             (recur (rest l) (->> (first (rest l))
