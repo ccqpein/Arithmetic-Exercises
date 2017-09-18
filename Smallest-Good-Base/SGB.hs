@@ -1,14 +1,24 @@
-log' = logBase 2
+log' :: (Integral a, RealFrac a, Floating a) => a -> a
+log' = floor.(+1).logBase 2
 
-smallGoodBase :: (Floating a, Eq a, Ord a, RealFrac a, Integral a) => a -> a -> a
+pow' :: (Integral b, RealFrac a, Integral a) => a -> a -> b
+pow' n l = floor (n ^ (1 / (l-1)))
+
+checkAnswer :: (Integral b) => b -> b -> b
+checkAnswer k l = (k ^ l - 1) `div` (k - 1)
+
+
+{--
+smallGoodBase :: (RealFrac a, Integral a) => a -> a -> a
 smallGoodBase n l
-  | l < 2
+  | l <= 2
   = n - 1
   | otherwise
-  = let k = round (n ** (1 / (l - 1))) in
-      if (k ** l - 1) / (k - 1) == 0
-      then k
+  = let k = (pow' n l) :: Int in
+      if checkAnswer k l == n then k
       else smallGoodBase n (l - 1)
+
+--}
 
 {--
 main = do
