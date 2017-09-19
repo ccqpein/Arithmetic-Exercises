@@ -1,3 +1,5 @@
+-- well, I give up
+-- RealFrac is a weird typeclass, or becasue I am still suck with haskell
 log' :: (Integral a, RealFrac a, Floating a) => a -> a
 log' = floor.(+1).logBase 2
 
@@ -17,7 +19,6 @@ smallGoodBase n l
   = let k = (pow' n l) :: Int in
       if checkAnswer k l == n then k
       else smallGoodBase n (l - 1)
-
 --}
 
 {--
