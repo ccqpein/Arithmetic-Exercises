@@ -9,4 +9,11 @@ checkPerfectNumber a
 
 
 edge :: Int -> Int
-edge a = round (sqrt (fromIntegral a) :: Double) :: Int
+edge a = round (sqrt (fromIntegral a))
+-- sqrt input/output is same type, so need change Int to Double
+-- https://stackoverflow.com/questions/18280844/converting-integer-to-double-in-haskell
+-- https://wiki.haskell.org/Converting_numbers
+
+main = do
+  let a = 28
+  print $ checkPerfectNumber a
