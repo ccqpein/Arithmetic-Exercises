@@ -6,7 +6,7 @@ class Solution(object):
         :rtype: int
         """
 
-        # datastuct = {num:[degree,[postion]]}
+        # store_all_ele = {num:[degree,[postion]]}
         store_all_ele = {}
 
         stack_of_degree = [0, []]
