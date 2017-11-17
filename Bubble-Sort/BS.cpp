@@ -51,20 +51,21 @@ public:
     va_list args;
     va_start (args,i);
     
-    int s = sizeof(args)/sizeof(int);
+    int s = sizeof(args);
 
     node * first = createnode(i);
     head = first;
 
     node * temp = head;
     
-    for (int ind = 0; ind < 5; ind++) { // need to solve this problems
-      int thisarg = va_arg(args,int);
-      if (thisarg != NULL){
+    for (int ind = 0; ind < s; ind++) { // using NULL be guard value
+      if (int thisarg = va_arg(args,int);thisarg != NULL){
 	temp->next = createnode(thisarg);
 	node * buffer = temp;
 	temp = temp->next;
 	temp->last = buffer;
+      }else{
+	break;
       };
     };
 
@@ -74,9 +75,10 @@ public:
   int show() {
     node * temp = this->head;
     do{
-      cout << temp->data << endl;
+      cout << temp->data << " ";
       temp = temp->next;
     }while(temp != NULL);
+    cout << endl;
   };
 };
 
@@ -89,17 +91,26 @@ int bubbleSort(list * lis) {
     while(temp->next != NULL){
       if (temp->next->data < temp->data) {
 	flag = 1;
-	node * buffer = temp->next->next;
+	node * tailBuffer = temp->next->next;
+	node * headBuffer = temp->last;
+	
 	temp->next->next = temp;
-	temp->next->last = temp->last;
-	temp->last->next = temp->next;
+	temp->next->last = headBuffer;
+	if (headBuffer != NULL) {
+	  headBuffer->next = temp->next;
+	}else{
+	  lis->head = temp->next;
+	};
 	temp->last = temp->next;
-	temp->next = buffer;
+	temp->next = tailBuffer;
       }else{
+	(*lis).show();
 	temp = temp->next;
       };
     };
     temp = lis->head;
+    cout << temp->data << endl;
+    cout << "ont time: " << lis->show();
   }while(flag != 0);
 }
 
@@ -107,8 +118,9 @@ int main(){
   //list a  = list(1,2,3,4);
   //a.show();
 
-  list b = list(2,3,44,5,33,23);
+  list b = list(2,3,44,5,33,23,45,32,33,1,23,NULL);
   b.show();
   bubbleSort(&b);
+  cout << "here: " << endl;
   b.show();
 }
