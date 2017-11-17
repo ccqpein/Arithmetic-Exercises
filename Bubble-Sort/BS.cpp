@@ -22,22 +22,26 @@ int main(){
 struct node {
   int data;
   node * next;
+  node * last;
 };
 
 class list {
 private:
-  node * head, * tail;
 
   node * createnode(int i){
     node * temp = new node;
     temp->data = i;
     temp->next = NULL;
+    temp->last = NULL;
 
     return temp;
   };
 
   
 public:
+  
+  node * head, * tail;
+
   list() { // construct function
     head = NULL;
   }
@@ -47,19 +51,24 @@ public:
     va_list args;
     va_start (args,i);
     
-    int s = sizeof(args)/sizeof(long); // it should be long type
+    int s = sizeof(args)/sizeof(int);
 
-    node * first = new node;
-    first->data = i;
-    first->next = NULL;
+    node * first = createnode(i);
     head = first;
 
     node * temp = head;
     
-    for (int ind = 0; ind < s; ind++) {
-      temp->next = createnode(va_arg(args,int));
-      temp = temp->next;
+    for (int ind = 0; ind < 5; ind++) { // need to solve this problems
+      int thisarg = va_arg(args,int);
+      if (thisarg != NULL){
+	temp->next = createnode(thisarg);
+	node * buffer = temp;
+	temp = temp->next;
+	temp->last = buffer;
+      };
     };
+
+    temp->next = NULL;
   };
 
   int show() {
@@ -69,10 +78,37 @@ public:
       temp = temp->next;
     }while(temp != NULL);
   };
-  
 };
 
+
+int bubbleSort(list * lis) {
+  int flag = 0;
+  node * temp = lis->head;
+  do {
+    flag = 0;
+    while(temp->next != NULL){
+      if (temp->next->data < temp->data) {
+	flag = 1;
+	node * buffer = temp->next->next;
+	temp->next->next = temp;
+	temp->next->last = temp->last;
+	temp->last->next = temp->next;
+	temp->last = temp->next;
+	temp->next = buffer;
+      }else{
+	temp = temp->next;
+      };
+    };
+    temp = lis->head;
+  }while(flag != 0);
+}
+
 int main(){
-  list a  = list(1,2,3,4);
-  a.show();
+  //list a  = list(1,2,3,4);
+  //a.show();
+
+  list b = list(2,3,44,5,33,23);
+  b.show();
+  bubbleSort(&b);
+  b.show();
 }
