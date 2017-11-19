@@ -40,7 +40,7 @@ private:
   
 public:
   
-  node * head, * tail;
+  node * head;
 
   list() { // construct function
     head = NULL;
@@ -103,14 +103,15 @@ int bubbleSort(list * lis) {
 	};
 	temp->last = temp->next;
 	temp->next = tailBuffer;
+	// reconnect next number's last
+	if (temp->next != NULL){
+	  temp->next->last = temp;
+	};
       }else{
-	(*lis).show();
 	temp = temp->next;
       };
     };
     temp = lis->head;
-    cout << temp->data << endl;
-    cout << "ont time: " << lis->show();
   }while(flag != 0);
 }
 
