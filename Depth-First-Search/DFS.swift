@@ -59,5 +59,3 @@ func DFS<T:Hashable>(graph g:UndirGraph<T>, start s:T) {
     
     innerDFS(g:g,s:s)
 }
-
-DFS(graph:ga, start:"s")
