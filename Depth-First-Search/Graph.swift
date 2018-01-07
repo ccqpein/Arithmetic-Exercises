@@ -10,10 +10,10 @@
 public class UndirGraph<U:Hashable>:Graph{
     var pointSet:Set<U>
 
-    typealias PathType = [U:Set<U>]
-    var pathDic:PathType
+    //typealias PathType = [U:Set<U>]
+    var pathDic:[U:Set<U>]
 
-    required init(V points:Set<U>, E paths:PathType){
+    required public init(V points:Set<U>, E paths:[U:Set<U>]){
         self.pointSet = points
         self.pathDic = paths
 
@@ -27,7 +27,7 @@ public class UndirGraph<U:Hashable>:Graph{
     init(E paths:PathType) {
         self.pathDic = paths
         self.pointSet = []
-        for (k, p) in paths {
+        for (k, _) in paths {
             self.pointSet.insert(k)
         }
     }
