@@ -9,26 +9,27 @@ fn changeCoin(value: i32, coinL: &[i32], result: &mut HashMap<i32, i32>) -> i32 
     }
 
     let mut tempresult: Vec<i32> = Vec::new();
-    for c in &coinL {
+    for c in coinL {
         if *c <= value {
-            tempResult.push(1 + changeCoin(value - 1, coinL, result));
+            tempresult.push(1 + changeCoin(value - 1, coinL, result));
         }
     }
 
     let mut tempmin = tempresult[0];
     for tt in &tempresult {
-        if *tt <= tempmin {
+        if *tt < tempmin {
             tempmin = *tt;
         }
     }
 
     result.insert(value, tempmin);
+    println!("{}=>{}, {:?}", value, tempmin, result);
     return tempmin;
 }
 
 fn main() {
-    let coinList = [1, 5, 10, 25];
-    let mut resultM: HashMap<i32, i32>;
+    let coinList = [1, 5, 12, 25];
+    let mut resultM: HashMap<i32, i32> = HashMap::new();
 
-    println!("{}", changeCoin(16));
+    println!("{}", changeCoin(16, &coinList, &mut resultM));
 }
