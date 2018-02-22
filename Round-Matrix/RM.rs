@@ -63,6 +63,8 @@ fn round_matrix(m: &Vec<Vec<u32>>) -> Vec<u32> {
     resutl
 }
 
+fn round_matrix2(m: &Vec<Vec<u32>>) -> Vec<u32> {}
+
 fn main() {
     let testa = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
     println!("{:?}", round_matrix(&testa));
