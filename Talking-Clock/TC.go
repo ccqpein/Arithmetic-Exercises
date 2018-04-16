@@ -40,6 +40,10 @@ var numTable = map[int]string{
 func hoursParse(input string) (string, string) {
 	num, _ := strconv.Atoi(input)
 
+	if num > 23 {
+		panic("hours wrong")
+	}
+
 	if num >= 12 {
 		return numTable[num-12], "pm"
 	} else {
