@@ -7,7 +7,7 @@ where
     T: Copy + Clone,
 {
     if i >= nl.len() {
-        return Err(Error::new(
+        return Result::Err(Error::new(
             ErrorKind::Other,
             "first index larger than length",
         ));
@@ -16,9 +16,9 @@ where
     let mut jj;
 
     if j > nl.len() {
-        jj = nl.len() - 1;
+        jj = nl.len();
     } else {
-        jj = j - 1;
+        jj = j;
     }
 
     let mut ind = 0;
@@ -47,16 +47,18 @@ where
     result
 }
 
-/*
 fn sum_range<T>(nl: &Vec<T>, i: usize, j: usize) -> Result<T, Error>
 where
-    T: Add + Copy + Clone,
+    T: Add<Output = T> + Copy + Clone,
 {
-
-}*/
+    match range_vec(nl, i, j) {
+        Result::Ok(temp_l) => return Result::Ok(sum_vec(&temp_l)),
+        Result::Err(e) => return Result::Err(e),
+    }
+}
 
 fn main() {
-    let a = vec![1, 2, 3, 4, 5, 6];
+    let a = vec![-2, 0, 3, -5, 2, -1];
     println!("{:?}", range_vec(&a, 0, 1));
     println!("{:?}", range_vec(&a, 2, 6));
     println!("{:?}", range_vec(&a, 6, 6));
@@ -65,4 +67,8 @@ fn main() {
     //println!("{:?}", range_vec(&a, 2, 6)?);
 
     println!("{:?}", sum_vec(&a));
+
+    println!("{:?}", sum_range(&a, 0, 2));
+    println!("{:?}", sum_range(&a, 2, 5));
+    println!("{:?}", sum_range(&a, 0, 5));
 }
