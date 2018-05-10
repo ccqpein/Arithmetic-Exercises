@@ -57,18 +57,24 @@ where
     }
 }
 
-fn main() {
+fn main() -> Result<(), std::io::Error> {
     let a = vec![-2, 0, 3, -5, 2, -1];
     println!("{:?}", range_vec(&a, 0, 1));
     println!("{:?}", range_vec(&a, 2, 6));
     println!("{:?}", range_vec(&a, 6, 6));
     println!("{:?}", range_vec(&a, 5, 6));
+
     //main thread cannot use `?`
-    //println!("{:?}", range_vec(&a, 2, 6)?);
+    //1.26 can use `?`
+    //https://blog.rust-lang.org/2018/05/10/Rust-1.26.html
+    let b = range_vec(&a, 2, 6)?;
+    println!("{:?}", b);
 
     println!("{:?}", sum_vec(&a));
 
     println!("{:?}", sum_range(&a, 0, 2));
     println!("{:?}", sum_range(&a, 2, 5));
     println!("{:?}", sum_range(&a, 0, 5));
+
+    Result::Ok(())
 }
