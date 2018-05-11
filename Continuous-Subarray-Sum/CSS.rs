@@ -23,6 +23,9 @@ fn check_sub_array_sum(nums: Vec<i32>, k: i32) -> bool {
     if length >= 2 && k > 0 {
         return true;
     }
+
+    let inner_k = k.abs();
+    //not finish
 }
 
 fn main() {}
