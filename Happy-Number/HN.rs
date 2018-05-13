@@ -5,13 +5,19 @@ fn split_num(s: &str) -> Vec<i32> {
     result
 }
 
-fn main() {
-    let mut a = "123";
-    let b = split_num(a);
-
-    println!("{:?}", b);
-
-    for c in a.chars() {
-        println!("{:?}", c.to_string().parse::<i32>().unwrap());
+fn is_happy(s: &str) -> bool {
+    let num_vec: i32 = split_num(s).iter().sum();
+    if num_vec < 1 {
+        return false;
     }
+    if num_vec == 1 {
+        return true;
+    }
+
+    return is_happy(&num_vec.to_string());
+}
+
+fn main() {
+    println!("{}", is_happy("19"));
+    println!("{}", is_happy("1"));
 }
