@@ -63,3 +63,20 @@ class Solution(object):
             checkTen(l1, flag)
 
         return result
+
+
+'''
+test:
+(1)
+(9,2)
+-> (0,3)
+
+(2)
+(8,9,9)
+->(0,0,0,1)
+
+(5)
+(5)
+->(0,1)
+
+'''
