@@ -4,6 +4,14 @@ struct ListNode {
     next: Option<Box<ListNode>>,
 }
 
+impl Clone for ListNode {
+    fn clone(&self) -> ListNode {
+        let mut result = ListNode::new(self.val);
+        result.next = self.next.clone();
+        return result;
+    }
+}
+
 impl ListNode {
     fn new(v: i32) -> Self {
         ListNode { val: v, next: None }
@@ -15,7 +23,10 @@ impl ListNode {
         if self.val >= 10 {
             self.val -= 10;
             inner_flag = 1;
+        } else {
+            inner_flag = 0;
         }
+
         match self.next {
             Some(ref mut n) => n.check_ten(inner_flag),
             None => if inner_flag == 1 {
@@ -25,13 +36,53 @@ impl ListNode {
     }
 }
 
-fn main() {
-    //let a = ListNode::new(1);
-    //let mut b = ListNode::new(9);
-    //b.next = Some(Box::new(ListNode::new(2)));
+fn add_two_numbers(a: ListNode, b: ListNode, flag: i32) -> ListNode {
+    let mut inner_flag = flag;
+    let mut result = ListNode::new(a.val + b.val);
 
-    let mut c = Box::new(ListNode::new(9));
-    c.check_ten(1);
-    println!("{:?}", c);
-    println!("{:?}", c.next);
+    let mut inner_a = a;
+    let mut inner_b = b;
+
+    if inner_a.next.is_some() && inner_b.next.is_some() {
+        result.val += inner_flag;
+        if result.val >= 10 {
+            result.val -= 10;
+            inner_flag = 1;
+        } else {
+            inner_flag = 0;
+        }
+
+        inner_a = Box::leak(inner_a.next.unwrap()).clone();
+        inner_b = Box::leak(inner_b.next.unwrap()).clone();
+        result.next = Some(Box::new(add_two_numbers(inner_a, inner_b, inner_flag)))
+    } else if inner_a.next.is_none() && inner_b.next.is_some() {
+        let temp = Box::leak(inner_b.next.unwrap()).clone();
+        result.next = Some(Box::new(temp));
+        result.check_ten(inner_flag)
+    } else if inner_b.next.is_none() && inner_a.next.is_some() {
+        let temp = Box::leak(inner_a.next.unwrap()).clone();
+        result.next = Some(Box::new(temp));
+        result.check_ten(inner_flag)
+    } else if inner_a.next.is_none() && inner_b.next.is_none() {
+        result.check_ten(inner_flag);
+    }
+
+    return result;
+}
+
+fn main() {
+    let a = ListNode::new(1);
+    let mut b = ListNode::new(9);
+    b.next = Some(Box::new(ListNode::new(2)));
+
+    println!("{:?}", add_two_numbers(a, b, 0));
+
+    let c = ListNode::new(2);
+    let mut d = ListNode::new(8);
+    let mut d1 = ListNode::new(9);
+    let mut d2 = ListNode::new(9);
+    d1.next = Some(Box::new(d2));
+    d.next = Some(Box::new(d1));
+
+    println!("{:?}", add_two_numbers(c, d, 0));
 }
