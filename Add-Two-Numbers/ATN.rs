@@ -1,4 +1,4 @@
-use std::rc::Rc;
+#[derive(Debug)]
 struct ListNode {
     val: i32,
     next: Option<Box<ListNode>>,
@@ -8,26 +8,20 @@ impl ListNode {
     fn new(v: i32) -> Self {
         ListNode { val: v, next: None }
     }
-}
 
-fn check_ten(this: &mut ListNode, f: &i32) {
-    let mut inner_this = this;
-    let mut temp: Rc<&mut Box<ListNode>>;
-    let mut flag = *f;
-    while let Some(t) = { inner_this } {
-        t.val += flag;
-        if t.val >= 10 {
-            t.val = t.val - 10;
-            flag = 1;
-        } else {
-            flag = 0
+    fn check_ten(&mut self, flag: i32) {
+        let mut inner_flag = flag;
+        self.val += flag;
+        if self.val >= 10 {
+            self.val -= 10;
+            inner_flag = 1;
         }
-        temp = Rc::new(t);
-        let next = &mut t.next;
-        inner_this = next;
-    }
-    if flag == 1 {
-        temp.next = Some(Box::new(ListNode::new(1)));
+        match self.next {
+            Some(ref mut n) => n.check_ten(inner_flag),
+            None => if inner_flag == 1 {
+                self.next = Some(Box::new(ListNode::new(inner_flag)));
+            },
+        }
     }
 }
 
@@ -36,6 +30,8 @@ fn main() {
     //let mut b = ListNode::new(9);
     //b.next = Some(Box::new(ListNode::new(2)));
 
-    let mut c = Some(Box::new(ListNode::new(9)));
-    check_ten(&mut c, &1);
+    let mut c = Box::new(ListNode::new(9));
+    c.check_ten(1);
+    println!("{:?}", c);
+    println!("{:?}", c.next);
 }
