@@ -40,10 +40,7 @@ fn add_two_numbers(a: ListNode, b: ListNode, flag: i32) -> ListNode {
     let mut inner_flag = flag;
     let mut result = ListNode::new(a.val + b.val);
 
-    let mut inner_a = a;
-    let mut inner_b = b;
-
-    if inner_a.next.is_some() && inner_b.next.is_some() {
+    if a.next.is_some() && b.next.is_some() {
         result.val += inner_flag;
         if result.val >= 10 {
             result.val -= 10;
@@ -52,18 +49,18 @@ fn add_two_numbers(a: ListNode, b: ListNode, flag: i32) -> ListNode {
             inner_flag = 0;
         }
 
-        inner_a = Box::leak(inner_a.next.unwrap()).clone();
-        inner_b = Box::leak(inner_b.next.unwrap()).clone();
+        let inner_a = Box::leak(a.next.unwrap()).clone();
+        let inner_b = Box::leak(b.next.unwrap()).clone();
         result.next = Some(Box::new(add_two_numbers(inner_a, inner_b, inner_flag)))
-    } else if inner_a.next.is_none() && inner_b.next.is_some() {
-        let temp = Box::leak(inner_b.next.unwrap()).clone();
+    } else if a.next.is_none() && b.next.is_some() {
+        let temp = Box::leak(b.next.unwrap()).clone();
         result.next = Some(Box::new(temp));
         result.check_ten(inner_flag)
-    } else if inner_b.next.is_none() && inner_a.next.is_some() {
-        let temp = Box::leak(inner_a.next.unwrap()).clone();
+    } else if b.next.is_none() && a.next.is_some() {
+        let temp = Box::leak(a.next.unwrap()).clone();
         result.next = Some(Box::new(temp));
         result.check_ten(inner_flag)
-    } else if inner_a.next.is_none() && inner_b.next.is_none() {
+    } else if a.next.is_none() && b.next.is_none() {
         result.check_ten(inner_flag);
     }
 
