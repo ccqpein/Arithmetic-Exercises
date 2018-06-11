@@ -1,0 +1,8 @@
+[package]
+name = "linker"
+version = "0.1.0"
+authors = ["ccQ <ccq777@gmail.com>"]
+
+[dependencies]
+regex = "1.0.0"
+lazy_static = "1.0.1"
