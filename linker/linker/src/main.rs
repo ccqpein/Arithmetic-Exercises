@@ -16,6 +16,7 @@ lazy_static! {
 
 #[derive(Debug)]
 enum Content {
+    DefSym(Vec<String>),
     Symbols(Vec<String>),
     Addrs(Vec<String>),
 }
@@ -26,11 +27,50 @@ struct SingleLine {
     content: Option<Content>,
 }
 
+impl Content {
+    fn num_change(&mut self) -> Vec<(String, i32)> {
+        let mut result: Vec<(String, i32)> = vec![];
+        match self {
+            Content::DefSym(l) | Content::Addrs(l) => {
+                let (_, l2) = l.split_at(1);
+                for (i, (x, y)) in l.iter().zip(l2.iter()).enumerate() {
+                    if i % 2 == 0 {
+                        result.push((x.clone(), y.parse::<i32>().unwrap()));
+                    }
+                }
+            }
+            _ => (),
+        }
+        return result;
+    }
+}
+
+#[test]
+fn test_num_change() {
+    let a = read_linker_line(String::from("5 R 1004  I 5678  E 2000  R 8002  E 7001"));
+    println!("{:?}", a.content.unwrap().num_change());
+}
+
 fn read_linker_line(li: String) -> SingleLine {
     let mut cut_str: Vec<&str> = li.split_whitespace().collect();
     let num = cut_str[0].parse::<i32>().unwrap();
 
+    if cut_str.len() == 1 {
+        return SingleLine {
+            num: num,
+            content: None,
+        };
+    }
+
     if cut_str[1] != "A" && cut_str[1] != "E" && cut_str[1] != "R" && cut_str[1] != "I" {
+        if let Ok(_) = cut_str[2].parse::<i32>() {
+            return SingleLine {
+                num: num,
+                content: Some(Content::DefSym(
+                    cut_str.split_off(1).iter().map(|s| s.to_string()).collect(),
+                )),
+            };
+        }
         return SingleLine {
             num: num,
             content: Some(Content::Symbols(
@@ -45,26 +85,10 @@ fn read_linker_line(li: String) -> SingleLine {
             )),
         };
     }
-
-    return SingleLine {
-        num: num,
-        content: None,
-    };
 }
 
 #[test]
-fn regex_test() {
-    let mut fields: Vec<&str> = line_re
-        .split("5 R 1004  I 5678  E 2000  R 8002  E 7001")
-        .collect();
-    //println!("{:?}", fields);
-
-    fields = line_re
-        .split("5 R 1004  I 5678  E 2000  R 8002  E 7001")
-        .collect();
-}
-
-#[test]
+#[ignore]
 fn read_linker_line_test() {
     println!(
         "{:?}",
@@ -72,6 +96,10 @@ fn read_linker_line_test() {
     );
 
     println!("{:?}", read_linker_line(String::from("2 xy z")));
+
+    println!("{:?}", read_linker_line(String::from("0")));
+
+    println!("{:?}", read_linker_line(String::from("2 xy 2")));
 }
 
 fn main() {
