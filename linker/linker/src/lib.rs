@@ -2,6 +2,7 @@ use regex::Regex;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
+use std::collections::HashMap;
 
 #[macro_use]
 extern crate lazy_static;
@@ -86,3 +87,6 @@ pub fn add_line_vec(ve: &mut Vec<SingleLine>, l: SingleLine) {
     ve.push(l);
 }
 
+fn iter_all_lines() -> (HashMap, Vec<(String,i32)>) {
+    return HashMap::new(), vec![("a",1)];
+}
