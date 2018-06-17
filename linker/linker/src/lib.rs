@@ -1,8 +1,8 @@
 use regex::Regex;
+use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
-use std::collections::HashMap;
 
 #[macro_use]
 extern crate lazy_static;
@@ -15,7 +15,7 @@ lazy_static! {
     static ref addres_re: Regex = Regex::new(r"").unwrap();
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Content {
     DefSym(Vec<String>),
     Symbols(Vec<String>),
@@ -29,7 +29,7 @@ pub struct SingleLine {
 }
 
 impl Content {
-    pub fn num_change(&mut self) -> Vec<(String, i32)> {
+    pub fn num_change(&self) -> Result<Vec<(String, i32)>, ()> {
         let mut result: Vec<(String, i32)> = vec![];
         match self {
             Content::DefSym(l) | Content::Addrs(l) => {
@@ -39,10 +39,10 @@ impl Content {
                         result.push((x.clone(), y.parse::<i32>().unwrap()));
                     }
                 }
+                return Ok(result);
             }
-            _ => (),
+            _ => return Err(()),
         }
-        return result;
     }
 }
 
@@ -82,11 +82,25 @@ pub fn read_linker_line(li: String) -> SingleLine {
     }
 }
 
-
 pub fn add_line_vec(ve: &mut Vec<SingleLine>, l: SingleLine) {
     ve.push(l);
 }
 
-fn iter_all_lines() -> (HashMap, Vec<(String,i32)>) {
-    return HashMap::new(), vec![("a",1)];
+//:= need clean mind, I forget requirments actually.
+pub fn create_sym_table(line_vec: &Vec<SingleLine>) -> HashMap<String, i32> {
+    let mut result: HashMap<String, i32> = HashMap::new();
+    let mut mem_jump = 0;
+
+    for l in line_vec {
+        if let Some(ref c) = l.content {
+            match c {
+                Content::DefSym(_) => if let Ok(cc) = c.num_change() {
+                    result.insert(cc[0].0.to_string(), mem_jump);
+                },
+                _ => (),
+            }
+        }
+    }
+
+    result
 }
