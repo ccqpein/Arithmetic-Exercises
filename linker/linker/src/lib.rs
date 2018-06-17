@@ -1,5 +1,5 @@
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
@@ -9,11 +9,11 @@ extern crate lazy_static;
 extern crate regex;
 
 //Maybe do not need regex
-lazy_static! {
+/*lazy_static! {
     static ref line_re: Regex = Regex::new(r"^\d ").unwrap();
     static ref symbols_re: Regex = Regex::new(r"").unwrap();
     static ref addres_re: Regex = Regex::new(r"").unwrap();
-}
+}*/
 
 #[derive(Debug, Clone)]
 pub enum Content {
@@ -58,13 +58,15 @@ pub fn read_linker_line(li: String) -> SingleLine {
     }
 
     if cut_str[1] != "A" && cut_str[1] != "E" && cut_str[1] != "R" && cut_str[1] != "I" {
-        if let Ok(_) = cut_str[2].parse::<i32>() {
-            return SingleLine {
-                num: num,
-                content: Some(Content::DefSym(
-                    cut_str.split_off(1).iter().map(|s| s.to_string()).collect(),
-                )),
-            };
+        if cut_str.len() >= 3 {
+            if let Ok(_) = cut_str[2].parse::<i32>() {
+                return SingleLine {
+                    num: num,
+                    content: Some(Content::DefSym(
+                        cut_str.split_off(1).iter().map(|s| s.to_string()).collect(),
+                    )),
+                };
+            }
         }
         return SingleLine {
             num: num,
@@ -89,16 +91,34 @@ pub fn add_line_vec(ve: &mut Vec<SingleLine>, l: SingleLine) {
 //:= need clean mind, I forget requirments actually.
 pub fn create_sym_table(line_vec: &Vec<SingleLine>) -> HashMap<String, i32> {
     let mut result: HashMap<String, i32> = HashMap::new();
+    let mut which_use_before_define: HashSet<String> = HashSet::new();
     let mut mem_jump = 0;
 
     for l in line_vec {
+        //println!("{}", mem_jump);
         if let Some(ref c) = l.content {
             match c {
                 Content::DefSym(_) => if let Ok(cc) = c.num_change() {
-                    result.insert(cc[0].0.to_string(), mem_jump);
+                    for (ind, c_t) in cc.iter().enumerate() {
+                        if which_use_before_define.contains(&c_t.0) {
+                            result.insert(c_t.0.to_string(), mem_jump + ind as i32);
+                        } else {
+                            result.insert(c_t.0.to_string(), c_t.1);
+                        }
+                    }
+                    continue;
                 },
+
+                Content::Symbols(sl) => {
+                    for s in sl {
+                        if !result.contains_key(s) {
+                            which_use_before_define.insert(s.to_string());
+                        }
+                    }
+                }
                 _ => (),
             }
+            mem_jump += l.num;
         }
     }
 
