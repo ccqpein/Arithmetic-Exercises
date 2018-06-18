@@ -9,6 +9,7 @@ extern crate lazy_static;
 extern crate regex;
 
 //Maybe do not need regex
+//Yes, I do not need this
 /*lazy_static! {
     static ref line_re: Regex = Regex::new(r"^\d ").unwrap();
     static ref symbols_re: Regex = Regex::new(r"").unwrap();
@@ -89,21 +90,23 @@ pub fn add_line_vec(ve: &mut Vec<SingleLine>, l: SingleLine) {
 }
 
 //:= need clean mind, I forget requirments actually.
-pub fn create_sym_table(line_vec: &Vec<SingleLine>) -> HashMap<String, i32> {
-    let mut result: HashMap<String, i32> = HashMap::new();
+pub fn create_sym_table(line_vec: &Vec<SingleLine>) -> (HashMap<String, i32>, HashMap<i32, i32>) {
+    let mut sym_table: HashMap<String, i32> = HashMap::new();
+    let mut adds_table: HashMap<i32, i32> = HashMap::new();
+
     let mut which_use_before_define: HashSet<String> = HashSet::new();
+    let mut sym_use_in_this_module: Vec<String> = Vec::new();
     let mut mem_jump = 0;
 
     for l in line_vec {
-        //println!("{}", mem_jump);
         if let Some(ref c) = l.content {
             match c {
                 Content::DefSym(_) => if let Ok(cc) = c.num_change() {
-                    for (ind, c_t) in cc.iter().enumerate() {
+                    for (_, c_t) in cc.iter().enumerate() {
                         if which_use_before_define.contains(&c_t.0) {
-                            result.insert(c_t.0.to_string(), mem_jump + ind as i32);
+                            sym_table.insert(c_t.0.to_string(), mem_jump + c_t.1);
                         } else {
-                            result.insert(c_t.0.to_string(), c_t.1);
+                            sym_table.insert(c_t.0.to_string(), mem_jump + c_t.1);
                         }
                     }
                     continue;
@@ -111,10 +114,11 @@ pub fn create_sym_table(line_vec: &Vec<SingleLine>) -> HashMap<String, i32> {
 
                 Content::Symbols(sl) => {
                     for s in sl {
-                        if !result.contains_key(s) {
+                        if !sym_table.contains_key(s) {
                             which_use_before_define.insert(s.to_string());
                         }
                     }
+                    continue;
                 }
                 _ => (),
             }
@@ -122,5 +126,43 @@ pub fn create_sym_table(line_vec: &Vec<SingleLine>) -> HashMap<String, i32> {
         }
     }
 
-    result
+    mem_jump = 0;
+    for l in line_vec {
+        if let Some(ref c) = l.content {
+            match c {
+                Content::Symbols(sl) => {
+                    sym_use_in_this_module = vec![];
+                    for s in sl {
+                        sym_use_in_this_module.push(s.to_string());
+                    }
+                    continue;
+                }
+
+                Content::Addrs(_) => if let Ok(cc) = c.num_change() {
+                    for (ind, c_t) in cc.iter().enumerate() {
+                        let temp = c_t.0.to_string();
+                        if temp == "E" {
+                            let var_add = c_t.1 % 1000;
+                            adds_table.insert(
+                                mem_jump + ind as i32,
+                                *sym_table
+                                    .get(&sym_use_in_this_module[var_add as usize])
+                                    .unwrap() + c_t.1 - var_add,
+                            );
+                        } else if temp == "R" {
+                            adds_table.insert(mem_jump + ind as i32, c_t.1 + mem_jump);
+                        } else {
+                            adds_table.insert(mem_jump + ind as i32, c_t.1);
+                        }
+                    }
+                },
+                _ => {
+                    continue;
+                }
+            }
+            mem_jump += l.num;
+        }
+    }
+
+    (sym_table, adds_table)
 }

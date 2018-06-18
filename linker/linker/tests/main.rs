@@ -53,14 +53,25 @@ fn test_create_sym_table() {
     linker::add_line_vec(&mut test0, linker::read_linker_line(String::from("1 z")));
     linker::add_line_vec(
         &mut test0,
-        linker::read_linker_line(String::from("6 R 8001")),
+        linker::read_linker_line(String::from("6 R 8001 E 1000 E 1000 E 3000 R 1002 A 1010")),
     );
     linker::add_line_vec(&mut test0, linker::read_linker_line(String::from("1 z")));
     linker::add_line_vec(
         &mut test0,
-        linker::read_linker_line(String::from("2 R 8001")),
+        linker::read_linker_line(String::from("2 R 5001 E 4000")),
     );
     linker::add_line_vec(&mut test0, linker::read_linker_line(String::from("1 z 2")));
+    linker::add_line_vec(&mut test0, linker::read_linker_line(String::from("2 xy z")));
+    linker::add_line_vec(
+        &mut test0,
+        linker::read_linker_line(String::from("3 A 8000 E 1001 E 2000")),
+    );
 
-    println!("{:?}", linker::create_sym_table(&test0));
+    let (r1, r2) = linker::create_sym_table(&test0);
+
+    println!("{:?}", r1);
+
+    for i in 0..16 {
+        println!("{:?} : {:?}", i, r2.get(&i).unwrap());
+    }
 }
