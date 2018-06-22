@@ -1,4 +1,6 @@
-#[derive(Debug)]
+use std::rc::Rc;
+
+#[derive(Debug, Clone)]
 struct ListNode {
     val: i32,
     next: Option<Box<ListNode>>,
@@ -9,8 +11,8 @@ impl ListNode {
         ListNode { val: i, next: None }
     }
 
-    //:= DEBUG: self point changed
     //:= https://stackoverflow.com/questions/50957738/how-to-copy-a-raw-pointer-in-rust?noredirect=1#comment88913158_50957738
+    /*
     fn add_l(&mut self, l: &Vec<i32>) {
         //let mut p: *mut ListNode = self as *mut ListNode;
         let org = self;
@@ -23,6 +25,16 @@ impl ListNode {
                 let temp_b = Box::from_raw(p);
                 p = Box::into_raw(temp_b.next.unwrap());
             };
+        }
+    }*/
+
+    //https://stackoverflow.com/questions/50957738/how-to-copy-a-raw-pointer-when-implementing-a-linked-list-in-rust/50970414#50970414
+    fn add_l(&mut self, l: &[i32]) {
+        let mut head = self;
+
+        for &val in l {
+            head.next = Some(Box::new(ListNode::new(val)));
+            head = { head }.next.as_mut().unwrap();
         }
     }
 
@@ -46,12 +58,27 @@ impl ListNode {
         temp
     }
 
-    fn removeNthFromEnd(&self, n: i32) {}
+    fn removeNthFromEnd(&mut self, n: i32) {
+        //let mut head_1 = { self }.next.as_ref().unwrap();
+        let mut head_2 = { self }.next.as_ref().unwrap();
+        let mut n_h = 0;
+
+        for _ in 1..n {
+            head_2 = { head_2 }.next.as_ref().unwrap();
+        }
+
+        while let Some(_) = { &head_2 }.next {
+            //head_1 = { head_1 }.next.as_mut().unwrap();
+            n_h += 1;
+            head_2 = { head_2 }.next.as_ref().unwrap();
+        }
+    }
 }
 fn main() {
     //let mut a = ListNode::new(1);
     //a.add_l(&vec![2, 3, 4, 5]);
 
-    let a = ListNode::new_l(vec![1, 2, 3, 4, 5]);
+    let mut a = ListNode::new_l(vec![1, 2, 3, 4, 5]);
+    a.removeNthFromEnd(1);
     println!("{:?}", a);
 }
