@@ -1,9 +1,13 @@
-use std::rc::Rc;
-
 #[derive(Debug, Clone)]
 struct ListNode {
     val: i32,
     next: Option<Box<ListNode>>,
+}
+
+impl Default for ListNode {
+    fn default() -> ListNode {
+        ListNode { val: 0, next: None }
+    }
 }
 
 impl ListNode {
@@ -59,26 +63,53 @@ impl ListNode {
     }
 
     fn removeNthFromEnd(&mut self, n: i32) {
-        //let mut head_1 = { self }.next.as_ref().unwrap();
-        let mut head_2 = { self }.next.as_ref().unwrap();
-        let mut n_h = 0;
+        let mut n_h = 1;
+        {
+            let mut head_2 = self.next.as_ref().unwrap();
 
-        for _ in 1..n {
-            head_2 = { head_2 }.next.as_ref().unwrap();
+            for _ in 1..n {
+                head_2 = { head_2 }.next.as_ref().unwrap_or(head_2);
+            }
+
+            while let Some(_) = { &head_2 }.next {
+                n_h += 1;
+                head_2 = { head_2 }.next.as_ref().unwrap();
+            }
+        }
+        println!("number is {}", n_h);
+
+        let mut temp: Option<Box<ListNode>>;
+        {
+            let mut head_2 = self.next.as_mut().unwrap();
+            for _ in 1..n_h {
+                head_2 = { head_2 }.next.as_mut().unwrap();
+            }
+            temp = head_2.next.clone()
         }
 
-        while let Some(_) = { &head_2 }.next {
-            //head_1 = { head_1 }.next.as_mut().unwrap();
-            n_h += 1;
-            head_2 = { head_2 }.next.as_ref().unwrap();
+        let mut head_2 = self;
+
+        for _ in 1..n_h {
+            head_2 = { head_2 }.next.as_mut().unwrap();
         }
+        head_2.next = temp;
     }
 }
+
 fn main() {
-    //let mut a = ListNode::new(1);
-    //a.add_l(&vec![2, 3, 4, 5]);
+    //Known bug: cannot delete first element.
+    //Of course cannot move list which own only one element (will panic)
 
     let mut a = ListNode::new_l(vec![1, 2, 3, 4, 5]);
-    a.removeNthFromEnd(1);
+    a.removeNthFromEnd(2);
     println!("{:?}", a);
+
+    let mut b = ListNode::new_l(vec![1, 2]);
+    b.removeNthFromEnd(1);
+    println!("{:?}", b);
+
+    //Failed! Panic
+    //let mut c = ListNode::new_l(vec![1]);
+    //c.removeNthFromEnd(1);
+    //println!("{:?}", c);
 }
