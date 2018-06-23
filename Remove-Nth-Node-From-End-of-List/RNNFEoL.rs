@@ -63,6 +63,11 @@ impl ListNode {
     }
 
     fn removeNthFromEnd(&mut self, n: i32) {
+        if let None = self.next {
+            println!("Error");
+            return;
+        }
+
         let mut n_h = 1;
         {
             let mut head_2 = self.next.as_ref().unwrap();
