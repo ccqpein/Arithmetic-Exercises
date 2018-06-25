@@ -43,9 +43,12 @@ impl Tree {
         } else {
             &mut self.left
         };
-
+        //println!("target is -> {:?}", target);
         match target {
-            Some(next) => next.insert(v),
+            Some(next) => {
+                println!("next is -> {:?}", &next);
+                next.insert(v)
+            }
             None => {
                 let new_node = Node::new(v);
                 let new_tree = Tree {
@@ -57,6 +60,32 @@ impl Tree {
             }
         }
     }
+
+    fn look_up(&mut self, v: &i32) -> Result<&mut Self, String> {
+        if *v == self.enter.val {
+            return Ok(self);
+        } else if *v > self.enter.val {
+            if let Some(_) = self.right {
+                let next = self.right.as_mut().unwrap();
+                return next.look_up(v);
+            } else {
+                Err("not find".to_string())
+            }
+        } else {
+            if let Some(_) = self.left {
+                let next = self.right.as_mut().unwrap();
+                return next.look_up(v);
+            } else {
+                Err("not find".to_string())
+            }
+        }
+    }
 }
 
-fn main() {}
+fn main() {
+    let mut a = Tree::new(&3);
+    a.insert(&2);
+    a.insert(&1);
+
+    println!("{:?}", a);
+}
