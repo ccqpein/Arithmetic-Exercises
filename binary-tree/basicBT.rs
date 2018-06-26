@@ -80,6 +80,8 @@ impl Tree {
             }
         }
     }
+
+    fn look_up_while(&mut self, v: &i32) -> Result<&mut Self, String> {}
 }
 
 fn main() {
