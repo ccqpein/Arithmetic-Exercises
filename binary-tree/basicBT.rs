@@ -81,7 +81,17 @@ impl Tree {
         }
     }
 
-    fn look_up_while(&mut self, v: &i32) -> Result<&mut Self, String> {}
+    fn look_up_while(&mut self, v: &i32) -> Result<&mut Self, String> {
+        if *v == self.enter.val {
+            return Ok(self);
+        }
+
+        let next
+        
+        loop {
+            
+        }
+    }
 }
 
 fn main() {
