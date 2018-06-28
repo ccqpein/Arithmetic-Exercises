@@ -46,7 +46,7 @@ impl Tree {
         //println!("target is -> {:?}", target);
         match target {
             Some(next) => {
-                println!("next is -> {:?}", &next);
+                //println!("next is -> {:?}", &next);
                 next.insert(v)
             }
             None => {
@@ -73,7 +73,7 @@ impl Tree {
             }
         } else {
             if let Some(_) = self.left {
-                let next = self.right.as_mut().unwrap();
+                let next = self.left.as_mut().unwrap();
                 return next.look_up(v);
             } else {
                 Err("not find".to_string())
@@ -82,14 +82,21 @@ impl Tree {
     }
 
     fn look_up_while(&mut self, v: &i32) -> Result<&mut Self, String> {
-        if *v == self.enter.val {
-            return Ok(self);
-        }
-
-        let next
-        
+        let mut this: &mut Self = self;
         loop {
-            
+            if *v == this.enter.val {
+                return Ok(this);
+            } else if *v > this.enter.val {
+                if let None = this.right {
+                    return Err("not find".to_string());
+                }
+                this = { this }.right.as_mut().unwrap();
+            } else {
+                if let None = this.left {
+                    return Err("not find".to_string());
+                }
+                this = { this }.left.as_mut().unwrap();
+            }
         }
     }
 }
@@ -99,5 +106,7 @@ fn main() {
     a.insert(&2);
     a.insert(&1);
 
-    println!("{:?}", a);
+    //println!("{:?}", a);
+    //println!("{:?}", a.look_up(&1));
+    println!("{:?}", a.look_up_while(&1));
 }
