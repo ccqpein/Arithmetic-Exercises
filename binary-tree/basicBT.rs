@@ -61,7 +61,7 @@ impl Tree {
         }
     }
 
-    fn look_up(&mut self, v: &i32) -> Result<&mut Self, String> {
+    fn look_up_recursive(&mut self, v: &i32) -> Result<&mut Self, String> {
         if *v == self.enter.val {
             return Ok(self);
         } else if *v > self.enter.val {
@@ -81,7 +81,7 @@ impl Tree {
         }
     }
 
-    fn look_up_while(&mut self, v: &i32) -> Result<&mut Self, String> {
+    fn look_up(&mut self, v: &i32) -> Result<&mut Self, String> {
         let mut this: &mut Self = self;
         loop {
             if *v == this.enter.val {
@@ -99,6 +99,8 @@ impl Tree {
             }
         }
     }
+
+    fn left_shift(&mut self, v: &i32) {}
 }
 
 fn main() {
@@ -108,5 +110,6 @@ fn main() {
 
     //println!("{:?}", a);
     //println!("{:?}", a.look_up(&1));
-    println!("{:?}", a.look_up_while(&1));
+    println!("{:?}", a.look_up(&1));
+    println!("{:?}", a);
 }
