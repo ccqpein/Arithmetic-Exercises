@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Tree {
     enter: Node,
     left: Option<Box<Tree>>,
@@ -6,14 +6,14 @@ struct Tree {
 }
 
 //for red-black tree
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum Color {
     Black,
     Red,
     White,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Node {
     val: i32,
     color: Color,
@@ -27,6 +27,8 @@ impl Node {
         }
     }
 }
+
+type ReTr<'a> = Result<&'a mut Tree, String>;
 
 impl Tree {
     fn new(v: &i32) -> Tree {
@@ -81,7 +83,7 @@ impl Tree {
         }
     }
 
-    fn look_up(&mut self, v: &i32) -> Result<&mut Self, String> {
+    fn look_up(&mut self, v: &i32) -> ReTr {
         let mut this: &mut Self = self;
         loop {
             if *v == this.enter.val {
@@ -100,6 +102,27 @@ impl Tree {
         }
     }
 
+    fn look_up_father(&mut self, v: &i32) -> (ReTr, String) {
+        let mut this: &mut Self = self;
+        loop {
+            if *v == this.right.as_ref().unwrap().enter.val {
+                return (Ok(this), "right".to_string());
+            } else if *v == this.right.as_ref().unwrap().enter.val {
+                return (Ok(this), "left".to_string());
+            } else if *v > this.enter.val {
+                if let None = this.right {
+                    return (Err("not find".to_string()), "Error".to_string());
+                }
+                this = { this }.right.as_mut().unwrap();
+            } else {
+                if let None = this.left {
+                    return (Err("not find".to_string()), "Error".to_string());
+                }
+                this = { this }.left.as_mut().unwrap();
+            }
+        }
+    }
+
     fn left_shift(&mut self, v: &i32) {}
 }
 
@@ -107,9 +130,11 @@ fn main() {
     let mut a = Tree::new(&3);
     a.insert(&2);
     a.insert(&1);
+    a.insert(&4);
+    a.insert(&5);
 
     //println!("{:?}", a);
     //println!("{:?}", a.look_up(&1));
-    println!("{:?}", a.look_up(&1));
-    println!("{:?}", a);
+    println!("{:?}", a.look_up_father(&4));
+    //println!("{:?}", a);
 }
