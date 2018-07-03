@@ -26,14 +26,24 @@ impl Node {
             color: Color::White,
         }
     }
+
+    fn make_black(&mut self) {
+        self.color = Color::Black;
+    }
+
+    fn make_red(&mut self) {
+        self.color = Color::Red;
+    }
 }
 
 type ReTr<'a> = Result<&'a mut Tree, String>;
 
 impl Tree {
     fn new(v: &i32) -> Tree {
+        let mut root = Node::new(v);
+        root.make_black();
         Tree {
-            enter: Node::new(v),
+            enter: root,
             left: None,
             right: None,
         }
@@ -45,14 +55,12 @@ impl Tree {
         } else {
             &mut self.left
         };
-        //println!("target is -> {:?}", target);
+
         match target {
-            Some(next) => {
-                //println!("next is -> {:?}", &next);
-                next.insert(v)
-            }
+            Some(next) => next.insert(v),
             None => {
-                let new_node = Node::new(v);
+                let mut new_node = Node::new(v);
+                new_node.make_red();
                 let new_tree = Tree {
                     enter: new_node,
                     left: None,
@@ -63,7 +71,7 @@ impl Tree {
         }
     }
 
-    fn look_up_recursive(&mut self, v: &i32) -> Result<&mut Self, String> {
+    fn look_up_recursive(&mut self, v: &i32) -> ReTr {
         if *v == self.enter.val {
             return Ok(self);
         } else if *v > self.enter.val {
