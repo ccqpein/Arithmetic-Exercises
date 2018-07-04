@@ -1,9 +1,21 @@
+use std::fmt;
+
 #[derive(Debug, Clone)]
 struct Tree {
     enter: Node,
     left: Option<Box<Tree>>,
     right: Option<Box<Tree>>,
 }
+
+/*impl fmt::Display for Tree {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "(this: {:#?}, \nleft: {:#?}, \nright: {:#?})",
+            self.enter, self.left, self.right
+        )
+    }
+}*/
 
 //for red-black tree
 #[derive(Debug, Clone)]
@@ -113,7 +125,9 @@ impl Tree {
     fn look_up_father(&mut self, v: &i32) -> (ReTr, String) {
         let mut this: &mut Self = self;
         loop {
-            if *v == this.right.as_ref().unwrap().enter.val {
+            if *v == this.enter.val {
+                return (Err("no father".to_string()), "this".to_string());
+            } else if *v == this.right.as_ref().unwrap().enter.val {
                 return (Ok(this), "right".to_string());
             } else if *v == this.left.as_ref().unwrap().enter.val {
                 return (Ok(this), "left".to_string());
@@ -140,14 +154,35 @@ impl Tree {
     }
 
     fn left_shift(&mut self, v: &i32) {
-        let father = self.look_up_father(v).0.unwrap();
-        let mut this = father.cut_left_tree().unwrap();
-        let mut son = this.cut_right_tree().unwrap();
-        let grand_son = son.cut_left_tree().unwrap();
+        match self.look_up_father(v).0 {
+            Ok(r) => {
+                let father = r;
+                let mut this = father.cut_left_tree().unwrap();
+                let mut son = this.cut_right_tree().unwrap();
+                let grand_son = son.cut_left_tree().unwrap();
 
-        this.right = Some(grand_son);
-        son.left = Some(this);
-        father.left = Some(son);
+                this.right = Some(grand_son);
+                son.left = Some(this);
+                father.left = Some(son);
+                return;
+            }
+            _ => (),
+        }
+
+        let left = self.cut_left_tree().unwrap();
+        let mut new_left = Tree::new(&self.enter.val);
+        new_left.left = Some(left);
+
+        let mut right = self.cut_right_tree().unwrap();
+        let right_left = right.cut_left_tree().unwrap();
+        let right_right = right.cut_right_tree().unwrap();
+        new_left.right = Some(right_left);
+
+        self.enter = Node::new(&right.enter.val);
+
+        self.right = Some(right_right);
+
+        self.left = Some(Box::new(new_left));
     }
 
     fn right_shift(&mut self, v: &i32) {
@@ -174,27 +209,29 @@ fn main() {
     //println!("{:?}", a.look_up_father(&4));
     //println!("{:?}", a);
 
-    //let mut b = Tree::new(&10);
-    //b.insert(&2);
-    //b.insert(&1);
-    //b.insert(&5);
-    //b.insert(&3);
-    //b.insert(&6);
-    //b.insert(&11);
+    let mut b = Tree::new(&10);
+    b.insert(&2);
+    b.insert(&1);
+    b.insert(&5);
+    b.insert(&3);
+    b.insert(&6);
+    b.insert(&11);
 
     //println!("{:?}", b);
     //println!("{:?}", b.look_up_father(&2));
-    //b.left_shift(&2);
-    //println!("{:?}", b);
+    let mut c = b.cut_left_tree().unwrap();
+    //println!("{:#?}", c);
+    c.left_shift(&2);
+    println!("{:#?}", c);
 
-    let mut c = Tree::new(&2);
-    c.insert(&8);
-    c.insert(&1);
-    c.insert(&5);
-    c.insert(&4);
-    c.insert(&7);
-    c.insert(&9);
+    //let mut c = Tree::new(&2);
+    //c.insert(&8);
+    //c.insert(&1);
+    //c.insert(&5);
+    //c.insert(&4);
+    //c.insert(&7);
+    //c.insert(&9);
     //println!("{:?}", c.look_up_father(&8));
-    c.right_shift(&8);
-    println!("{:?}", c);
+    //c.right_shift(&8);
+    //println!("{:#?}", c);
 }
