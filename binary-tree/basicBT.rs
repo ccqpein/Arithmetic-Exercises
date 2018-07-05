@@ -39,6 +39,16 @@ impl Node {
         }
     }
 
+    fn new_black(v: &i32) -> Node {
+        let mut n = Node::new(v);
+        n.make_black();
+        n
+    }
+    fn new_red(v: &i32) -> Node {
+        let mut n = Node::new(v);
+        n.make_red();
+        n
+    }
     fn make_black(&mut self) {
         self.color = Color::Black;
     }
@@ -145,11 +155,11 @@ impl Tree {
         }
     }
 
-    fn cut_left_tree(&mut self) -> Option<Box<Self>> {
+    fn cut_left_tree(&self) -> Option<Box<Self>> {
         self.left.clone()
     }
 
-    fn cut_right_tree(&mut self) -> Option<Box<Self>> {
+    fn cut_right_tree(&self) -> Option<Box<Self>> {
         self.right.clone()
     }
 
@@ -173,12 +183,12 @@ impl Tree {
         let mut new_left = Tree::new(&self.enter.val);
         new_left.left = Some(left);
 
-        let mut right = self.cut_right_tree().unwrap();
+        let right = self.cut_right_tree().unwrap();
         let right_left = right.cut_left_tree().unwrap();
         let right_right = right.cut_right_tree().unwrap();
         new_left.right = Some(right_left);
 
-        self.enter = Node::new(&right.enter.val);
+        self.enter = Node::new_black(&right.enter.val);
 
         self.right = Some(right_right);
 
@@ -186,14 +196,33 @@ impl Tree {
     }
 
     fn right_shift(&mut self, v: &i32) {
-        let father = self.look_up_father(v).0.unwrap();
-        let mut this = father.cut_right_tree().unwrap();
-        let mut son = this.cut_left_tree().unwrap();
-        let grand_son = son.cut_right_tree().unwrap();
+        match self.look_up_father(v).0 {
+            Ok(r) => {
+                let father = r;
+                let mut this = father.cut_right_tree().unwrap();
+                let mut son = this.cut_left_tree().unwrap();
+                let grand_son = son.cut_right_tree().unwrap();
 
-        this.left = Some(grand_son);
-        son.right = Some(this);
-        father.right = Some(son);
+                this.left = Some(grand_son);
+                son.right = Some(this);
+                father.right = Some(son);
+                return;
+            }
+            _ => (),
+        }
+
+        let right = self.cut_right_tree().unwrap();
+        let left = self.cut_left_tree().unwrap();
+        let left_left = left.cut_left_tree().unwrap();
+        let left_right = left.cut_left_tree().unwrap();
+
+        let mut new_right = Tree::new(&self.enter.val);
+        new_right.left = Some(left_right);
+        new_right.right = Some(right);
+
+        self.enter = Node::new_black(&left.enter.val);
+        self.left = Some(left_left);
+        self.right = Some(Box::new(new_right));
     }
 }
 
