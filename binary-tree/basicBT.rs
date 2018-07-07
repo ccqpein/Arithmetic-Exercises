@@ -79,26 +79,38 @@ impl Tree {
         }
     }
 
+    //fix color at ending of insert method
     fn insert(&mut self, v: &i32) {
-        let target = if *v > self.enter.val {
-            &mut self.right
-        } else {
-            &mut self.left
-        };
+        if *v == self.enter.val {
+            println!("{}", "duplicate value");
+            return;
+        }
 
-        match target {
-            Some(next) => next.insert(v),
-            None => {
-                let mut new_node = Node::new(v);
-                new_node.make_red();
-                let new_tree = Tree {
-                    enter: new_node,
-                    left: None,
-                    right: None,
-                };
-                *target = Some(Box::new(new_tree));
+        {
+            //need drop target which hold self ownship..
+            //we need this ownship to fix color at endding of this method.
+            let target = if *v > self.enter.val {
+                &mut self.right
+            } else {
+                &mut self.left
+            };
+
+            match target {
+                Some(next) => next.insert(v),
+                None => {
+                    let mut new_node = Node::new(v);
+                    new_node.make_red();
+                    let new_tree = Tree {
+                        enter: new_node,
+                        left: None,
+                        right: None,
+                    };
+                    *target = Some(Box::new(new_tree));
+                }
             }
         }
+
+        //self.fix(v);
     }
 
     fn look_up_recursive(&mut self, v: &i32) -> ReTr {
