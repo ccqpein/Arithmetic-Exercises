@@ -18,7 +18,7 @@ struct Tree {
 }*/
 
 //for red-black tree
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 enum Color {
     Black,
     Red,
@@ -55,6 +55,14 @@ impl Node {
 
     fn make_red(&mut self) {
         self.color = Color::Red;
+    }
+
+    fn change_color(&mut self) {
+        if self.color == Color::Black {
+            self.color = Color::Red
+        } else {
+            self.color = Color::Black
+        }
     }
 }
 
