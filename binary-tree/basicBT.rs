@@ -152,26 +152,76 @@ impl Tree {
         }
     }
 
-    fn look_up_father(&mut self, v: &i32) -> (ReTr, String) {
+    fn look_up_father(&mut self, v: &i32) -> (ReTr, &'static str) {
         let mut this: &mut Self = self;
         loop {
             if *v == this.enter.val {
-                return (Err("no father".to_string()), "this".to_string());
+                return (Err("no father".to_string()), "this");
             } else if *v == this.right.as_ref().unwrap().enter.val {
-                return (Ok(this), "right".to_string());
+                return (Ok(this), "right");
             } else if *v == this.left.as_ref().unwrap().enter.val {
-                return (Ok(this), "left".to_string());
+                return (Ok(this), "left");
             } else if *v > this.enter.val {
                 if let None = this.right {
-                    return (Err("not find".to_string()), "Error".to_string());
+                    return (Err("not find".to_string()), "Error");
                 }
                 this = { this }.right.as_mut().unwrap();
             } else {
                 if let None = this.left {
-                    return (Err("not find".to_string()), "Error".to_string());
+                    return (Err("not find".to_string()), "Error");
                 }
                 this = { this }.left.as_mut().unwrap();
             }
+        }
+    }
+
+    //find father, grandfather, and uncle
+    fn look_up_family(
+        &mut self,
+        v: &i32,
+    ) -> (
+        Result<i32, &'static str>,
+        Result<i32, &'static str>,
+        Result<i32, &'static str>,
+    ) {
+        let this: &mut Self = self;
+        let grandfather: i32;
+        let father: i32;
+
+        match this.look_up_father(v).0 {
+            Ok(n) => {
+                father = n.enter.val;
+            }
+            Err(_) => {
+                return (
+                    Err("father not find"),
+                    Err("grandfather not find"),
+                    Err("uncle not find"),
+                )
+            }
+        }
+
+        let uncle_option: &Option<Box<Tree>>;
+        match this.look_up_father(&father) {
+            (Ok(n), s) => {
+                grandfather = n.enter.val;
+                match s {
+                    "left" => uncle_option = &n.right,
+                    _ => uncle_option = &n.left,
+                };
+            }
+            (Err(_), _) => {
+                return (
+                    Ok(father),
+                    Err("grandfather not find"),
+                    Err("uncle not find"),
+                )
+            }
+        }
+
+        match uncle_option {
+            Some(un) => return (Ok(father), Ok(grandfather), Ok(un.enter.val)),
+            _ => return (Ok(father), Ok(grandfather), Err("uncle not find")),
         }
     }
 
