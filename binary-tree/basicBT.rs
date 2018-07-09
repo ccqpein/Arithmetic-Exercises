@@ -154,22 +154,51 @@ impl Tree {
 
     fn look_up_father(&mut self, v: &i32) -> (ReTr, &'static str) {
         let mut this: &mut Self = self;
+        let mut result: &str = "None";
+        let mut next: &str = "None";
         loop {
             if *v == this.enter.val {
                 return (Err("no father".to_string()), "this");
-            } else if *v == this.right.as_ref().unwrap().enter.val {
-                return (Ok(this), "right");
-            } else if *v == this.left.as_ref().unwrap().enter.val {
-                return (Ok(this), "left");
-            } else if *v > this.enter.val {
+            }
+
+            match (this.right.as_ref(), this.left.as_ref()) {
+                (Some(r), Some(l)) => {
+                    if r.enter.val == *v {
+                        result = "right";
+                    } else if l.enter.val == *v {
+                        result = "left"
+                    }
+                }
+                (Some(r), None) => {
+                    if r.enter.val == *v {
+                        result = "right";
+                    }
+                }
+                (None, Some(l)) => {
+                    if l.enter.val == *v {
+                        result = "left";
+                    }
+                }
+                _ => (),
+            }
+
+            if *v > this.enter.val {
                 if let None = this.right {
                     return (Err("not find".to_string()), "Error");
                 }
-                this = { this }.right.as_mut().unwrap();
+                next = "right";
             } else {
                 if let None = this.left {
                     return (Err("not find".to_string()), "Error");
                 }
+                next = "left";
+            }
+
+            if result != "None" {
+                return (Ok(this), result);
+            } else if next == "right" {
+                this = { this }.right.as_mut().unwrap();
+            } else if next == "left" {
                 this = { this }.left.as_mut().unwrap();
             }
         }
@@ -271,9 +300,9 @@ impl Tree {
                 let father = r;
                 let mut this = father.cut_right_tree().unwrap();
                 let mut son = this.cut_left_tree().unwrap();
-                let grand_son = son.cut_right_tree().unwrap();
+                let grand_son = son.cut_right_tree();
 
-                this.left = Some(grand_son);
+                this.left = grand_son;
                 son.right = Some(this);
                 father.right = Some(son);
                 return;
