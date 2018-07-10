@@ -310,18 +310,78 @@ impl Tree {
             _ => (),
         }
 
-        let right = self.cut_right_tree().unwrap();
+        let right = self.cut_right_tree();
         let left = self.cut_left_tree().unwrap();
         let left_left = left.cut_left_tree().unwrap();
-        let left_right = left.cut_left_tree().unwrap();
+        let left_right = left.cut_right_tree().unwrap();
 
         let mut new_right = Tree::new(&self.enter.val);
         new_right.left = Some(left_right);
-        new_right.right = Some(right);
+        new_right.right = right;
 
         self.enter = Node::new_black(&left.enter.val);
         self.left = Some(left_left);
         self.right = Some(Box::new(new_right));
+    }
+
+    //this fix method might not very efficiency because look_up_father..
+    //always look from top of tree
+    fn fix(&mut self, v: &i32) {
+        //step 1
+        let mut this: i32 = 0;
+        match self.look_up_family(v) {
+            (Ok(father), Ok(grandfather), Ok(uncle)) => {
+                if let Ok(fff) = self.look_up_father(&grandfather).0 {
+                    this = fff.enter.val;
+                } else {
+                    println!("{}", "no great-grandfather");
+                    return;
+                }
+
+                if let Ok(ff) = self.look_up(&father) {
+                    ff.enter.make_black();
+                }
+
+                if let Ok(un) = self.look_up(&uncle) {
+                    un.enter.make_black();
+                }
+
+                if let Ok(ff) = self.look_up(&grandfather) {
+                    ff.enter.make_red();
+                }
+            }
+            (a, b, c) => println!("{:#?}, {:#?}, {:#?}", a, b, c),
+        }
+
+        //step 2
+        self.left_shift(&this);
+        this = self
+            .look_up(&{ this })
+            .unwrap()
+            .left
+            .as_mut()
+            .unwrap()
+            .enter
+            .val;
+
+        //stap3
+        match self.look_up_family(&this) {
+            (Ok(father), Ok(grandfather), _) => {
+                if let Ok(ff) = self.look_up(&father) {
+                    ff.enter.make_black();
+                }
+
+                if let Ok(gf) = self.look_up(&grandfather) {
+                    gf.enter.make_red();
+                    this = gf.enter.val;
+                }
+            }
+            _ => (),
+        }
+
+        this = self.look_up_father(&this).0.unwrap().enter.val;
+        self.right_shift(&this);
+        self.enter.make_black();
     }
 }
 
