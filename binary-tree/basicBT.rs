@@ -80,15 +80,16 @@ impl Tree {
     }
 
     //fix color at ending of insert method
-    fn insert(&mut self, v: &i32) {
+    fn insert_recursive(&mut self, v: &i32) {
         if *v == self.enter.val {
             println!("{}", "duplicate value");
             return;
         }
 
+        let color_this: Color;
+        //need drop target which hold self ownship..
+        //we need this ownship to fix color at endding of this method.
         {
-            //need drop target which hold self ownship..
-            //we need this ownship to fix color at endding of this method.
             let target = if *v > self.enter.val {
                 &mut self.right
             } else {
@@ -109,8 +110,61 @@ impl Tree {
                 }
             }
         }
+    }
 
-        //self.fix(v);
+    fn insert(&mut self, v: &i32) {
+        let mut color: Color;
+
+        {
+            let mut this: &mut Self = self;
+            loop {
+                if *v == this.enter.val {
+                    println!("{}", "duplicate value");
+                    return;
+                }
+
+                if *v > this.enter.val {
+                    if let Some(_) = this.right {
+                        this = { this }.right.as_mut().unwrap();
+                        continue;
+                    } else {
+                        let mut new_node = Node::new(v);
+                        new_node.make_red();
+                        let new_tree = Tree {
+                            enter: new_node,
+                            left: None,
+                            right: None,
+                        };
+                        this.right = Some(Box::new(new_tree));
+                        color = this.enter.color.clone();
+                        break;
+                    }
+                }
+
+                if *v < this.enter.val {
+                    if let Some(_) = this.left {
+                        this = { this }.left.as_mut().unwrap();
+                        continue;
+                    } else {
+                        let mut new_node = Node::new(v);
+                        new_node.make_red();
+                        let new_tree = Tree {
+                            enter: new_node,
+                            left: None,
+                            right: None,
+                        };
+                        this.left = Some(Box::new(new_tree));
+                        color = this.enter.color.clone();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if color == Color::Red {
+            println!("{}", "fix here");
+            //self.fix(v);
+        }
     }
 
     fn look_up_recursive(&mut self, v: &i32) -> ReTr {
@@ -397,29 +451,35 @@ fn main() {
     //println!("{:?}", a.look_up_father(&4));
     //println!("{:?}", a);
 
-    let mut b = Tree::new(&10);
-    b.insert(&2);
-    b.insert(&1);
-    b.insert(&5);
-    b.insert(&3);
-    b.insert(&6);
-    b.insert(&11);
+    //let mut b = Tree::new(&10);
+    //b.insert(&2);
+    //b.insert(&1);
+    //b.insert(&5);
+    //b.insert(&3);
+    //b.insert(&6);
+    //b.insert(&11);
 
-    //println!("{:?}", b);
+    //println!("{:#?}", b);
     //println!("{:?}", b.look_up_father(&2));
-    let mut c = b.cut_left_tree().unwrap();
+    //let mut c = b.cut_left_tree().unwrap();
     //println!("{:#?}", c);
-    c.left_shift(&2);
-    println!("{:#?}", c);
+    //c.left_shift(&2);
+    //println!("{:#?}", c);
+    //println!("{:#?}", b.look_up_family(&1));
+    //println!("{:#?}", b.look_up_family(&2));
+    //println!("{:#?}", b.look_up_family(&10));
 
-    //let mut c = Tree::new(&2);
-    //c.insert(&8);
-    //c.insert(&1);
-    //c.insert(&5);
-    //c.insert(&4);
-    //c.insert(&7);
-    //c.insert(&9);
-    //println!("{:?}", c.look_up_father(&8));
-    //c.right_shift(&8);
-    //println!("{:#?}", c);
+    let mut c = Tree::new(&11);
+    c.insert(&2);
+    c.insert(&14);
+    c.insert(&1);
+    c.insert(&7);
+    c.insert(&13);
+    c.insert(&8);
+    c.insert(&5);
+    c.insert(&4);
+    //c.fix(&4);
+    //println!("{:#?}", c.look_up_father(&4));
+    //c.left_shift(&2);
+    println!("{:#?}", c);
 }
