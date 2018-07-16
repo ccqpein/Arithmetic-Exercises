@@ -162,7 +162,6 @@ impl Tree {
         }
 
         if color == Color::Red {
-            println!("{}", "fix here");
             self.fix(v);
         }
     }
@@ -317,16 +316,27 @@ impl Tree {
     }
 
     fn left_shift(&mut self, v: &i32) {
-        match self.look_up_father(v).0 {
-            Ok(r) => {
+        match self.look_up_father(v) {
+            (Ok(r), "left") => {
                 let father = r;
                 let mut this = father.cut_left_tree().unwrap();
                 let mut son = this.cut_right_tree().unwrap();
-                let grand_son = son.cut_left_tree().unwrap();
+                let grand_son = son.cut_left_tree();
 
-                this.right = Some(grand_son);
+                this.right = grand_son;
                 son.left = Some(this);
                 father.left = Some(son);
+                return;
+            }
+            (Ok(r), "right") => {
+                let father = r;
+                let mut this = father.cut_right_tree().unwrap();
+                let mut son = this.cut_right_tree().unwrap();
+                let grand_son = son.cut_left_tree();
+
+                this.right = grand_son;
+                son.left = Some(this);
+                father.right = Some(son);
                 return;
             }
             _ => (),
@@ -334,6 +344,7 @@ impl Tree {
 
         let left = self.cut_left_tree().unwrap();
         let mut new_left = Tree::new(&self.enter.val);
+        new_left.enter.color = self.enter.color.clone();
         new_left.left = Some(left);
 
         let right = self.cut_right_tree().unwrap();
@@ -349,10 +360,21 @@ impl Tree {
     }
 
     fn right_shift(&mut self, v: &i32) {
-        match self.look_up_father(v).0 {
-            Ok(r) => {
+        match self.look_up_father(v) {
+            (Ok(r), "right") => {
                 let father = r;
                 let mut this = father.cut_right_tree().unwrap();
+                let mut son = this.cut_left_tree().unwrap();
+                let grand_son = son.cut_right_tree();
+
+                this.left = grand_son;
+                son.right = Some(this);
+                father.right = Some(son);
+                return;
+            }
+            (Ok(r), "left") => {
+                let father = r;
+                let mut this = father.cut_left_tree().unwrap();
                 let mut son = this.cut_left_tree().unwrap();
                 let grand_son = son.cut_right_tree();
 
@@ -382,7 +404,7 @@ impl Tree {
     //this fix method might not very efficiency because look_up_father..
     //always look from top of tree
     fn fix(&mut self, v: &i32) {
-        println!("fix: {}", *v);
+        //println!("fix: {}", *v);
         let mut this: i32 = *v;
         let mut status = (0, "");
 
@@ -393,20 +415,28 @@ impl Tree {
                 if let (Ok(gf), e) = self.look_up_father(&father) {
                     if e == "left" {
                         match &gf.right {
-                            None => status = (3, "left"),
+                            None => {
+                                status = (2, "left");
+                                this = *v;
+                            }
                             Some(temp) => if temp.enter.color == Color::Black {
-                                status = (3, "left");
+                                status = (2, "left");
+                                this = *v;
                             } else if temp.enter.color == Color::Red {
-                                status = (1, "left");
+                                status = (1, "");
                             },
                         }
                     } else if e == "right" {
                         match &gf.left {
-                            None => status = (3, "right"),
+                            None => {
+                                status = (2, "right");
+                                this = *v;
+                            }
                             Some(temp) => if temp.enter.color == Color::Black {
-                                status = (3, "right");
+                                status = (2, "right");
+                                this = *v;
                             } else if temp.enter.color == Color::Red {
-                                status = (1, "right");
+                                status = (1, "");
                             },
                         }
                     }
@@ -416,16 +446,20 @@ impl Tree {
             (a, b, c) => (),
         }
 
-        println!("status: {:?}", status);
+        //println!("status: {:?}", status);
         //step 1
         if status.0 == 1 {
+            let mut great_grand_father: i32 = 0;
+
             match self.look_up_family(v) {
                 (Ok(father), Ok(grandfather), Ok(uncle)) => {
-                    if let (Ok(fff), e) = self.look_up_father(&grandfather) {
-                        this = fff.enter.val;
+                    let mut level_three = false;
+                    if let (Ok(fff), _e) = self.look_up_father(&grandfather) {
+                        this = grandfather;
+                        great_grand_father = fff.enter.val;
                     } else {
-                        println!("{}", "no great-grandfather");
-                        return;
+                        //println!("{}", "no great-grandfather");
+                        level_three = true;
                     }
 
                     if let Ok(ff) = self.look_up(&father) {
@@ -436,45 +470,53 @@ impl Tree {
                         un.enter.make_black();
                     }
 
+                    if level_three {
+                        return;
+                    }
+
                     if let Ok(ff) = self.look_up(&grandfather) {
                         ff.enter.make_red();
                     }
-                    status = (2, status.1);
                 }
-                (a, b, c) => println!("{:#?}, {:#?}, {:#?}", a, b, c),
+                (a, b, c) => {
+                    println!("{:#?}, {:#?}, {:#?}", a, b, c);
+                    return;
+                }
             }
+            let (_, e) = self.look_up_father(&great_grand_father);
+            status.1 = e;
+            status.0 = 2;
         }
 
+        //println!("{}", this);
         //step 2
         if status.0 == 2 {
-            self.left_shift(&this);
-            this = self
-                .look_up(&this)
-                .unwrap()
-                .left
-                .as_mut()
-                .unwrap()
-                .enter
-                .val;
-            status = (3, status.1);
-        }
-
-        //stap3
-        if status.0 == 3 {
             match self.look_up_family(&this) {
                 (Ok(father), Ok(grandfather), _) => {
-                    if let Ok(ff) = self.look_up(&father) {
-                        ff.enter.make_black();
-                    }
-
-                    if let Ok(gf) = self.look_up(&grandfather) {
-                        gf.enter.make_red();
-                        this = gf.enter.val;
+                    if let (Ok(_), e) = self.look_up_father(&this) {
+                        if e == "left" && status.1 == "right" {
+                            self.right_shift(&father);
+                            self.look_up(&grandfather).unwrap().enter.make_red();
+                            self.look_up(&this).unwrap().enter.make_black();
+                            self.left_shift(&grandfather);
+                        } else if e == "right" && status.1 == "left" {
+                            self.left_shift(&father);
+                            self.look_up(&grandfather).unwrap().enter.make_red();
+                            self.look_up(&this).unwrap().enter.make_black();
+                            self.right_shift(&grandfather);
+                        } else if e == "left" && status.1 == "left" {
+                            self.look_up(&grandfather).unwrap().enter.make_red();
+                            self.look_up(&father).unwrap().enter.make_black();
+                            self.right_shift(&grandfather);
+                        } else if e == "right" && status.1 == "right" {
+                            self.look_up(&grandfather).unwrap().enter.make_red();
+                            self.look_up(&father).unwrap().enter.make_black();
+                            self.left_shift(&grandfather);
+                        }
                     }
                 }
                 _ => (),
             }
-            self.right_shift(&this);
         }
     }
 }
@@ -511,16 +553,22 @@ fn main() {
 
     let mut c = Tree::new(&11);
     c.insert(&2);
-    //c.insert(&14);
+    c.insert(&14);
     c.insert(&1);
-    println!("{:#?}", c);
-    //c.insert(&7);
-    //c.insert(&13);
-    //c.insert(&8);
-    //c.insert(&5);
-    //c.insert(&4);
-    //c.fix(&4);
-    //println!("{:#?}", c.look_up_father(&4));
-    //c.left_shift(&2);
+    c.insert(&7);
+    c.insert(&13);
+    c.insert(&8);
+    c.insert(&5);
+    c.insert(&4);
     //println!("{:#?}", c);
+
+    let mut d = Tree::new(&8);
+    d.insert(&18);
+    d.insert(&5);
+    d.insert(&15);
+    d.insert(&17);
+    d.insert(&25);
+    //d.insert(&40);
+    //d.insert(&80);
+    println!("{:#?}", d);
 }
