@@ -9,6 +9,7 @@ Search arithmetic questions from the Web, code them using different languages fo
 + Python
 + Go
 + Common Lisp
++ Rust
 + Swift
 + Haskell
 + Clojure
