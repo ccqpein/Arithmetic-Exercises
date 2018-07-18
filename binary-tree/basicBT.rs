@@ -25,6 +25,7 @@ enum Color {
     White,
 }
 
+//tree node
 #[derive(Debug, Clone)]
 struct Node {
     val: i32,
@@ -66,6 +67,7 @@ impl Node {
     }
 }
 
+//type alias
 type ReTr<'a> = Result<&'a mut Tree, String>;
 
 impl Tree {
