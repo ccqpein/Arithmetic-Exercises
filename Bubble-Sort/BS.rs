@@ -1,3 +1,29 @@
+fn bubble_sort<T>(a: Vec<T>) -> Vec<T>
+where
+    T: PartialEq + PartialOrd + Clone,
+{
+    let length = a.len();
+    let mut flag = true;
+    let mut b = a;
+    while (flag) {
+        flag = false;
+        let mut temp: Vec<T> = vec![];
+        let mut this = b[0].clone();
+        for i in 1..length {
+            if b[i] < this {
+                temp.push(b[i].clone());
+                flag = true;
+            } else {
+                temp.push(this);
+                this = b[i].clone();
+            }
+        }
+        temp.push(this);
+        b = temp;
+    }
+    b
+}
+
 fn main() {
     let test = vec![
         30, 63, 83, 40, 15, 45, 46, 15, 56, 39, 82, 97, 59, 88, 3, 1, 40, 95, 83, 32, 38, 70, 4,
@@ -10,4 +36,5 @@ fn main() {
         8, 50, 97, 30, 68, 1, 34, 15, 38, 52, 27, 50, 10, 22, 67, 25, 37, 84, 91, 13, 15, 0, 5, 31,
         18, 5, 31, 49, 93, 95, 3, 86, 11, 37, 68, 43, 74,
     ];
+    println!("{:?}", bubble_sort(test));
 }
