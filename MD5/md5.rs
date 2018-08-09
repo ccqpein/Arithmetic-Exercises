@@ -15,7 +15,7 @@ where
 }
 
 fn main() {
-    let input_data = b"hello world";
+    let input_data = b"hello world,aaa";
     let mut reader = BufReader::new(&input_data[..]);
 
     let first = read_n(&mut reader, 5);
@@ -25,6 +25,6 @@ fn main() {
     println!(
         "{:?}, {:?}",
         str::from_utf8(&first),
-        str::from_utf8(&second)
+        str::from_utf8(&second),
     );
 }
