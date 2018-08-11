@@ -2,6 +2,10 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::str;
 
+//1 group = 512 bits = 16 * 32 bits
+//512 bits = 64 bytes = 16 * 4 bytes
+//32 bits = 4 bytes
+//MD5 give Hex chars out
 fn read_n<R>(reader: R, bytes_to_read: u64) -> Vec<u8>
 where
     R: Read,
