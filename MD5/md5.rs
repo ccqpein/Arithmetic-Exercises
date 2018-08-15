@@ -47,8 +47,10 @@ where
     let bytes = reader.bytes();
     let mut time = 0;
 
+    let mut origin_len = 0;
     for byte in bytes {
         time += 1;
+        origin_len += 1
         buf.push(byte.unwrap());
         if time == 64 {
             time = 0;
@@ -70,8 +72,9 @@ where
                 buf.push(0x00u8)
             }
         }
-        return buf;
     }
+
+    origin_len * 8 
 
     buf
 }
