@@ -75,15 +75,29 @@ where
     }
 
     //length of orginal data tail 64 bits
-    let len_data = (origin_len * 8) % u64::max_value();
+    //let mut len_data = (origin_len * 8) % u64::max_value();
     //len_data & 0xff00000000000000
 
-    let mut bit_cache = 0xff00000000000000;
-    for _ in 0..8 {
-        buf.push((len_data & bit_cache))
-    }
+    //let mut bit_cache = 0xff00000000000000;
+    //for i in 0..8 {
+    //    buf.push(((len_data & bit_cache) >> (64 - i * 8)) as u8);
+    //    len_data >>= (64 - i * 8)
+    //}
 
     buf
+}
+
+fn last_64_bits(length: &u64) -> Vec<u8> {
+    let mut len_last64 = length % u64::max_value();
+    let mut bit_cache = 0xff00000000000000;
+    let mut buf: Vec<u8> = vec![];
+
+    for i in 0..8 {
+        buf.push(((len_last64 & bit_cache) >> (56 - i * 8)) as u8);
+        bit_cache >>= 8;
+    }
+
+    return buf;
 }
 
 fn main() {
@@ -98,5 +112,7 @@ fn main() {
     println!("{}", 184 % u64::max_value());
     println!("{}", 0xafu8 >> 2); //10101111 -> 00101011
 
-    println!("{}", 12249790986447749120 & 0xff00000000000000 as u64)
+    println!("{}", 12249790986447749120 & 0xff00000000000000 as u64);
+
+    println!("{:?}", last_64_bits(&(0x1200130014001500 as u64)));
 }
