@@ -50,7 +50,7 @@ where
     let mut origin_len = 0;
     for byte in bytes {
         time += 1;
-        origin_len += 1
+        origin_len += 1;
         buf.push(byte.unwrap());
         if time == 64 {
             time = 0;
@@ -74,7 +74,14 @@ where
         }
     }
 
-    origin_len * 8 
+    //length of orginal data tail 64 bits
+    let len_data = (origin_len * 8) % u64::max_value();
+    //len_data & 0xff00000000000000
+
+    let mut bit_cache = 0xff00000000000000;
+    for _ in 0..8 {
+        buf.push((len_data & bit_cache))
+    }
 
     buf
 }
@@ -86,4 +93,10 @@ fn main() {
     let word = read_group(&mut reader);
     println!("{}", word.len());
     println!("{:?}", str::from_utf8(&word));
+
+    println!("{}", 18446744073709551615 % u64::max_value());
+    println!("{}", 184 % u64::max_value());
+    println!("{}", 0xafu8 >> 2); //10101111 -> 00101011
+
+    println!("{}", 12249790986447749120 & 0xff00000000000000 as u64)
 }
