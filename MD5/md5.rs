@@ -7,37 +7,6 @@ use std::str;
 //448 bits = 56 bytes
 //32 bits = 4 bytes
 //MD5 give Hex chars out
-/*
-fn read_group<R>(reader: R) -> Vec<u8>
-where
-    R: Read,
-{
-    let mut buf = vec![];
-
-    let mut chunk = reader.take(64);
-    // Do appropriate error handling for your situation
-    let n = chunk.read_to_end(&mut buf).expect("Read issue error:");
-
-    if n < 64 {
-        if n < 56 {
-            buf.push(0x10u8);
-            for _ in 0..(55 - n) {
-                buf.push(0x00u8)
-            }
-        } else if n > 56 {
-            buf.push(0x10u8);
-            for _ in 0..(63 - n) {
-                buf.push(0x00u8)
-            }
-            for _ in 0..56 {
-                buf.push(0x00u8)
-            }
-        }
-        return buf;
-    }
-
-    buf
-}*/
 
 fn read_group<R>(reader: R) -> Vec<u8>
 where
@@ -74,19 +43,14 @@ where
         }
     }
 
-    //length of orginal data tail 64 bits
-    //let mut len_data = (origin_len * 8) % u64::max_value();
-    //len_data & 0xff00000000000000
+    //println!("{:?}", last_64_bits(&origin_len));
 
-    //let mut bit_cache = 0xff00000000000000;
-    //for i in 0..8 {
-    //    buf.push(((len_data & bit_cache) >> (64 - i * 8)) as u8);
-    //    len_data >>= (64 - i * 8)
-    //}
+    buf.append(&mut last_64_bits(&origin_len));
 
     buf
 }
 
+//Put length in and return last 64 bits
 fn last_64_bits(length: &u64) -> Vec<u8> {
     let mut len_last64 = length % u64::max_value();
     let mut bit_cache = 0xff00000000000000;
@@ -99,6 +63,8 @@ fn last_64_bits(length: &u64) -> Vec<u8> {
 
     return buf;
 }
+
+//A=0x67452301, B=0xefcdab89, C=0x98badcfe, D=0x10325476
 
 fn main() {
     let input_data = b"123456789A123456789B123456789C123456789D123456789E123456789F";
