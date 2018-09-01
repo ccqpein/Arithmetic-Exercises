@@ -56,13 +56,6 @@ Example:
                    (loop for id from 0 to (1- colNum) collect
                         (aref ,mm ,ii id))))))
 
-(defmacro aappend (l &rest eles)
-  "l must be symbol not expression. For example, (aappend a 2 3 4) is fine, (aappend '(1 2) 2 3) and (aappend (list 2 3) 2 2) will issue error"
-  (with-gensyms (elel)
-    `(let ((,elel (list ,@eles)))
-       (loop for i in ,elel do
-            (setf ,l (append ,l (list i))))
-       ,l)))
 ;;;;;;; Borrow tools finished ;;;;;;;;;;;;;;;
 
 (defun get-val (l &optional (m *Example))
@@ -108,7 +101,11 @@ Example:
         (setf s (car (last (car smallOne))))
         (setf l1 (car smallOne))
         (setf storeList (append storeList tempStore))
-        (aappend smallest smallOne)
+	;(print smallOne)
+        (setf smallest (append smallest (list smallOne)))
+	;(print smallest)
         ))
     (if show (print storeList))
     smallest))
+
+(DIJKSTRA 0 *EXAMPLE :show t)
