@@ -1,9 +1,12 @@
 (defun find-k-closest-elements (arr k x)
+  (declare (fixnum k x)
+	   (list arr)
+	   )
   (let* ((i_lager (loop with i = 0
-		     for v in arr
-		     while (< v x)
-		     do (incf i)
-		     finally (return i)))
+			for v in arr
+			while (< v x)
+			do (incf i)
+			finally (return i)))
 	 (i (if (> (- i_lager k) 0)
 		(- i_lager k)
 		0))
