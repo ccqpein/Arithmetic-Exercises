@@ -161,23 +161,26 @@ fn is_nil<T: ?Sized + Any>(o: &T) -> bool {
     TypeId::of::<i32>() == TypeId::of::<T>()
 }*/
 
-// new_distance_matrix!()
 // cannot check type in macro body. so do not need this macro
 /*
-macro_rules! new_distance_matrix {
-    ($([$($x:expr),*]),*) => {{
-        vec![$(vec![$(
-            if is_nil($x) {
-                None
-            }else{
-                Some($x)
-            }
-        ),*]),*]
-    }};
-    ($($x:expr),*) => {{
+(
+ ["a",("b",6 ["a","b"]),("c",3,["a","c"])],
+ ["b",...),
+)
+*/
 
+macro_rules! new_distance_matrix {
+    ($([$x:expr,$(($y:expr,$z:expr,[$($p:expr),*])),*]),*) => {{
+        let mut temp: Matrix<u32> = HashMap::new();
+        $(
+            temp.insert(
+                $x,
+                [$(($y,($z as u32,vec![$($p),*]))),*].iter().cloned().collect(),
+            );
+        )*;
+        temp
     }};
-}*/
+}
 
 fn main() {
     //let test0: Matrix<u32>;
@@ -245,7 +248,7 @@ fn main() {
         "f",
         [
             ("e", (5 as u32, vec!["f", "e"])),
-            ("d", (3 as u32, vec!["f", "e"])),
+            ("d", (3 as u32, vec!["f", "d"])),
         ]
             .iter()
             .cloned()
@@ -261,6 +264,39 @@ fn main() {
     };
 
     //Option<(&&str, &(u32, std::vec::Vec<u32>))>
-    println!("{:?}", test_case1.new_dijkstra_on("a"));
-    println!("{:?}", test_case1.inner_max.get("a"));
+    //println!("{:?}", test_case1.new_dijkstra_on("a"));
+    //println!("{:?}", test_case1.inner_max.get("a"));
+
+    // test macro
+    let macro_test_marix = new_distance_matrix!(
+        ["a", ("b", 6, ["a", "b"]), ("c", 3, ["a", "c"])],
+        [
+            "b",
+            ("a", 6, ["b", "a"]),
+            ("c", 2, ["b", "c"]),
+            ("d", 5, ["b", "d"])
+        ],
+        [
+            "c",
+            ("a", 3, ["c", "a"]),
+            ("d", 3, ["c", "d"]),
+            ("b", 2, ["c", "b"]),
+            ("e", 4, ["c", "e"])
+        ],
+        [
+            "d",
+            ("b", 5, ["d", "b"]),
+            ("e", 2, ["d", "e"]),
+            ("c", 3, ["d", "c"]),
+            ("f", 3, ["d", "f"])
+        ],
+        [
+            "e",
+            ("c", 4, ["e", "c"]),
+            ("d", 2, ["e", "d"]),
+            ("f", 5, ["e", "f"])
+        ],
+        ["f", ("e", 5, ["f", "e"]), ("d", 3, ["f", "d"])]
+    );
+    println!("{:?}", macro_test_marix);
 }
