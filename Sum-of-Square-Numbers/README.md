@@ -1,5 +1,7 @@
 # README #
 
+[Source](https://leetcode.com/problems/sum-of-square-numbers/description/)
+
 Given a non-negative integer `c`, your task is to decide whether there're two integers `a` and `b` such that a^2 + b^2 = c.
 
 **Example 1:**
