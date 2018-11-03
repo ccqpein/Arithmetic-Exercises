@@ -1,0 +1,23 @@
+(defun judge-square-sum (input)
+  (cond ((= input 0) t)
+		((< input 0) nil)
+		(t
+		 (let ((upper (number-sqrt-round input)))
+		   (loop for i from 0 to (+ upper 1)
+			  for temp_i = (* i i)
+			  do (if (> temp_i input)
+					 (return-from judge-square-sum nil))
+			  do (let ((down (number-sqrt-rest (- input temp_i))))
+				   (if (= 0 down)
+					   (return-from judge-square-sum t)
+					   )))))))
+
+(defun number-sqrt-round (n)
+  (multiple-value-bind (down rest)
+	  (round (sqrt n))
+	down))
+
+(defun number-sqrt-rest (n)
+  (multiple-value-bind (down rest)
+	  (round (sqrt n))
+	rest))
