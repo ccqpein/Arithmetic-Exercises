@@ -8,3 +8,6 @@ GRTAGS
 GTAGS
 .nrepl-port
 target
+*.cmi
+*.cmx
+*.o
