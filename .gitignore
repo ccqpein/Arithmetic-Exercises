@@ -11,3 +11,4 @@ target
 *.cmi
 *.cmx
 *.o
+*.cmo
