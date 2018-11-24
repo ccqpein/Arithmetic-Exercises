@@ -29,9 +29,11 @@ impl ListNode {
 
         match self.next {
             Some(ref mut n) => n.check_ten(inner_flag),
-            None => if inner_flag == 1 {
-                self.next = Some(Box::new(ListNode::new(inner_flag)));
-            },
+            None => {
+                if inner_flag == 1 {
+                    self.next = Some(Box::new(ListNode::new(inner_flag)));
+                }
+            }
         }
     }
 }
