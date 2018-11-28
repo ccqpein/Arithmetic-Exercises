@@ -10,10 +10,11 @@ Search arithmetic questions from the Web, code them using different languages fo
 + Go
 + Common Lisp
 + Rust
-+ Swift
++ ~~Swift~~ (I forget)
 + Haskell
 + Clojure
-+ Scala
++ ~~Scala~~ (I forget too)
++ OCaml
 
 ## Source
 
