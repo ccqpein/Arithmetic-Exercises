@@ -29,18 +29,18 @@ def GCD(l, ind):
             return GCD(next_round, ind + 1)
 
 
-def GCD2(l, i):
-    inner_l = remove_zero(l)
-    smallest = 0
-    while len(inner_l) != 1:
-        i += 1
-        smallest = min(inner_l)
-        next_round = remove_zero(
-            [i - smallest for i in inner_l])
-        next_round.append(smallest)
-        inner_l = next_round
-
-    return smallest, i
+# def GCD2(l, i):
+#    inner_l = remove_zero(l)
+#    smallest = 0
+#    while len(inner_l) != 1:
+#        i += 1
+#        smallest = min(inner_l)
+#        next_round = remove_zero(
+#            [i - smallest for i in inner_l])
+#        next_round.append(smallest)
+#        inner_l = next_round
+#
+#    return smallest, i
 
 
 # Euclid's Algorithm below
