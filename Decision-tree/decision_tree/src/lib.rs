@@ -30,6 +30,9 @@ impl DTree {
 
 type DTreeAlgo = fn(EntrySet, HashSet<FeatureName>, FeatureName) -> DTree;
 
+//only support string now
+fn gini(datas: EntrySet, feature: FeatureName, target: FeatureName) -> DTree {}
+
 fn c4_5(datas: EntrySet, rest_features: HashSet<FeatureName>, target: FeatureName) -> DTree {
     DTree::new()
 }
