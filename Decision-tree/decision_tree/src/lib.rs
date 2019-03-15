@@ -2,11 +2,13 @@ use std::collections::{HashMap, HashSet};
 
 type FeatureName = String;
 
+#[derive(PartialEq, Eq, Hash)]
 enum Data {
     String(String),
     RangeData((i64, i64)),
 }
 
+#[derive(PartialEq, Eq)]
 struct Entry {
     features: HashSet<FeatureName>,
     data: HashMap<FeatureName, Data>,
