@@ -31,7 +31,19 @@ impl DTree {
 type DTreeAlgo = fn(EntrySet, HashSet<FeatureName>, FeatureName) -> DTree;
 
 //only support string now
-fn gini(datas: EntrySet, feature: FeatureName, target: FeatureName) -> DTree {}
+fn gini(datas: EntrySet, feature: FeatureName, target: FeatureName) -> DTree {
+    let mut record = HashMap::new();
+
+    for entry in datas {
+        if let split_ = record
+            .get_mut(entry.data.get(feature).unwrap())
+            .unwrap_or(0)
+        {}
+    }
+
+    //first, get all value set
+    //spilt values
+}
 
 fn c4_5(datas: EntrySet, rest_features: HashSet<FeatureName>, target: FeatureName) -> DTree {
     DTree::new()
