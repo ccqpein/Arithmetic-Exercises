@@ -5,11 +5,11 @@
 	   for num in sorted-num
 	   when (> num 0)
 	   if (/= ind num)
-	   if (/= (- ind 1) num)
-	   return ind
-	   else ()
-	   else (incf ind)
+	   do (if (/= (- ind 1) num)
+			  (return ind))
+	   else
+	   do (incf ind)
 		 )
-	;sorted-num
+	ind
 	))
 
