@@ -24,5 +24,6 @@ pub fn integer_replacement(n: i32) -> i32 {
 fn main() {
     println!("{:?}", integer_replacement(8)); //3
     println!("{:?}", integer_replacement(7)); //4
+    println!("{:?}", integer_replacement(1234)); //14
     println!("{:?}", integer_replacement(2147483647));
 }
