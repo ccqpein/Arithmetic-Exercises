@@ -113,6 +113,35 @@ func mergeKLists2(lists []*ListNode) *ListNode {
 	}
 }
 
+func mergeKLists3(lists []*ListNode) *ListNode {
+	var result *ListNode = &ListNode{}
+	var mark *ListNode = result
+
+	for {
+		var smallest *int
+		smallest_ind := 0
+		for ind, i := range lists {
+			if i != nil {
+				if smallest == nil {
+					smallest = &i.Val
+				}
+				if i.Val <= *smallest {
+					smallest = &i.Val
+					smallest_ind = ind
+				}
+			}
+		}
+		if smallest == nil {
+			break
+		}
+		mark.Next = lists[smallest_ind]
+		mark = mark.Next
+		lists[smallest_ind] = lists[smallest_ind].Next
+
+	}
+	return result.Next
+}
+
 func printout(ln *ListNode) {
 	if ln != nil {
 		fmt.Printf("%+v -> ", ln.Val)
@@ -154,7 +183,8 @@ func main() {
 	// temp0, temp1 := handleSmall(test0)
 	// fmt.Printf("%+v, %p\n", temp0, temp1)
 	//fmt.Printf("%+v\n", mergeKLists(test0))
-	fmt.Printf("%+v\n", mergeKLists2(test0))
+	//printout(mergeKLists2(test0))
+	printout(mergeKLists3(test0))
 
 	test1 := []*ListNode{
 		nil,
