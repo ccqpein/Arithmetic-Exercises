@@ -1,0 +1,53 @@
+(declaim (optimize (speed 3)))
+
+(defun merge-K-Lists (l)
+  (declare (optimize (speed 3)))
+  (let (a ind new-l result)
+    (declare ;;(inline min-and-index)
+             ((or null integer) a ind)
+             ((or null list) result))
+    (multiple-value-setq (a ind new-l) (min-and-index l))
+    ;;(print (list a ind new-l result))
+    (if (not (eql nil new-l))
+        (setf result (cons a
+                           (merge-K-Lists new-l)))
+        (cons a result))
+    (the list result)))
+
+(defun min-and-index (l)
+  (declare (type list l)
+           (optimize (speed 3)))
+  (let ((smallest (caar l))
+        (index 0)
+        )
+    (declare (fixnum smallest index))
+    (do ((rest-l l (cdr rest-l))
+         (ind 0 (+ 1 ind))
+         )
+        ((eql nil rest-l)
+         (progn
+           (setf (nth index l) (cdr (nth index l)))
+           (values (the integer smallest)
+                   (the integer index)
+                   (the list (remove 'nil l))))
+         )
+      (declare (fixnum ind))
+      (declare ((or list null) rest-l))
+      (let ((this-v (if (not (eql nil (car rest-l)))
+                        (caar rest-l)
+                        nil)))
+        (declare ((or null fixnum) this-v))
+        (cond
+          ((eql nil this-v)
+           )
+          ((<= this-v smallest)
+               (setf index ind
+                     smallest this-v
+                     )))))))
+
+;; (print (merge-k-lists '((1 4 5) (1 3 4) (2 6))))
+;; (print (merge-k-lists '((1))))
+;; (print (merge-k-lists '((-3 1 4) (-2 -1 0 2) (-1 1))))
+
+(defun test-time ()
+  (loop for i from 0 to 1000 do (merge-k-lists (list '(1 4 5) '(1 3 4) '(2 6)))))
