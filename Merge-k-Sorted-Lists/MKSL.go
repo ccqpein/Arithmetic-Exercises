@@ -117,7 +117,6 @@ func mergeKLists2(lists []*ListNode) *ListNode {
 }
 
 func mergeKLists3(lists []*ListNode) *ListNode {
-	t0 := time.Now()
 	var result *ListNode = &ListNode{}
 	var mark *ListNode = result
 
@@ -143,8 +142,6 @@ func mergeKLists3(lists []*ListNode) *ListNode {
 		lists[smallest_ind] = lists[smallest_ind].Next
 
 	}
-	t1 := time.Now()
-	fmt.Printf("cost is = %v\n", t1.Sub(t0).Nanoseconds())
 	return result.Next
 }
 
@@ -189,11 +186,13 @@ func main() {
 	// temp0, temp1 := handleSmall(test0)
 	// fmt.Printf("%+v, %p\n", temp0, temp1)
 	//fmt.Printf("%+v\n", mergeKLists(test0))
-	printout(mergeKLists3(test0))
-	//t0 := time.Now()
-	//mergeKLists3(test0)
-	//t1 := time.Now()
-	//fmt.Printf("2 seconds is = %v\n", (2 * time.Second).Nanoseconds())
+	t0 := time.Now()
+	a := mergeKLists2(test0)
+	//printout(mergeKLists3(test0))
+	//fmt.Printf("%+v\n", mergeKLists2(test0))
+	t1 := time.Now()
+	fmt.Printf("cost is = %v\n", t1.Sub(t0).Nanoseconds())
+	println(a)
 
 	test1 := []*ListNode{
 		nil,

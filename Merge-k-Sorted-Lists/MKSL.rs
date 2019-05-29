@@ -16,6 +16,17 @@ impl ListNode {
     fn new_with_next(val: i32, next: Option<Box<Self>>) -> Self {
         ListNode { next: next, val }
     }
+
+    #[inline]
+    fn give_me_all(&self) -> Vec<i32> {
+        let mut result = vec![self.val];
+        let mut a = &self.next;
+        while let Some(n) = a {
+            result.push(n.val);
+            a = &n.next;
+        }
+        result
+    }
 }
 
 pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
@@ -44,9 +55,11 @@ pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>>
 }
 
 fn merge_k_lists2(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
-    let now = Instant::now();
-
-    let mut inner_copy_lists = lists.clone();
+    let mut inner_copy_lists = lists
+        .iter()
+        .filter(|x| x.is_some())
+        .map(|x| x.clone())
+        .collect::<Vec<_>>();
     let mut result = ListNode::new(0);
     let mut point_to = &mut result;
     let mut length = inner_copy_lists.len().clone();
@@ -73,9 +86,29 @@ fn merge_k_lists2(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
         }
     }
 
-    let end = now.elapsed().as_nanos();
-    println!("{:?} nano seconds", end);
     result.next
+}
+
+fn merge_k_lists3(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+    let mut all_of_them = vec![];
+    let tmp = lists
+        .iter()
+        .filter(|x| x.is_some())
+        .map(|x| x.as_ref().unwrap().give_me_all());
+
+    for mut i in tmp {
+        all_of_them.append(&mut i);
+    }
+
+    all_of_them.sort_by(|a, b| b.cmp(a));
+
+    let mut result = ListNode::new(all_of_them[0]);
+
+    for ind in 1..all_of_them.len() {
+        result = { ListNode::new_with_next(all_of_them[ind], Some(Box::new(result))) };
+    }
+
+    Some(Box::new(result))
 }
 
 fn main() {
@@ -102,11 +135,10 @@ fn main() {
         ))),
     ];
 
-    //let now = Instant::now();
-    //merge_k_lists(test0);
+    let now = Instant::now();
     //println!("{:?}", merge_k_lists2(test0));
-    merge_k_lists2(test0);
-    //sleep(Duration::new(2, 0));
-    //let end = now.elapsed().as_nanos();
-    //println!("{:?} nano seconds", end);
+    //merge_k_lists2(test0);
+    merge_k_lists3(test0);
+    let end = now.elapsed();
+    println!("{:?} nano seconds", end.as_nanos());
 }
