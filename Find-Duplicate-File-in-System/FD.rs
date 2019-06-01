@@ -27,6 +27,17 @@ pub fn find_duplicate(paths: Vec<String>) -> Vec<Vec<String>> {
 }
 
 fn main() {
+    use std::time::Instant;
+    let a = Instant::now();
+    find_duplicate(vec![
+        String::from("root/a 1.txt(abcd) 2.txt(efgh)"),
+        String::from("root/c 3.txt(abcd)"),
+        String::from("root/c/d 4.txt(efgh)"),
+        String::from("root 4.txt(efgh)"),
+    ]);
+    let b = a.elapsed();
+    println!("{}", b.as_micros());
+
     println!(
         "{:?}",
         find_duplicate(vec![
