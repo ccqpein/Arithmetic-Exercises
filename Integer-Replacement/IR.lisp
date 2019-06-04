@@ -1,0 +1,18 @@
+(defun integer-replacement (i)
+  (labels ((inner-func (i j)
+             (declare (fixnum i j))
+             (cond ((= 1 i)
+                    j)
+                   ((evenp i)
+                    (inner-func (/ i 2) (+ 1 j)))
+                   ((oddp i)
+                    (the fixnum
+                         (min (inner-func (+ i 1) (+ 1 j))
+                              (inner-func (- i 1) (+ 1 j))))))))
+    (the fixnum (inner-func i 0))))
+
+(defun main ()
+  (print (integer-replacement 8))
+  (print (integer-replacement 7))
+  (print (integer-replacement 1234))
+  (print (integer-replacement 2147483647)))
