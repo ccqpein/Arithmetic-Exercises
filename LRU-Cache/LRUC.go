@@ -3,7 +3,7 @@ package main
 type LRUCache struct {
 	cap int
 
-	record []int       //index -> key
+	record []int
 	backet map[int]int //key -> value
 }
 
