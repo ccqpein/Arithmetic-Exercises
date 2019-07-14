@@ -1,7 +1,7 @@
 corp_flight_bookings :: [[Int]] -> Int -> [Int]
 corp_flight_bookings [] _ = []
 corp_flight_bookings [[]] _ = []
-corp_flight_bookings v n = let result = [0 | _ <- [0..2000]] in
+corp_flight_bookings v n = let result = [0 | _ <- [0..20000]] in
   fst $ splitAt n $ change_vec result v
   where
     change_vec :: [Int] -> [[Int]] -> [Int]
