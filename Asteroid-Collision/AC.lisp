@@ -1,0 +1,11 @@
+(defun asteroid-collision (l)
+  (let ((stack '()))
+    (do* ((rest l)
+          (a (car rest) (car rest))
+          )
+         ((eq a nil) stack)
+      (case (stack a)
+        (('() a)
+         (setf stack (cons a stack)))
+        (otherwise
+         )))))
