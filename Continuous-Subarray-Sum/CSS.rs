@@ -32,10 +32,10 @@ pub fn check_subarray_sum(nums: Vec<i32>, k: i32) -> bool {
 }
 
 fn main() {
-    dbg!(check_subarray_sum(vec![23, 2, 4, 6, 7], 6));
-    dbg!(check_subarray_sum(vec![23, 2, 6, 4, 7], -6));
-    dbg!(check_subarray_sum(vec![0, 0], -1));
-    dbg!(check_subarray_sum(vec![1, 2, 3], 4));
-    dbg!(check_subarray_sum(vec![0, 0], 0));
-    dbg!(check_subarray_sum(vec![0], 0));
+    dbg!(check_subarray_sum(vec![23, 2, 4, 6, 7], 6)); //t
+    dbg!(check_subarray_sum(vec![23, 2, 6, 4, 7], -6)); //t
+    dbg!(check_subarray_sum(vec![0, 0], -1)); //t
+    dbg!(check_subarray_sum(vec![1, 2, 3], 4)); //nil
+    dbg!(check_subarray_sum(vec![0, 0], 0)); //t
+    dbg!(check_subarray_sum(vec![0], 0)); //nil
 }
