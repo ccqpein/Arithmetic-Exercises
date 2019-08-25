@@ -25,7 +25,8 @@ pub fn num_subarrays_with_sum_1(a: Vec<i32>, s: i32) -> i32 {
 }
 
 pub fn num_subarrays_with_sum(a: Vec<i32>, s: i32) -> i32 {
-    let store_ind: Vec<i32> = vec![-1];
+    let mut store_ind: Vec<i32> = vec![-1];
+    let mut sum: i32 = 0;
 
     for (ind, v) in a.iter().enumerate() {
         if *v == 1 {
@@ -34,7 +35,22 @@ pub fn num_subarrays_with_sum(a: Vec<i32>, s: i32) -> i32 {
     }
     store_ind.push(a.len() as i32);
 
-    if s == 0 {}
+    if s == 0 {
+        for ind in 0..store_ind.len() - 1 {
+            let a = store_ind[ind + 1] - store_ind[ind] - 1;
+            sum += a * (a + 1) / 2;
+        }
+        return sum;
+    }
+
+    let change_store_ind = store_ind.as_slice();
+    for ind in 1..(change_store_ind.len() - s as usize) {
+        let x = (ind as i32 + s - 1) as usize;
+        sum += (change_store_ind[ind] - change_store_ind[ind - 1])
+            * (change_store_ind[x + 1] - change_store_ind[x])
+    }
+
+    sum
 }
 
 fn main() {
