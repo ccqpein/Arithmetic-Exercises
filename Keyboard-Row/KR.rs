@@ -1,28 +1,35 @@
 pub fn find_words(words: Vec<String>) -> Vec<String> {
     use std::collections::HashSet;
     let one = {
-        let mut temp = HashSet::new();
-        for c in vec![b'q', b'w', b'e', b'r', b't', b'y', b'u', b'i', b'o', b'p'] {
-            temp.insert(c);
-        }
+        let temp: HashSet<u8> = "qwertyuiop".as_bytes().iter().cloned().collect();
+        //for c in vec![b'q', b'w', b'e', b'r', b't', b'y', b'u', b'i', b'o', b'p'] {
+        //    temp.insert(c);
+        //}
         temp
     };
+    //dbg!(&one);
 
     let two = {
-        let mut temp = HashSet::new();
-        for c in vec![b'a', b's', b'd', b'f', b'g', b'g', b'h', b'j', b'k', b'l'] {
-            temp.insert(c);
-        }
+        let temp: HashSet<u8> = "asdfghjkl".as_bytes().iter().cloned().collect();
+        // for c in vec![b'a', b's', b'd', b'f', b'g', b'g', b'h', b'j', b'k', b'l'] {
+        //     temp.insert(c);
+        // }
         temp
     };
+    //dbg!(&two);
 
     let three = {
-        let mut temp = HashSet::new();
-        for c in vec![b'z', b'x', b'c', b'v', b'b', b'n', b'm'] {
-            temp.insert(c);
-        }
+        let temp: HashSet<u8> = "zxcvbnm".as_bytes().iter().cloned().collect();
+        // let _ = "zxcvbnm".as_bytes().iter().map(|by| {
+        //     temp.insert(by);
+        // }); //=> ??????
+
+        // for c in vec![b'z', b'x', b'c', b'v', b'b', b'n', b'm'] {
+        //     temp.insert(c);
+        // }
         temp
     };
+    //dbg!(&three);
 
     let re = words.iter().map(|x| {
         let low_x = x.to_lowercase();
