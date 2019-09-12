@@ -1,0 +1,16 @@
+(defun find-words (words)
+  (let ((one (concatenate 'list "qwertyuiop"))
+        (two (concatenate 'list "asdfghjkl"))
+        (three (concatenate 'list "zxcvbnm")))
+    (remove nil
+            (mapcar (lambda (word)
+                      (let* ((chars (concatenate 'list word))
+                             (first-char (nth 0 chars))
+                             (which-row (cond ((member first-char one) one)
+                                              ((member first-char two) two)
+                                              ((member first-char three) three))))
+                        (if (find-if-not (lambda (c) (member c which-row)) (cdr chars))
+                            nil
+                            word)))
+                    words)))
+  )
