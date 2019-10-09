@@ -102,7 +102,7 @@ fn bits_plus(x: &[u8; 4], y: &[u8; 4]) -> [u8; 4] {
 }
 
 //:= TODO
-//fn offset_func
+//fn offset_func()
 
 //:= todo
 fn wrap_function<FF>(
