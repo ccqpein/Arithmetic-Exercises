@@ -101,10 +101,15 @@ fn bits_plus(x: &[u8; 4], y: &[u8; 4]) -> [u8; 4] {
     result
 }
 
-//:= TODO
-//fn offset_func()
+fn offset_func(x: [u8; 4], offset: u32) -> [u8; 4] {
+    use std::mem;
+    let x_inner: u32 = unsafe { mem::transmute::<[u8; 4], u32>(x) };
+    x_inner.rotate_left(offset);
 
-//:= todo
+    x_inner.to_be_bytes()
+}
+
+//:= TODO: I can start this now
 fn wrap_function<FF>(
     a: &mut [u8; 4],
     b: &[u8; 4],
