@@ -1,0 +1,12 @@
+(ql:quickload 'cl-ppcre)
+
+(defun find-ocurrences (text first second)
+  (let ((text-l (cl-ppcre:split "\\s+" text))
+        (result '()))
+    (do* ((rest text-l (cdr rest))
+          (first-p (first rest) second-p)
+          (second-p (second rest) third-p)
+          (third-p (third rest) (third rest)))
+         ((not third-p) (reverse result))
+      (if (and (string= first first-p) (string= second-p second))
+          (push third-p result)))))
