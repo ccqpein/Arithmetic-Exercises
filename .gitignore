@@ -12,3 +12,4 @@ target
 *.cmx
 *.o
 *.cmo
+Cargo.lock
