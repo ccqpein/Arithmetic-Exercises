@@ -1,5 +1,5 @@
 use core::iter::Iterator;
-use nalgebra::{Dynamic, Matrix, VecStorage, Vector};
+use nalgebra::{Dim, Dynamic, Matrix, VecStorage, Vector};
 use std::collections::HashMap;
 use std::io::{Error, ErrorKind, Result};
 
@@ -37,6 +37,9 @@ impl SingleWord {
         &self,
         l: &WordIndex,
     ) -> Vector<f32, Dynamic, VecStorage<f32, Dynamic, Dynamic>> {
+        let mut ve = VecStorage::new(l.iter().count(), Dim.from_usize(1), vec![]);
+        //iter map
+        for (w, id) in self.next_word_map.iter() {}
     }
 }
 
