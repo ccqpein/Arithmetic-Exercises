@@ -1,8 +1,9 @@
 pub fn count_squares(matrix: Vec<Vec<i32>>) -> i32 {
+    use std::cmp::*;
     let row = matrix.len();
     let col = matrix[0].len();
 
-    let whole_size = if row <= col { row } else { col };
+    let whole_size = min(row, col);
 
     let mut count = 0;
     for r in 0..row {
