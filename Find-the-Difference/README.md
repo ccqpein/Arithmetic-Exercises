@@ -1,5 +1,6 @@
 # README
 [Source](https://leetcode.com/contest/2/problems/find-the-difference/)
+[Normal Source](https://leetcode.com/problems/find-the-difference/)
 
 Come from **LeetCode Weekly Contest 2**
 Given two strings s and t which consist of only lowercase letters.
