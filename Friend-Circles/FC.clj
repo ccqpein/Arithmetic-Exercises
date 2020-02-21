@@ -28,8 +28,10 @@
 
 (defn friend-circle [m]
   (let [stuNum (count m)
-        pool (atom #{})]
+        pool (atom #{})
+        result (atom 0)]
     (doseq [ind (range 0 stuNum)]
       (if (not (contains? @pool ind))
-        (reset! pool (doIndex ind m pool))))))
-
+        (do (swap! result inc)
+            (reset! pool (doIndex ind m @pool)))))
+    result))
