@@ -1,6 +1,9 @@
 (defun smallest-from-leaf (nodes)
   "nodes are list"
-  )
+  (let ((all-re (all-results nodes))
+        )
+    (create-str (find-least all-re))
+    ))
 
 (defun all-results (nodes)
   (if (not nodes) (return-from all-results nil))
@@ -8,7 +11,7 @@
   (let ((result '())
         (left-re (all-results (cadr nodes)))
         (right-re (all-results (caddr nodes))))
-    ;;(format t "~a;~a~%" left-re right-re)
+
     (if (and (not left-re) (not right-re)) (return-from all-results (list (list (car nodes)))))
     (setf result
           (append result
@@ -17,7 +20,23 @@
     result
     ))
 
-(defun )
+(defun find-least (ll)
+  (let ((reverse-ll (mapcar #'reverse ll)))
+    (labels ((compare-inner (a b)
+               (do ((aa a (cdr aa))
+                    (bb b (cdr bb)))
+                   ((or (not aa) (not bb))
+                    (return (if (not aa)
+                                a
+                                b)))
+                 (cond ((< (car aa) (car bb)) (return-from compare-inner a))
+                       ((> (car aa) (car bb)) (return-from compare-inner b))))
+               ))
+      (reduce #'compare-inner reverse-ll))
+    ))
+
+(defun create-str (l)
+  (coerce (mapcar (lambda (x) (code-char (+ 97 x))) l) 'string))
 
 (defun main ()
   (let ((test0 '(0
@@ -35,6 +54,6 @@
                   (0)
                   nil))) ;; abc
         )
-    (all-results test1)
+    ;;(create-str (find-least (all-results test0)))
+    (smallest-from-leaf test1)
     ))
-
