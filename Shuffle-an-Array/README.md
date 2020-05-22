@@ -1,6 +1,8 @@
 # README
 
-Shuffle a set of numbers without duplicates.[Source](https://leetcode.com/problems/shuffle-an-array/)
+Shuffle a set of numbers without duplicates.
+
+[Source](https://leetcode.com/problems/shuffle-an-array/)
 
 Example:
 

@@ -1,6 +1,6 @@
 ;;; switch the design
 
-(setf *random-state* (make-random-state t))
+;;(setf *random-state* (make-random-state t))
 
 (defun gen-random-num (n times)
   "return result is list. n is number limit, times is number of results. No same number in the result list"
