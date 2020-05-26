@@ -67,7 +67,7 @@ fn find_closest_elements(mut arr: Vec<i32>, k: i32, x: i32) -> Vec<i32> {
 
         if x - arr[smaller_i32 as usize] <= arr[larger] - x {
             smaller_i32 -= 1;
-        } else if x - arr[smaller_i32 as usize] > arr[larger] - x {
+        } else {
             larger += 1;
         }
         count += 1;
