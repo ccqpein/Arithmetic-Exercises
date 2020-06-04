@@ -11,6 +11,7 @@ where
     P: PartialOrd,
 {
     form: HashMap<T, HashMap<T, P>>,
+    path_form: HashMap<T, HashMap<T, Vec<T>>>,
 }
 
 impl<T, P> Graph<T, P>
@@ -21,6 +22,7 @@ where
     fn new() -> Self {
         Graph {
             form: HashMap::new(),
+            path_form: HashMap::new(),
         }
     }
 
@@ -35,6 +37,15 @@ where
             .entry(data.1)
             .or_insert(HashMap::new())
             .insert(data.0, data.2);
+
+        let mut path = if data.0 == data.1 {
+            vec![data.0]
+        } else {
+            vec![data.0, data.1]
+        };
+        self.insert_path(&(data.0, data.1, &path));
+        path.reverse();
+        self.insert_path(&(data.1, data.0, &path));
     }
 
     fn distance_between(&self, x: &T, y: &T) -> Result<P, String> {
@@ -45,6 +56,17 @@ where
             },
             None => Err(String::from("Not Found")),
         }
+    }
+
+    fn insert_path(&mut self, path_tuple: &(T, T, &Vec<T>)) {
+        self.path_form
+            .entry(path_tuple.0)
+            .or_insert(HashMap::new())
+            .insert(path_tuple.1, path_tuple.2.clone());
+    }
+
+    fn path_between(&mut self, x: &T, y: &T) -> Option<&Vec<T>> {
+        self.path_form.entry(*x).or_insert(HashMap::new()).get(y)
     }
 
     // update all distance from start
@@ -74,13 +96,26 @@ where
                                 node.0,
                                 self.distance_between(start, &last).unwrap() + node.1,
                             ));
+
+                            // insert path
+                            let mut new_path =
+                                { self.path_between(start, &last).cloned() }.unwrap();
+                            new_path.push(node.0); // put new node inside
+                            self.insert_path(&(*start, node.0, &new_path));
                         }
                     }
-                    Err(_) => self.insert(&(
-                        *start,
-                        node.0,
-                        self.distance_between(start, &last).unwrap() + node.1,
-                    )),
+                    Err(_) => {
+                        self.insert(&(
+                            *start,
+                            node.0,
+                            self.distance_between(start, &last).unwrap() + node.1,
+                        ));
+
+                        // insert path
+                        let mut new_path = { self.path_between(start, &last).cloned() }.unwrap();
+                        new_path.push(node.0); // put new node inside
+                        self.insert_path(&(*start, node.0, &new_path));
+                    }
                 }
             }
 
@@ -131,6 +166,7 @@ fn main() {
 
     testcase0.dijkstra(&1);
     println!("{:?}", testcase0.form.get(&1));
+    println!("{:?}", testcase0.path_form.get(&1));
 
     //////
     let mut testcase1: Graph<char, i32> = Graph::new();
@@ -158,4 +194,5 @@ fn main() {
     }
     testcase1.dijkstra(&'A');
     println!("{:?}", testcase1.form.get(&'A'));
+    println!("{:?}", testcase1.path_form.get(&'A'));
 }
