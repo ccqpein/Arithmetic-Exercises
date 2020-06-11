@@ -1,64 +1,34 @@
-// pub fn num_subarrays_with_sum_1(a: Vec<i32>, s: i32) -> i32 {
-//     let len = a.len() as i32;
-//     let a_slice = a.as_slice();
-//     let mut sum = 0;
-//     let count_start = if s == 0 { 1 } else { s };
-//     println!("{:?}", count_start);
+function numSubarraysWithSum(a,s)
+    storeInd = [0];
+    for (ind, v) in enumerate(a)
+        v == 1 && push!(storeInd,ind)
+    end
 
-//     for ind in 0..len - s + 1 {
-//         //println!("ind: {}", ind);
+    push!(storeInd, length(a) + 1)
 
-//         for count in count_start..(len - ind + 1) {
-//             //println!("count: {}", count);
-//             //let print_out = &a_slice[(ind as usize)..(ind + count) as usize];
-//             //println!("this slice: {:?}", print_out);
-
-//             let temp = a_slice[(ind as usize)..(ind + count) as usize].iter().sum();
-//             if s == temp {
-//                 sum += 1;
-//             } else if temp > s {
-//                 break;
-//             }
-//         }
-//     }
-//     sum
-// }
-
-pub fn num_subarrays_with_sum(a: Vec<i32>, s: i32) -> i32 {
-    let mut store_ind: Vec<i32> = vec![-1];
-    let mut sum: i32 = 0;
-
-    for (ind, v) in a.iter().enumerate() {
-        if *v == 1 {
-            store_ind.push(ind as i32);
-        }
-    }
-    store_ind.push(a.len() as i32);
-
-    if s == 0 {
-        for ind in 0..store_ind.len() - 1 {
-            let a = store_ind[ind + 1] - store_ind[ind] - 1;
-            sum += a * (a + 1) / 2;
-        }
-        return sum;
-    }
-
-    let change_store_ind = store_ind.as_slice();
-    for ind in 1..(change_store_ind.len() - s as usize) {
-        let x = (ind as i32 + s - 1) as usize;
-        sum += (change_store_ind[ind] - change_store_ind[ind - 1])
-            * (change_store_ind[x + 1] - change_store_ind[x])
-    }
-
+    sum = 0
+    s == 0 && begin
+        for ind in 1:length(storeInd) - 1
+            let a = storeInd[ind+1] - storeInd[ind] - 1
+                sum += a * (a + 1) / 2
+            end
+        end
+        return sum
+    end
+    
+    for ind in 2:(length(storeInd) - s)
+        let x = ind + s - 1
+            sum += (storeInd[ind] - storeInd[ind-1]) * (storeInd[x + 1] - storeInd[x])
+        end
+    end
     sum
-}
+end
 
-fn main() {
-    assert_eq!(num_subarrays_with_sum(vec![1, 0, 1, 0, 1], 2), 4); //=> 4
-    assert_eq!(num_subarrays_with_sum(vec![0, 1, 1, 1, 1], 3), 3); //=> 3
-    assert_eq!(num_subarrays_with_sum(vec![0, 0, 0, 0, 0], 0), 15); //=> 15
-
-    let case0 = vec![
+using Test
+@test numSubarraysWithSum([1,0,1,0,1], 2) == 4
+@test numSubarraysWithSum([0,1,1,1,1], 3) == 3
+@test numSubarraysWithSum([0,0,0,0,0], 0) == 15
+@test numSubarraysWithSum([
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1059,6 +1029,4 @@ fn main() {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    ];
-    assert_eq!(num_subarrays_with_sum(case0, 108), 1896100); //=> 1896100
-}
+    ], 108) == 1896100
