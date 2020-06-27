@@ -87,33 +87,93 @@ pub fn max_inner(slices: &Vec<i32>, left: usize) -> i32 {
     result
 }*/
 
+use std::collections::HashMap;
 pub fn max_size_slices(slices: Vec<i32>) -> i32 {
-    max_inner(&slices, slices.len() / 3)
+    // need hashmap do the Dynamic programming
+    let mut cache: HashMap<(usize, usize, usize), i32> = HashMap::new();
+    max_inner3(
+        &mut cache,
+        &slices,
+        0,
+        slices.len() - 1,
+        slices.len() / 3,
+        1,
+    )
 }
 
-pub fn max_inner(slices: &Vec<i32>, left: usize) -> i32 {
-    if slices.len() <= 3 || left == 1 {
-        return *slices.iter().max().unwrap();
+// pub fn max_inner(slices: &Vec<i32>, left: usize) -> i32 {
+//     if slices.len() <= 3 || left == 1 {
+//         return *slices.iter().max().unwrap();
+//     }
+
+//     let mut cache =
+//         vec![max_inner(&slices[1..slices.len() - 2].to_vec(), left - 1) + slices.last().unwrap()];
+
+//     cache.append(
+//         &mut (0..=slices.len() - 3)
+//             .map(|x| {
+//                 let end_index = if x >= 1 {
+//                     slices.len()
+//                 } else {
+//                     slices.len() - 1
+//                 };
+//                 max_inner(&slices[x + 2..end_index].to_vec(), left - 1) + slices[x]
+//             })
+//             .collect::<Vec<i32>>(),
+//     );
+
+//     *cache.iter().max().unwrap()
+// }
+
+// pub fn max_inner2(slices: &Vec<i32>, left: usize) -> i32 {
+//     use std::cmp::max;
+//     if left == 1 {
+//         return *slices.iter().max().unwrap();
+//     }
+
+//     if slices.len() - 1 < left * 2 - 1 {
+//         return i32::MIN;
+//     }
+//     println!("{}", left);
+//     return max(
+//         max_inner2(&slices[1..slices.len()].to_vec(), left),
+//         max_inner2(&slices[2..slices.len() - 2].to_vec(), left - 1) + slices[0],
+//     );
+// }
+
+pub fn max_inner3(
+    cache: &mut HashMap<(usize, usize, usize), i32>,
+    slices: &Vec<i32>,
+    i: usize,
+    j: usize,
+    left: usize,
+    cycle: usize,
+) -> i32 {
+    if let Some(v) = cache.get(&(i, j, left)) {
+        return *v;
+    }
+    use std::cmp::max;
+    //println!("{:?}, i:{}, j:{}, left: {}", slices, i, j, left);
+    if left == 0 {
+        return 0;
     }
 
-    let mut cache =
-        vec![max_inner(&slices[1..slices.len() - 2].to_vec(), left - 1) + slices.last().unwrap()];
+    if left == 1 {
+        return *slices[i..j + 1].iter().max().unwrap();
+    }
 
-    //println!("fake len: {}, level: {}", fake_len, level);
-    cache.append(
-        &mut (0..=slices.len() - 3)
-            .map(|x| {
-                let end_index = if x >= 1 {
-                    slices.len()
-                } else {
-                    slices.len() - 1
-                };
-                max_inner(&slices[x + 2..end_index].to_vec(), left - 1) + slices[x]
-            })
-            .collect::<Vec<i32>>(),
+    if j - i + 1 < left * 2 - 1 {
+        return i32::MIN;
+    }
+
+    let miao = max(
+        // cycle only use first time in max_size_slices
+        slices[j] + max_inner3(cache, slices, i + cycle, j - 2, left - 1, 0),
+        max_inner3(cache, slices, i, j - 1, left, 0),
     );
 
-    *cache.iter().max().unwrap()
+    cache.insert((i, j, left), miao);
+    miao
 }
 
 fn main() {
@@ -142,7 +202,19 @@ fn main() {
         85
     );
 
-    dbg!(max_size_slices(vec![
-        6, 3, 1, 2, 6, 2, 4, 3, 10, 4, 1, 4, 6, 5, 5, 3, 4, 7, 6, 5, 8, 7, 3, 8, 8, 1, 7, 1, 7, 8
-    ]));
+    assert_eq!(
+        max_size_slices(vec![
+            6, 3, 1, 2, 6, 2, 4, 3, 10, 4, 1, 4, 6, 5, 5, 3, 4, 7, 6, 5, 8, 7, 3, 8, 8, 1, 7, 1, 7,
+            8
+        ]),
+        70
+    );
+
+    assert_eq!(
+        max_size_slices(vec![
+            7, 8, 5, 6, 9, 10, 1, 6, 5, 10, 8, 10, 5, 4, 7, 2, 8, 5, 9, 7, 5, 9, 3, 7, 7, 2, 2, 10,
+            7, 6, 4, 6, 5, 7, 7, 9, 6, 8, 10, 7, 5, 7, 2, 5, 4, 9, 6, 10, 10, 2, 10
+        ]),
+        150
+    );
 }
