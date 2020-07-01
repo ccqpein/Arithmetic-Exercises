@@ -1,14 +1,51 @@
-maxSizeSlices(slice::Array{Int64,1}) = maxInner(slice, 1, length(slice), div(length(slice), 3), 1)
+# maxSizeSlices(slice::Array{Int64,1}) = maxInner(slice, 1, length(slice), div(length(slice), 3), 1)
 
-function maxInner(slice::Array{Int64}, i, j, left, cycle=0)
-    left == 1 && return maximum(slice[i:j])
-    left == 0 && return 0
-    (j - i + 1) < (2 * left - 1) && return -2147483648
+# # use closure
+# function maxInner(slice::Array{Int64}, i, j, left, cycle=0)
+#     cache = Dict{Tuple{Int64,Int64,Int64}, Int64}()
+#     function inside(slice::Array{Int64}, i, j, left, cycle=0)
+#         try
+#             return cache[(i,j,left)]
+#         catch end
+#         left == 1 && return maximum(slice[i:j])
+#         left == 0 && return 0
+#         (j - i + 1) < (2 * left - 1) && return -2147483648
+        
+#         result = max(
+#             (slice[j] + inside(slice, i + cycle, j - 2, left - 1)),
+#             inside(slice, i, j - 1, left)
+#         )
+#         cache[(i,j,left)] = result
+#         result
+#     end
+#     inside(slice, i, j, left, cycle)
+# end
 
-    max(
-        (slice[j] + maxInner(slice, i + cycle, j - 2, left - 1)),
-        maxInner(slice, i, j - 1, left)
-    )
+## another solution of closure
+## as same as before solution
+function maxSizeSlices(slice::Array{Int64,1})
+    a = maxInner()
+    a(slice, 1, length(slice), div(length(slice), 3), 1)
+end
+
+function maxInner()
+    cache = Dict{Tuple{Int64,Int64,Int64}, Int64}()
+    function inside(slice::Array{Int64}, i, j, left, cycle=0)
+        try
+            return cache[(i,j,left)]
+        catch end
+        left == 1 && return maximum(slice[i:j])
+        left == 0 && return 0
+        (j - i + 1) < (2 * left - 1) && return -2147483648
+        
+        result = max(
+            (slice[j] + inside(slice, i + cycle, j - 2, left - 1)),
+            inside(slice, i, j - 1, left)
+        )
+        cache[(i,j,left)] = result
+        result
+    end
+    inside
 end
 
 using Test
@@ -33,7 +70,7 @@ using Test
     8
 ]) == 70
 
-# @test maxSizeSlices([
-#     7, 8, 5, 6, 9, 10, 1, 6, 5, 10, 8, 10, 5, 4, 7, 2, 8, 5, 9, 7, 5, 9, 3, 7, 7, 2, 2, 10,
-#     7, 6, 4, 6, 5, 7, 7, 9, 6, 8, 10, 7, 5, 7, 2, 5, 4, 9, 6, 10, 10, 2, 10
-# ]) == 150
+@test maxSizeSlices([
+    7, 8, 5, 6, 9, 10, 1, 6, 5, 10, 8, 10, 5, 4, 7, 2, 8, 5, 9, 7, 5, 9, 3, 7, 7, 2, 2, 10,
+    7, 6, 4, 6, 5, 7, 7, 9, 6, 8, 10, 7, 5, 7, 2, 5, 4, 9, 6, 10, 10, 2, 10
+]) == 150
