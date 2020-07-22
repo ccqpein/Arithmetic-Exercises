@@ -1,0 +1,35 @@
+(defun palindrome-p (l-char)
+  (declare (cons l-char))
+  (let* ((len (length l-char))
+         (head (if (oddp len)
+                   (butlast (subseq l-char 0 (ceiling len 2)))
+                   (subseq l-char 0 (ceiling len 2))))
+         (tail (subseq l-char (ceiling len 2))))
+    (the boolean (equal head (reverse tail)))))
+
+(defun shortest-palindrome (str)
+  (declare (string str))
+  (if (string= "" str) (return-from shortest-palindrome ""))
+  (let* ((l-char (coerce str 'list))
+         (rev-l-char (reverse l-char)))
+    (loop
+      for i on rev-l-char
+      for ind from 0
+      when (palindrome-p i)
+        return (coerce (append (subseq rev-l-char 0 ind)
+                               l-char)
+                       'string))))
+
+(defun main ()
+  (values
+   (string= (shortest-palindrome "aacecaaa") "aaacecaaa")
+   (string= (shortest-palindrome "abcd") "dcbabcd")
+   (string= (shortest-palindrome "") "")
+   (string= (shortest-palindrome "aba") "aba")
+   (string= (shortest-palindrome "abbacd") "dcabbacd")
+   (string= (shortest-palindrome "abb") "bbabb")
+   (string= (shortest-palindrome "aaaaa") "aaaaa")
+   (string= (shortest-palindrome "aabba") "abbaabba")
+   (string= (shortest-palindrome "a") "a")
+   (string= (shortest-palindrome "babbbabbaba") "ababbabbbabbaba")
+   (string= (shortest-palindrome "aaaabbaa") "aabbaaaabbaa")))
