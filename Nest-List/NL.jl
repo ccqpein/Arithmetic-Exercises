@@ -30,7 +30,18 @@ function nl2(al)
     innerfunc(al,[])
 end
 
+function nlFromLisp(nl)
+    if length(nl) == 0
+        []
+    elseif typeof(nl[1]) <: Array
+        append!(nlFromLisp(nl[1]), nlFromLisp(nl[2:end]))
+    else
+        append!([nl[1]], nlFromLisp(nl[2:end]))
+    end
+end
 
 using Test
+
 @test nl([1, [2, 3, [4, 5], [6, 7, [8]], [9]], 10]) == [1,2,3,4,5,6,7,8,9,10]
 @test nl2([1, [2, 3, [4, 5], [6, 7, [8]], [9]], 10]) == [1,2,3,4,5,6,7,8,9,10]
+@test nlFromLisp([1, [2, 3, [4, 5], [6, 7, [8]], [9]], 10]) == [1,2,3,4,5,6,7,8,9,10]
