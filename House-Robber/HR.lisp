@@ -27,6 +27,9 @@
           (len (length nums)))
       (inner-func nums 0 len table))))
 
+;;:= TODO
+;;(defun rob2 (nums &aux))
+
 (defun main ()
   (eql (rob '(2 7 9 3 1)) 12)
   (eql (rob '(1 2 3 1)) 4)
