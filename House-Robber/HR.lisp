@@ -27,8 +27,34 @@
           (len (length nums)))
       (inner-func nums 0 len table))))
 
-;;:= TODO
-;;(defun rob2 (nums &aux))
+(defun rob2 (nums
+             &optional (start 0) len table
+             &aux ;; aux will rewrite optional
+               (len (if (not len) (length nums) len))
+               (table (if (not table) (make-hash-table) table)))
+  (let (v p result)
+    (multiple-value-setq (v p) (gethash start table))
+    (cond (p (setf result v))
+
+          ((eql start (1- len))
+           (setf (gethash start table) (nth start nums)
+                 result (nth start nums)))
+
+          ((eql start len)
+           (setf (gethash start table) 0
+                 result 0))
+
+          (t
+           (let (a)
+             (setf a (max (+ (nth start nums)
+                             (rob2 nums (+ 2 start) len table))
+                          (apply #'max
+                                 (loop
+                                   for x from (1+ start) to (1- len)
+                                   collect (rob2 nums x len table))))
+                   (gethash start table) a
+                   result a))))
+    result))
 
 (defun main ()
   (eql (rob '(2 7 9 3 1)) 12)
