@@ -1,8 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
-pub fn min_reorder(n: i32, connections: Vec<Vec<i32>>) -> i32 {
+pub fn min_reorder(_: i32, connections: Vec<Vec<i32>>) -> i32 {
     let mut result = 0;
-    let mut set: HashSet<(i32, i32)> = connections.iter().map(|x| (x[0], x[1])).collect();
+    let set: HashSet<(i32, i32)> = connections.iter().map(|x| (x[0], x[1])).collect();
     let mut graph: HashMap<i32, Vec<i32>> = HashMap::new();
 
     for road in connections {
@@ -13,6 +13,7 @@ pub fn min_reorder(n: i32, connections: Vec<Vec<i32>>) -> i32 {
     dfs(0, -1, &graph, &set, &mut result)
 }
 
+// dfs search
 fn dfs(
     i: i32,
     p: i32,
@@ -20,7 +21,7 @@ fn dfs(
     set: &HashSet<(i32, i32)>,
     result: &mut i32,
 ) -> i32 {
-    match set.get(&(p, i)) {
+    match set.get(&(p, i)) { // if parent has path to child, this path should reverse
         Some(_) => *result += 1,
         None => (),
     }
