@@ -5,7 +5,7 @@ pub fn longest_subarray(nums: Vec<i32>) -> i32 {
     let mut cache = 0;
     for dd in nums {
         //dbg!(dd);
-        if dd.is_empty() {
+        if dd.is_empty() { // in rust, dd is empty mean there are multi 0s
             cache = 0;
         } else {
             let ddl = dd.len() as i32;
