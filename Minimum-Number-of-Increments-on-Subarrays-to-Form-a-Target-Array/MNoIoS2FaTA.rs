@@ -2,10 +2,11 @@ pub fn min_number_operations(mut target: Vec<i32>) -> i32 {
     //operation_helper(&target, 0)
 
     /// below is faster version
-    target.insert(0, 1);
-    target.push(1);
+    // target.insert(0, 1);
+    // target.push(1);
     //println!("{:?}", target);
-    operation_helper2(&target)
+    // operation_helper2(&target);
+    operation_helper3(&target)
 }
 
 /// this is easier version
@@ -71,6 +72,16 @@ fn operation_helper2(arr: &[i32]) -> i32 {
         }
     }
 
+    result
+}
+
+/// as same as version2, from https://leetcode.com/problems/minimum-number-of-increments-on-subarrays-to-form-a-target-array/discuss/754682/Wall-of-bricks
+fn operation_helper3(arr: &[i32]) -> i32 {
+    use std::cmp::max;
+    let mut result = arr[0];
+    for ind in 1..arr.len() {
+        result += max(arr[ind] - arr[ind - 1], 0);
+    }
     result
 }
 
