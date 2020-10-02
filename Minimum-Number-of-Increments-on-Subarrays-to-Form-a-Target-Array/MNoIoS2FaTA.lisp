@@ -1,5 +1,7 @@
 (defun min-number-operations (target)
-  (operation-helper target 0))
+  ;;(operation-helper target 0)
+  (operation-helper2 target)
+  )
 
 (defun operation-helper (arr base)
   (cond ((not arr) 0)
@@ -9,6 +11,15 @@
                 (loop
                   for i in (mapcar (lambda (x) (operation-helper x min)) (split-seq arr base))
                   sum i))))))
+
+(defun operation-helper2 (arr)
+  (loop
+    with result = (car arr) and cache = (car arr)
+    for i in (cdr arr)
+    do (incf result (max (- i cache) 0))
+    do (setf cache i)
+    finally (return result)
+    ))
 
 (defun split-seq (l ele)
   (let (result cache)
