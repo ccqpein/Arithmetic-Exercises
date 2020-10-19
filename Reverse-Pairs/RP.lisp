@@ -32,4 +32,20 @@
     finally (return result)
     ))
 
-
+(defun reverse-pairs (nums)
+  (let* ((new-nums (append nums (loop for num in nums collect (* 2 num))))
+         (nums-set (sort (remove-duplicates new-nums) #'<))
+         (position-plist (loop
+                           for ind from 0
+                           for num in nums-set
+                           append (list num ind)))
+         (bit (make-list (1+ (length nums-set)) :initial-element 0))
+         )
+    
+    (loop
+      with count = 0
+      for i from (1- (length nums)) downto 0
+      do (incf count (sum-binary-indexed-tree bit (getf position-plist (nth i nums))))
+      do (update-binary-indexed-tree bit (1+ (getf position-plist (* 2 (nth i nums)))) 1)
+      finally (return count)
+      )))
