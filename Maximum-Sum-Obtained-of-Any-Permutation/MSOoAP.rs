@@ -135,9 +135,38 @@ fn get_big_module(table: &mut HashMap<i32, i32>, num: i32) -> i32 {
     *table.get(&num).unwrap()
 }
 
+pub fn max_sum_range_query4(mut nums: Vec<i32>, requests: Vec<Vec<i32>>) -> i32 {
+    ///////////////////////////
+    // this part calculate each index's count;
+    // very enlighting way
+    let mut count_vec = vec![0_i64; nums.len() + 1];
+    for v in &requests {
+        count_vec[v[0] as usize] += 1;
+        count_vec[v[1] as usize + 1] -= 1;
+    }
+
+    for i in 1..=nums.len() {
+        count_vec[i] += count_vec[i - 1]
+    }
+    dbg!(&count_vec);
+    /////////////////////////
+
+    let mut result = 0;
+
+    nums.sort();
+    count_vec = count_vec.drain(..count_vec.len() - 1).collect();
+    count_vec.sort();
+
+    for i in 0..nums.len() {
+        result += (count_vec[i] * nums[i] as i64) % 1000000007;
+        result = result % 1000000007
+    }
+    result as i32
+}
+
 fn main() {
     assert_eq!(
-        max_sum_range_query3(
+        max_sum_range_query4(
             vec![1, 2, 3, 4, 5, 10],
             vec![vec![0, 2], vec![1, 3], vec![1, 1]]
         ),
@@ -145,12 +174,12 @@ fn main() {
     );
 
     assert_eq!(
-        max_sum_range_query3(vec![1, 2, 3, 4, 5, 6], vec![vec![0, 1]]),
+        max_sum_range_query4(vec![1, 2, 3, 4, 5, 6], vec![vec![0, 1]]),
         11
     );
 
     assert_eq!(
-        max_sum_range_query3(vec![1, 2, 3, 4, 5], vec![vec![1, 3], vec![0, 1]]),
+        max_sum_range_query4(vec![1, 2, 3, 4, 5], vec![vec![1, 3], vec![0, 1]]),
         19
     );
 }
