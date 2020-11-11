@@ -63,13 +63,23 @@ where
         self.insert_p += 1;
     }
 
-    // delete top element of heap
-    fn delete(&mut self) -> Option<T> {
+    // get the first element
+    fn get(&self) -> Option<T> {
         if self.insert_p == 1 {
             return None;
         }
 
-        let result = Some(self.inner_vec[1].clone());
+        Some(self.inner_vec[1].clone())
+    }
+
+    // delete top element of heap
+    fn delete(&mut self) -> Option<T> {
+        let result = if self.get().is_none() {
+            return None;
+        } else {
+            self.get()
+        };
+
         self.insert_p -= 1;
         // move last element to the first
         self.inner_vec[1] = self.inner_vec[self.insert_p].clone();
