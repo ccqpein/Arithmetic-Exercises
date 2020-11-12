@@ -205,58 +205,145 @@ where
     }
 }
 
-pub fn get_skyline(buildings: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
-    let mut heap = Heap::new(&|a: &(i32, i32, i32), b: &(i32, i32, i32)| a.0 >= b.0);
-    let mut result: Vec<Vec<i32>> = vec![];
-    let mut end_cache = (0, 0); // end point and height
-    for b in buildings {
-        // println!(
-        //     "heap: {:?},\nresult: {:?}, end_cache: {:?}, building: {:?}",
-        //     heap.inner_vec, result, end_cache, b
-        // );
-        loop {
-            match heap.get() {
-                Some((h, start, end)) => {
-                    //println!("this heap: {:?}, end: {}", (h, end), end);
-                    // delete the passed building
-                    if end < b[0] {
-                        heap.delete();
-                        continue;
-                    }
+// pub fn get_skyline(buildings: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+//     let mut heap = Heap::new(&|a: &(i32, i32, i32), b: &(i32, i32, i32)| a.0 >= b.0);
+//     let mut result: Vec<Vec<i32>> = vec![];
+//     let mut end_cache = (0, 0); // end point and height
+//     for b in buildings {
+//         // println!(
+//         //     "heap: {:?},\nresult: {:?}, end_cache: {:?}, building: {:?}",
+//         //     heap.inner_vec, result, end_cache, b
+//         // );
+//         loop {
+//             match heap.get() {
+//                 Some((h, start, end)) => {
+//                     //println!("this heap: {:?}, end: {}", (h, end), end);
+//                     // delete the passed building
+//                     if end < b[0] {
+//                         heap.delete();
+//                         continue;
+//                     }
 
-                    if h < b[2] && b[0] == start {
-                        result.pop();
-                        result.push(vec![b[0], b[2]])
-                    } else if h < b[2] {
-                        result.push(vec![b[0], b[2]])
-                    } else if end_cache.0 < b[1] && end_cache.1 > b[2] {
-                        result.push(vec![end_cache.0, b[2]])
-                    } else if end < b[1] && h != b[2] {
-                        result.push(vec![end, b[2]])
-                    }
+//                     if h < b[2] && b[0] == start {
+//                         result.pop();
+//                         result.push(vec![b[0], b[2]])
+//                     } else if h < b[2] {
+//                         result.push(vec![b[0], b[2]])
+//                     } else if end_cache.0 < b[1] && end_cache.1 > b[2] {
+//                         result.push(vec![end_cache.0, b[2]])
+//                     } else if end < b[1] && h != b[2] {
+//                         result.push(vec![end, b[2]])
+//                     }
 
-                    // add this one
-                    heap.insert(&(b[2], b[0], b[1]));
-                }
-                None => {
-                    result.push(vec![end_cache.0, 0]);
-                    result.push(vec![b[0], b[2]]);
-                    heap.insert(&(b[2], b[0], b[1])); // insert height, start, endpoint
-                }
+//                     // add this one
+//                     heap.insert(&(b[2], b[0], b[1]));
+//                 }
+//                 None => {
+//                     result.push(vec![end_cache.0, 0]);
+//                     result.push(vec![b[0], b[2]]);
+//                     heap.insert(&(b[2], b[0], b[1])); // insert height, start, endpoint
+//                 }
+//             }
+
+//             if b[1] > end_cache.0 {
+//                 end_cache = (b[1], b[2]);
+//             }
+//             break;
+//         }
+//     }
+//     result.push(vec![end_cache.0, 0]);
+//     result.drain(1..).collect()
+// }
+
+type Boundary = (i32, (i32, i32)); // (height, (start,end))
+
+fn update_boundaries(bl: &mut Vec<Boundary>, new_b: &(i32, i32, i32)) {
+    let mut copy_b = new_b.clone();
+    //let mut result: Vec<Vec<i32>> = vec![];
+    for bo in bl.clone() {
+        // this bo higher than new building
+        if bo.0 >= copy_b.2 {
+            let (start, end) = &bo.1;
+            if copy_b.0 >= *start && copy_b.0 <= *end && copy_b.1 > *end {
+                copy_b.0 = *start;
+            //result.push(vec![*end, bo.0]);
+            } else if copy_b.1 <= *end && copy_b.1 >= *start && copy_b.0 < *start {
+                copy_b.1 = *end;
+                //result.push(vec![copy_b.0, copy_b.2]);
             }
-
-            if b[1] > end_cache.0 {
-                end_cache = (b[1], b[2]);
-            }
+        } else {
             break;
         }
     }
-    result.push(vec![end_cache.0, 0]);
-    result.drain(1..).collect()
+
+    bl.push((copy_b.2, (copy_b.0, copy_b.1)));
+
+    // sort again
+    bl.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    //result
 }
 
+fn test_update_boundaries() {
+    let mut bl = vec![];
+    let case0 = vec![
+        vec![3, 7, 15],
+        vec![5, 12, 12],
+        vec![2, 9, 10],
+        vec![15, 20, 10],
+        vec![19, 24, 8],
+    ];
+
+    for new_b in case0 {
+        println!(
+            "{:?}",
+            update_boundaries(&mut bl, &(new_b[0], new_b[1], new_b[2]))
+        );
+    }
+
+    dbg!(bl);
+
+    let mut bl = vec![];
+    let case1 = vec![
+        vec![3, 7, 8],
+        vec![3, 8, 7],
+        vec![3, 9, 6],
+        vec![3, 10, 5],
+        vec![3, 11, 4],
+        vec![3, 12, 3],
+        vec![3, 13, 2],
+        vec![3, 14, 1],
+    ];
+
+    for new_b in case1 {
+        println!(
+            "{:?}",
+            update_boundaries(&mut bl, &(new_b[0], new_b[1], new_b[2]))
+        );
+    }
+
+    dbg!(bl);
+}
+
+// pub fn get_skyline(buildings: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+//     let mut heap = Heap::new(&|a: &(i32, i32, i32), b: &(i32, i32, i32)| a.2 >= b.2);
+//     let mut boundary_cache: Vec<Boundary> = vec![];
+//     let mut result: Vec<Vec<i32>> = vec![];
+
+//     for b in buildings {
+//         heap.insert(&(b[0], b[1], b[2]));
+//     }
+
+//     loop {
+//         match heap.delete() {
+//             Some(b) => {}
+//         }
+//     }
+
+//     result
+// }
+
 fn main() {
-    // dbg!(get_skyline_old(vec![
+    // dbg!(get_skyline(vec![
     //     vec![2, 9, 10],
     //     vec![3, 7, 15],
     //     vec![5, 12, 12],
@@ -266,53 +353,42 @@ fn main() {
 
     // assert_eq!(
     //     vec![vec![0, 3], vec![1, 0]],
-    //     get_skyline_old(vec![vec![0, 1, 3]])
+    //     get_skyline(vec![vec![0, 1, 3]])
     // );
 
-    dbg!(get_skyline(vec![
-        vec![2, 9, 10],
-        vec![3, 7, 15],
-        vec![5, 12, 12],
-        vec![15, 20, 10],
-        vec![19, 24, 8]
-    ]));
+    // assert_eq!(
+    //     vec![vec![0, 3], vec![5, 0]],
+    //     get_skyline(vec![vec![0, 2, 3], vec![2, 5, 3]])
+    // );
 
-    assert_eq!(
-        vec![vec![0, 3], vec![1, 0]],
-        get_skyline(vec![vec![0, 1, 3]])
-    );
+    // assert_eq!(
+    //     vec![vec![1, 3], vec![2, 0]],
+    //     get_skyline(vec![vec![1, 2, 1], vec![1, 2, 2], vec![1, 2, 3]])
+    // );
 
-    assert_eq!(
-        vec![vec![0, 3], vec![5, 0]],
-        get_skyline(vec![vec![0, 2, 3], vec![2, 5, 3]])
-    );
+    // assert_eq!(
+    //     vec![
+    //         vec![3, 8],
+    //         vec![7, 7],
+    //         vec![8, 6],
+    //         vec![9, 5],
+    //         vec![10, 4],
+    //         vec![11, 3],
+    //         vec![12, 2],
+    //         vec![13, 1],
+    //         vec![14, 0]
+    //     ],
+    //     get_skyline(vec![
+    //         vec![3, 7, 8],
+    //         vec![3, 8, 7],
+    //         vec![3, 9, 6],
+    //         vec![3, 10, 5],
+    //         vec![3, 11, 4],
+    //         vec![3, 12, 3],
+    //         vec![3, 13, 2],
+    //         vec![3, 14, 1]
+    //     ])
+    // );
 
-    assert_eq!(
-        vec![vec![1, 3], vec![2, 0]],
-        get_skyline(vec![vec![1, 2, 1], vec![1, 2, 2], vec![1, 2, 3]])
-    );
-
-    assert_eq!(
-        vec![
-            vec![3, 8],
-            vec![7, 7],
-            vec![8, 6],
-            vec![9, 5],
-            vec![10, 4],
-            vec![11, 3],
-            vec![12, 2],
-            vec![13, 1],
-            vec![14, 0]
-        ],
-        get_skyline(vec![
-            vec![3, 7, 8],
-            vec![3, 8, 7],
-            vec![3, 9, 6],
-            vec![3, 10, 5],
-            vec![3, 11, 4],
-            vec![3, 12, 3],
-            vec![3, 13, 2],
-            vec![3, 14, 1]
-        ])
-    );
+    test_update_boundaries();
 }
