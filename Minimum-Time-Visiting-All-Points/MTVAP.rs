@@ -18,4 +18,14 @@ pub fn min_time_to_visit_all_points(points: Vec<Vec<i32>>) -> i32 {
     result
 }
 
+pub fn min_time_to_visit_all_points2(points: Vec<Vec<i32>>) -> i32 {
+    use std::cmp::max;
+    let mut last = points[0].clone();
+    points.iter().fold(0, |acc, next| {
+        let a = acc + max((next[1] - last[1]).abs(), (next[0] - last[0]).abs());
+        last = next.clone();
+        a
+    })
+}
+
 fn main() {}
