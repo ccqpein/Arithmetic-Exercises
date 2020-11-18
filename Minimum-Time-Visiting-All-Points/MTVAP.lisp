@@ -1,0 +1,13 @@
+(defun min-time-to-visit-all-points (points)
+  (do* ((a 0)
+        (last (car points) (car points))
+        (points (cdr points) (cdr points))
+        )
+       ((not points) a)
+    (incf a (max (abs (- (nth 1 (car points))
+                         (nth 1 last)))
+                 (abs (- (nth 0 (car points))
+                         (nth 0 last)))))))
+
+(assert (= 7 (min-time-to-visit-all-points '((1 1) (3 4) (-1 0)))))
+(assert (= 5 (min-time-to-visit-all-points '((3 2) (-2 2)))))
