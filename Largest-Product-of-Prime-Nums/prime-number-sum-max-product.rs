@@ -12,44 +12,80 @@ const PRIME_NUMBER: &[u64] = &[
     937, 941, 947, 953, 967, 971, 977, 983, 991, 997, 1009,
 ];
 
-type Record = Vec<(u64, Vec<u64>)>;
+#[derive(Clone, Debug)]
+struct Record {
+    inner: (u128, Vec<u64>),
+}
 
-fn max_product<'a>(n: u64, table: &'a mut HashMap<u64, Record>) -> Option<&'a Record> {
-    match n {
-        2 | 3 => &Some(vec![(n, vec![n])]),
-        1 => None,
-        _ => {
-            for pn in PRIME_NUMBER[0..prime_nums_below(n)] {
-                let records = record_of_this_number((n - i), table);
-            }
+type Records = Vec<Record>;
+
+impl Record {
+    fn new(n: u64, v: Vec<u64>) -> Self {
+        Self {
+            inner: (n as u128, v),
         }
-    };
-}
+    }
 
-fn prime_nums_below(n: u64) -> usize {
-    PRIME_NUMBER.iter().rposition(|i| *i < n).unwrap_or(0)
-}
-
-fn record_of_this_number(n: u64, table: &HashMap<u64, Record>) -> Option<&Record> {
-    let a = table.get(&n);
-    if a.is_none() {
-        max_product(n, table);
-    } else {
-        a
+    fn update_record(i: u64, other: &Self) -> Self {
+        Self {
+            inner: (i as u128 * other.inner.0, {
+                let mut a = other.inner.1.clone();
+                a.push(i);
+                a
+            }),
+        }
     }
 }
 
-fn update_table(n: u64, i: u64, re: &(u64, Vec<u64>), table: &HashMap<u64, Record>) {
-    let a = (i * re.0, {
-        let b = re.1.clone();
-        b.push(i);
-        b
-    });
-    let b = table.entry(n).or_insert(vec![]);
-    b.push(a);
-    b.sort_by(|x, y| y.partial_cmp(x).unwrap());
+fn max_product<'a>(
+    n: u64,
+    table: &'a mut HashMap<u64, Records>,
+    prime_n: &[u64],
+) -> Option<&'a Records> {
+    let empty_trick = vec![];
+    match n {
+        1 => None,
+        _ => {
+            for pn in prime_n {
+                if *pn < n {
+                    let records = match table.get(&(n - *pn)) {
+                        Some(records) => records,
+                        None => max_product(n - *pn, table, prime_n).unwrap_or(&empty_trick),
+                    };
+
+                    if let Some(record) = records.iter().find(|r| !r.inner.1.contains(pn)) {
+                        let new_re = Record::update_record(*pn, record);
+                        let update_re = table.entry(n).or_insert(vec![]);
+                        update_re.push(new_re);
+                        update_re.sort_by(|x, y| y.inner.0.partial_cmp(&x.inner.0).unwrap());
+                    }
+                }
+            }
+
+            table.get(&n)
+        }
+    }
 }
 
-//fn check_if_already_in(n:u64, res:&R)
+fn main() {
+    let mut table: HashMap<u64, Records> = HashMap::new();
+    table.insert(2, vec![Record::new(2, vec![2])]);
+    table.insert(3, vec![Record::new(3, vec![3])]);
 
-//fn main() {}
+    let reverse_prime_vec: Vec<u64> = PRIME_NUMBER.to_vec().into_iter().rev().collect();
+
+    println!(
+        "{:?}",
+        max_product(35, &mut table, &reverse_prime_vec).unwrap()[0]
+    );
+
+    println!(
+        "{:?}",
+        max_product(500, &mut table, &reverse_prime_vec).unwrap()[0]
+    );
+
+    println!(
+        "{:?}",
+        max_product(1000, &mut table, &reverse_prime_vec).unwrap()[0]
+    );
+}
