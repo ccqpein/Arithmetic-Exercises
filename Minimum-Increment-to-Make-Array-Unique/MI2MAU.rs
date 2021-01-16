@@ -1,17 +1,19 @@
 pub fn min_increment_for_unique(mut a: Vec<i32>) -> i32 {
-    use std::collections::HashSet;
     a.sort();
 
     let mut result = 0;
     let mut largest = if let Some(u) = a.last() { *u } else { return 0 };
     let mut k = a[0];
 
-    let mut option_results = {
-        let aa = a.iter().cloned().collect::<HashSet<_>>();
-        let bb = (1..largest.clone()).collect::<HashSet<_>>();
-        let mut tt = bb.difference(&aa).cloned().collect::<Vec<_>>();
-        tt.sort();
-        tt
+    let mut option_results = vec![];
+    {
+        let mut o_v = 1;
+        for &v in &a {
+            if v - o_v > 1 {
+                option_results.append(&mut (o_v + 1..v).into_iter().collect::<Vec<_>>());
+            }
+            o_v = v
+        }
     };
 
     println!("{:?}, {:?}", option_results, a);
