@@ -85,28 +85,28 @@ fn no_rec_match(s: &[u8], p: &[u8]) -> bool {
 }
 
 fn main() {
-    //assert!(is_match("".to_string(), "".to_string()));
-    //assert!(is_match("".to_string(), "*".to_string()));
+    assert!(is_match("".to_string(), "".to_string()));
+    assert!(is_match("".to_string(), "*".to_string()));
 
     assert!(!is_match("aa".to_string(), "a".to_string()));
     assert!(is_match("aa".to_string(), "*".to_string()));
     assert!(!is_match("cb".to_string(), "?a".to_string()));
     assert!(is_match("adceb".to_string(), "*a*b".to_string()));
-    //assert!(!is_match("acdcb".to_string(), "a*c?b".to_string()));
+    assert!(!is_match("acdcb".to_string(), "a*c?b".to_string()));
 
-    // assert!(!is_match(
-    //     "mississippi".to_string(),
-    //     "m??*ss*?i*pi".to_string()
-    // ));
+    assert!(!is_match(
+        "mississippi".to_string(),
+        "m??*ss*?i*pi".to_string()
+    ));
 
-    // assert!(!is_match(
-    //     "aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba".to_string(),
-    //     "a*******b".to_string()
-    // ));
+    assert!(!is_match(
+        "aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba".to_string(),
+        "a*******b".to_string()
+    ));
 
-    // assert!(!is_match(
-    //         "abbabaaabbabbaababbabbbbbabbbabbbabaaaaababababbbabababaabbababaabbbbbbaaaabababbbaabbbbaabbbbababababbaabbaababaabbbababababbbbaaabbbbbabaaaabbababbbbaababaabbababbbbbababbbabaaaaaaaabbbbbaabaaababaaaabb".to_string(),
-    //         "**aa*****ba*a*bb**aa*ab****a*aaaaaa***a*aaaa**bbabb*b*b**aaaaaaaaa*a********ba*bbb***a*ba*bb*bb**a*b*bb"
-    // .to_string()
-    //     ));
+    assert!(!is_match(
+            "abbabaaabbabbaababbabbbbbabbbabbbabaaaaababababbbabababaabbababaabbbbbbaaaabababbbaabbbbaabbbbababababbaabbaababaabbbababababbbbaaabbbbbabaaaabbababbbbaababaabbababbbbbababbbabaaaaaaaabbbbbaabaaababaaaabb".to_string(),
+            "**aa*****ba*a*bb**aa*ab****a*aaaaaa***a*aaaa**bbabb*b*b**aaaaaaaaa*a********ba*bbb***a*ba*bb*bb**a*b*bb"
+    .to_string()
+        ));
 }
