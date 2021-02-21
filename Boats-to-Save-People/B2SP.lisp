@@ -1,0 +1,21 @@
+(defun num-rescue-boats (people limit)
+  (let ((pp (sort people #'<))
+        (count 0)
+        (inner-limit limit))
+    (loop
+      while (> (length pp) 1)
+      do (decf inner-limit (car (last pp)))
+      do (setf pp (butlast pp))
+      if (<= (car pp) inner-limit)
+        do (setf pp (cdr pp))
+      do (setf count (1+ count)
+               inner-limit limit)
+      )
+
+    (if (= 1 (length pp))
+        (1+ count)
+        count)))
+
+(DEFUN main ()
+  (assert (= (num-rescue-boats '(3 2 3 2 2) 6) 3))
+  (assert (= (num-rescue-boats '(5 1 4 2) 6) 2)))
