@@ -1,0 +1,6 @@
+(defun find-duplicate (nums)
+  (let ((cache (make-list (length nums) :initial-element nil)))
+    (dolist (n nums)
+      (if (not (nth n cache))
+          (setf (nth n cache) t)
+          (return-from find-duplicate n)))))
