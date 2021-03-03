@@ -1,0 +1,21 @@
+(defun car-pooling (trips capacity)
+  (let ((cache (make-array 1000 :initial-element 0)))
+    (dolist (trip trips)
+      (incf (aref cache (nth 1 trip)) (nth 0 trip))
+      (decf (aref cache (nth 2 trip)) (nth 0 trip)))
+    ;;(format t "~a~%" (subseq cache 0 10))
+    (loop
+      with sum = 0
+      for v across (subseq cache 0 10)
+      do (incf sum v)
+      if (> sum capacity)
+        do (return-from car-pooling nil)
+      finally (return t)
+      )))
+
+(defun main ()
+  (assert (not (car-pooling '((2 1 5) (3 3 7)) 4)))
+  (assert (car-pooling '((2 1 5) (3 3 7)) 5))
+  (assert (car-pooling '((2 1 5) (3 5 7)) 3))
+  (assert (car-pooling '((3 2 7) (3 7 9) (8 3 9)) 11))
+  )
