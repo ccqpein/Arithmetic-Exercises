@@ -1,0 +1,16 @@
+(defun num-water-bottles (bottles exchange)
+  (labels ((helper (bottles empty sum exc)
+             (let (nw ne)
+               (multiple-value-setq
+                   (nw ne)
+                 (floor (+ bottles empty) exc))
+               (if (and (< ne exc) (= 0 nw))
+                   (+ sum bottles)
+                   (helper nw ne (+ sum bottles) exc)))))
+    (helper bottles 0 0 exchange)))
+
+(defun main ()
+  (assert (= (num-water-bottles 15 4) 19))
+  (assert (= (num-water-bottles 9 3) 13))
+  (assert (= (num-water-bottles 5 5) 6))
+  (assert (= (num-water-bottles 2 3) 2)))
