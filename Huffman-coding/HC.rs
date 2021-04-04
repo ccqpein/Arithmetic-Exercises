@@ -3,7 +3,7 @@ use std::rc::Rc;
 use std::{borrow::Borrow, cmp::Ordering};
 use std::{cell::RefCell, collections::HashMap};
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct BTree {
     c: Option<char>,
     value: usize,
@@ -31,33 +31,72 @@ impl BTree {
         }
     }
 
-    fn record_in_table(&self, table: &mut HashMap<char, Vec<String>>) {
-        self.search_with_prefix(String::new(), table)
-    }
-
-    fn search_with_prefix(&self, pre: String, table: &mut HashMap<char, Vec<String>>) {
-        match self.c {
-            Some(cc) => {
-                table.entry(cc).or_insert(vec![]).push(pre);
+    fn new_from_code(&mut self, c: char, mut code: Vec<char>) -> Result<(), usize> {
+        if code.len() == 1 {
+            match code[0] {
+                '0' => {
+                    if self.left.is_some() {
+                        return Err(1);
+                    } else {
+                        self.left = Some(Rc::new(RefCell::new(Self {
+                            c: Some(c),
+                            value: 0,
+                            left: None,
+                            right: None,
+                        })))
+                    };
+                    Ok(())
+                }
+                '1' => {
+                    if self.right.is_some() {
+                        return Err(1);
+                    } else {
+                        self.right = Some(Rc::new(RefCell::new(Self {
+                            c: Some(c),
+                            value: 0,
+                            left: None,
+                            right: None,
+                        })))
+                    }
+                    Ok(())
+                }
+                _ => {
+                    panic!()
+                }
             }
-            None => {
-                let ll = self.left.as_ref().unwrap().clone();
-                ll.as_ref()
-                    .borrow()
-                    .search_with_prefix(pre.clone() + "0", table);
-
-                ll.as_ref()
-                    .borrow()
-                    .search_with_prefix(pre.clone() + "1", table);
-
-                let rr = self.right.as_ref().unwrap().clone();
-                rr.as_ref()
-                    .borrow()
-                    .search_with_prefix(pre.clone() + "1", table);
-
-                rr.as_ref()
-                    .borrow()
-                    .search_with_prefix(pre.clone() + "0", table);
+        } else {
+            match code[0] {
+                '0' => {
+                    if self.left.is_none() {
+                        self.left = Some(Rc::new(RefCell::new(Self {
+                            c: None,
+                            value: 0,
+                            left: None,
+                            right: None,
+                        })))
+                    }
+                    Rc::get_mut(self.left.as_mut().unwrap())
+                        .unwrap()
+                        .get_mut()
+                        .new_from_code(c, code.drain(1..).collect())
+                }
+                '1' => {
+                    if self.right.is_none() {
+                        self.right = Some(Rc::new(RefCell::new(Self {
+                            c: None,
+                            value: 0,
+                            left: None,
+                            right: None,
+                        })))
+                    }
+                    Rc::get_mut(self.right.as_mut().unwrap())
+                        .unwrap()
+                        .get_mut()
+                        .new_from_code(c, code.drain(1..).collect())
+                }
+                _ => {
+                    panic!()
+                }
             }
         }
     }
@@ -65,7 +104,13 @@ impl BTree {
 
 impl PartialEq for BTree {
     fn eq(&self, other: &Self) -> bool {
-        self.value == other.value
+        //self.value == other.value
+        //&&
+        self.c == other.c
+            && ((self.left.as_ref() == other.left.as_ref()
+                && self.right.as_ref() == other.right.as_ref())
+                || (self.left.as_ref() == other.right.as_ref()
+                    && self.right.as_ref() == other.left.as_ref()))
     }
 }
 
@@ -81,6 +126,7 @@ fn new_huffman_tree(mut ll: Vec<PBTree>) -> Vec<Vec<PBTree>> {
     if ll.len() == 1 {
         return vec![ll];
     }
+
     ll.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
     pick_smallest(ll)
@@ -149,22 +195,114 @@ fn main() {
     let e = Rc::new(RefCell::new(BTree::new('e', 5)));
     let t = Rc::new(RefCell::new(BTree::new('t', 7)));
 
-    //dbg!(new_huffman_tree(vec![f, o, r, g, e, t]));
     let aaa = new_huffman_tree(vec![f, o, r, g, e, t]);
-    //dbg!(new_huffman_tree(aaa[0].clone()));
-    //dbg!(pick_smallest(aaa[0].clone()));
-    //dbg!(pick_smallest(vec![f, o, r, g, e, t]));
-    //dbg!(make_buffman_tree(f, vec![o, r, g, e, t]));
 
-    //let mut table = HashMap::new();
+    // aaa.iter().for_each(move |a| {
+    //     dbg!(a);
+    // });
 
-    //dbg!(aaa.len());
-    aaa.iter().for_each(move |a| {
-        dbg!(a);
-        //a[0].as_ref().borrow().record_in_table(&mut table);
-        //dbg!(&table);
-    });
+    let mut a = BTree {
+        c: None,
+        value: 0,
+        left: None,
+        right: None,
+    };
+    a.new_from_code('f', vec!['0', '0', '0']).unwrap();
+    a.new_from_code('o', vec!['0', '0', '1']).unwrap();
+    a.new_from_code('r', vec!['1', '0', '0']).unwrap();
+    a.new_from_code('g', vec!['1', '0', '1']).unwrap();
+    a.new_from_code('e', vec!['0', '1']).unwrap();
+    a.new_from_code('t', vec!['1', '1']).unwrap();
 
-    //aaa[0][0].as_ref().borrow().record_in_table(&mut table);
-    //dbg!(table);
+    //dbg!(a);
+
+    dbg!(aaa
+        .iter()
+        .map(|v| v[0].as_ref().take() == a)
+        .collect::<Vec<bool>>());
+
+    ////////////////
+    ///////////////
+    //////////////
+
+    let a = Rc::new(RefCell::new(BTree::new('a', 1)));
+    let b = Rc::new(RefCell::new(BTree::new('b', 1)));
+    let c = Rc::new(RefCell::new(BTree::new('c', 1)));
+    let d = Rc::new(RefCell::new(BTree::new('d', 3)));
+    let e = Rc::new(RefCell::new(BTree::new('e', 3)));
+    let f = Rc::new(RefCell::new(BTree::new('f', 6)));
+    let g = Rc::new(RefCell::new(BTree::new('g', 6)));
+
+    let tree0s = new_huffman_tree(vec![a, b, c, d, e, f, g]);
+
+    let mut tree1 = BTree {
+        c: None,
+        value: 0,
+        left: None,
+        right: None,
+    };
+
+    tree1
+        .new_from_code('a', vec!['0', '0', '0', '0', '0'])
+        .unwrap();
+    tree1
+        .new_from_code('b', vec!['0', '0', '0', '0', '1'])
+        .unwrap();
+    tree1.new_from_code('c', vec!['0', '0', '0', '1']).unwrap();
+    tree1.new_from_code('d', vec!['0', '0', '1']).unwrap();
+    tree1.new_from_code('e', vec!['0', '1']).unwrap();
+    tree1.new_from_code('f', vec!['1', '0']).unwrap();
+    tree1.new_from_code('g', vec!['1', '1']).unwrap();
+
+    // dbg!(tree0s
+    //     .iter()
+    //     .map(|v| v[0].as_ref().take() == tree1)
+    //     .collect::<Vec<bool>>());
+
+    //////////////////////////////////////////////////////
+
+    let mut tree2 = BTree {
+        c: None,
+        value: 0,
+        left: None,
+        right: None,
+    };
+
+    tree2
+        .new_from_code('a', vec!['0', '1', '0', '1', '0'])
+        .unwrap();
+    tree2
+        .new_from_code('b', vec!['0', '1', '0', '1', '1'])
+        .unwrap();
+    tree2.new_from_code('c', vec!['0', '1', '0', '0']).unwrap();
+    tree2.new_from_code('d', vec!['0', '1', '1']).unwrap();
+    tree2.new_from_code('e', vec!['1', '0']).unwrap();
+    tree2.new_from_code('f', vec!['1', '1']).unwrap();
+    tree2.new_from_code('g', vec!['0', '0']).unwrap();
+
+    dbg!(tree0s
+        .iter()
+        .map(|v| v[0].as_ref().take() == tree2)
+        .collect::<Vec<bool>>());
+
+    //////////////////////////////////////////////////////
+    let mut tree3 = BTree {
+        c: None,
+        value: 0,
+        left: None,
+        right: None,
+    };
+
+    tree3.new_from_code('a', vec!['0', '0', '0']).unwrap();
+    tree3.new_from_code('b', vec!['0', '0', '1']).unwrap();
+    tree3.new_from_code('c', vec!['0', '1', '0']).unwrap();
+    tree3.new_from_code('d', vec!['0', '1', '1']).unwrap();
+    tree3.new_from_code('e', vec!['1', '0', '0']).unwrap();
+    tree3.new_from_code('f', vec!['1', '0', '1']).unwrap();
+    tree3.new_from_code('g', vec!['1', '1', '0']).unwrap();
+
+    dbg!(tree0s
+        .iter()
+        .map(|v| v[0].as_ref().take() == tree3)
+        .collect::<Vec<bool>>());
 }
