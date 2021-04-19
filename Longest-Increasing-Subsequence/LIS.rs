@@ -59,6 +59,26 @@ fn helper_2(nums: &Vec<i32>, ind: usize, cache: &mut [usize]) -> usize {
     }
 }
 
+pub fn length_of_lis_3(nums: Vec<i32>) -> i32 {
+    use std::cmp::max;
+    let mut tail = vec![0; nums.len()];
+    let mut size = 0;
+    for n in nums {
+        let (mut i, mut j) = (0, size);
+        while i != j {
+            let m = (i + j) / 2;
+            if tail[m as usize] < n {
+                i = m + 1
+            } else {
+                j = m
+            }
+        }
+        tail[i as usize] = n;
+        size = max(i + 1, size);
+    }
+    size
+}
+
 fn main() {
     // assert_eq!(length_of_lis(vec![10, 9, 2, 5, 3, 7, 101, 18]), 4);
     // assert_eq!(length_of_lis(vec![0, 1, 0, 3, 2, 3]), 4);
