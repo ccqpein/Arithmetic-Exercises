@@ -11,19 +11,29 @@ struct WordFilter {
  */
 impl WordFilter {
     fn new(words: Vec<String>) -> Self {
+        let mut w_words = HashMap::new(); // string: index
+        for (ind, s) in words.iter().enumerate() {
+            match w_words.get_mut(s) {
+                Some(vv) => *vv = ind,
+                None => {
+                    w_words.insert(s, ind);
+                }
+            }
+        }
+
         let mut table: HashMap<String, HashSet<usize>> = HashMap::new();
         let mut post_table: HashMap<String, HashSet<usize>> = HashMap::new();
-        for (ind, s) in words.iter().enumerate() {
+        for (s, ind) in w_words.iter() {
             for index in 1..=s.len() {
                 let en = table
                     .entry(s[0..index].to_string())
                     .or_insert(HashSet::new());
-                en.insert(ind);
+                en.insert(*ind);
 
                 let en = post_table
                     .entry(s[s.len() - index..s.len()].to_string())
                     .or_insert(HashSet::new());
-                en.insert(ind);
+                en.insert(*ind);
             }
         }
 
@@ -36,9 +46,8 @@ impl WordFilter {
     fn f(&self, prefix: String, suffix: String) -> i32 {
         match (self.pre_table.get(&prefix), self.pro_table.get(&suffix)) {
             (Some(s1), Some(s2)) => {
-                let mut ss: Vec<&usize> = s1.intersection(s2).collect();
-                ss.sort();
-                ss.into_iter().last().map_or(-1, |a| *a as i32)
+                let ss: Vec<&usize> = s1.intersection(s2).collect();
+                ss.iter().max().map_or(-1, |a| **a as i32)
             }
             _ => return -1,
         }
