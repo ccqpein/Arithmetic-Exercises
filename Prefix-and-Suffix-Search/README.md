@@ -27,8 +27,6 @@ wordFilter.f("a", "e"); // return 0, because the word at index 0 has prefix = "a
 
 ```
 
-
-
 **Constraints:**
 
 
