@@ -1,9 +1,18 @@
+;;; https://stackoverflow.com/questions/68974922/how-to-declare-the-list-type-in-common-lisp/68974996#68974996
+(defun list-of-strings-p (list)
+  "Return t if LIST is non nil and contains only strings."
+  (and (consp list)
+       (every #'stringp list)))
+
+(deftype list-of-strings ()
+  `(and list (satisfies list-of-strings-p)))
+
 (defstruct (word-filter (:conc-name wf-))
   (pre-table (make-hash-table :test 'equal) :type hash-table)
   (pro-table (make-hash-table :test 'equal) :type hash-table))
 
 (defun new-word-filter (words)
-  ;;(declare (list string words))
+  (declare (list-of-strings words))
   (let ((wf (make-word-filter))
         (w-words (loop
                    with index = 0
