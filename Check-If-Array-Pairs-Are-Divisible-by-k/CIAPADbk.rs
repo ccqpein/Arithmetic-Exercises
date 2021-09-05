@@ -1,46 +1,33 @@
 use std::collections::HashMap;
 
 pub fn can_arrange(arr: Vec<i32>, k: i32) -> bool {
-    if arr.len() == 2 {
-        return arr.iter().all(|v| v % k == 0);
-    }
+    let mut table = HashMap::new();
 
-    let arr = arr.into_iter().map(|v| v % k).collect::<Vec<i32>>();
+    for num in arr {
+        let m = num.rem_euclid(k);
+        let cm = (-num).rem_euclid(k);
 
-    dbg!(&arr);
+        //dbg!(&m, &cm);
 
-    let mut count_table: HashMap<i32, usize> = HashMap::new();
-
-    arr.iter().for_each(|v| {
-        let en = count_table.entry(*v).or_insert(0);
-        *en += 1;
-    });
-
-    dbg!(&count_table);
-
-    for &kk in count_table.keys() {
-        if kk == 0 {
-            continue;
-        }
-
-        let count = if let Some(count) = count_table.get(&kk) {
-            count
+        if let None = table.get(&cm) {
+            let en = table.entry(m).or_insert(0);
+            *en += 1;
         } else {
-            return false;
-        };
-
-        let pair_count = if let Some(count) = count_table.get(&(k - kk)) {
-            count
-        } else {
-            return false;
-        };
-
-        if *pair_count != *count {
-            return false;
+            let en = table.get_mut(&cm).unwrap();
+            *en -= 1;
+            if *en == 0 {
+                table.remove(&cm);
+            }
         }
     }
 
-    true
+    //dbg!(&table);
+
+    if table.len() == 0 {
+        true
+    } else {
+        false
+    }
 }
 
 fn main() {
