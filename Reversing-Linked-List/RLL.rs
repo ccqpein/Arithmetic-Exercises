@@ -1,4 +1,4 @@
-#![feature(box_into_inner)]
+//#![feature(box_into_inner)]
 
 #[derive(Debug)]
 struct List {
@@ -8,14 +8,20 @@ struct List {
 
 impl List {
     fn new(mut input: Vec<i32>) -> Option<Self> {
-        let mut this;
-        let mut tail = None;
+        let mut this = if let Some(i) = input.pop() {
+            Self { v: i, next: None }
+        } else {
+            return None;
+        };
+
         loop {
             if let Some(i) = input.pop() {
-                this = Self { v: i, next: tail };
-                tail = Some(Box::new(this));
+                this = Self {
+                    v: i,
+                    next: Some(Box::new(this)),
+                }
             } else {
-                return Some(Box::into_inner(tail.unwrap()));
+                return Some(this);
             };
         }
     }
@@ -44,7 +50,7 @@ impl List {
             cache.push(head);
             match next {
                 Some(n) => {
-                    head = Box::into_inner(n);
+                    head = *n;
                     next = head.next.take();
                 }
                 None => {
