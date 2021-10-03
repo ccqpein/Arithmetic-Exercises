@@ -21,5 +21,5 @@ fn main() {
     dbg!(thousand_separator(1234));
     dbg!(thousand_separator(123456789));
     dbg!(thousand_separator(0));
-    dbg!(thousand_separator(0));
+ 
 }
