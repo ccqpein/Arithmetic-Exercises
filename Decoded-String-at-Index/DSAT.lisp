@@ -9,7 +9,8 @@
                (if (= 0 (mod k l))
                    (return-from decode-at-index (decode-at-index str l))
                    (return-from decode-at-index (decode-at-index str (mod k l)))
-                   ))
+                   )
+               )
         and do (setf l (* l this-num))
       else
         do (incf l)
