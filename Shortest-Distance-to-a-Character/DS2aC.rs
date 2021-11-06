@@ -39,6 +39,43 @@ pub fn shortest_to_char(s: String, c: char) -> Vec<i32> {
         .collect()
 }
 
+pub fn shortest_to_char2(s: String, c: char) -> Vec<i32> {
+    let chars = s.chars();
+    let mut from_head = Vec::with_capacity(s.len());
+    let mut from_tail = Vec::with_capacity(s.len());
+
+    chars
+        .clone()
+        .fold((-1, s.len() as i32), |(flag, length), ch| {
+            if c == ch {
+                from_head.push(0);
+                (1, 0)
+            } else {
+                from_head.push(length + flag);
+                (flag, length + flag)
+            }
+        });
+
+    chars.rfold((-1, s.len() as i32), |(flag, length), ch| {
+        if c == ch {
+            from_tail.push(0);
+            (1, 0)
+        } else {
+            from_tail.push(length + flag);
+            (flag, length + flag)
+        }
+    });
+
+    from_tail.reverse();
+    //dbg!(&from_head);
+    //dbg!(&from_tail);
+    from_head
+        .into_iter()
+        .zip(from_tail)
+        .map(|(a, b)| a.min(b))
+        .collect()
+}
+
 fn main() {
     assert_eq!(
         shortest_to_char("loveleetcode".into(), 'e'),
@@ -46,4 +83,11 @@ fn main() {
     );
 
     assert_eq!(shortest_to_char("aaab".into(), 'b'), vec![3, 2, 1, 0]);
+
+    assert_eq!(
+        shortest_to_char2("loveleetcode".into(), 'e'),
+        vec![3, 2, 1, 0, 1, 0, 0, 1, 2, 2, 1, 0]
+    );
+
+    assert_eq!(shortest_to_char2("aaab".into(), 'b'), vec![3, 2, 1, 0]);
 }
