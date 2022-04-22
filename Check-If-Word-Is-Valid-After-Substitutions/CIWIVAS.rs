@@ -8,7 +8,7 @@ fn helper(mut ch: Chars, stack: &mut Vec<char>) -> bool {
     //println!("chars: {:?}, stack: {:?}", ch, stack);
     match ch.next() {
         Some(c) => {
-            if c == 'a' && *stack.last().unwrap_or(&' ') != 'a' {
+            if c == 'a' {
                 stack.push('c');
                 stack.push('b');
                 helper(ch, stack)
