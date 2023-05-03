@@ -1,0 +1,25 @@
+(defun max-unique-split (s)
+  (let ((set (make-hash-table :test 'equal)))
+	(labels ((helper (s set)
+			   (cond ((= 0 (length s))
+					  0)
+					 (t
+					  (loop for i from 1 to (length s)
+							for a = (str:substring 0 i s)
+							unless (gethash a set)
+							  maximize (1+ (if (gethash a set)
+											   0
+											   (progn
+												 (setf (gethash a set) t)
+												 (let ((vv (helper (str:substring i (length s) s) set)))
+												   (setf (gethash a set) nil)
+												   vv)))))))))
+	  (helper s set)
+	  )))
+
+(defun main ()
+  (assert (= 5 (max-unique-split "ababccc")))
+  (assert (= 2 (max-unique-split "aba")))
+  (assert (= 1 (max-unique-split "aa")))
+  (assert (= 11 (max-unique-split "wwwzfvedwfvhsww")))
+  )
