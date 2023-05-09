@@ -6,7 +6,6 @@ pub fn compare_version(version1: String, version2: String) -> i32 {
 
     let mut buf1 = vec![];
     let mut buf2 = vec![];
-    let mut first = true;
 
     loop {
         let l1 = cursor1.read_until(b'.', &mut buf1).unwrap();
@@ -38,7 +37,6 @@ pub fn compare_version(version1: String, version2: String) -> i32 {
 
         buf1.clear();
         buf2.clear();
-        first = false
     }
 }
 
