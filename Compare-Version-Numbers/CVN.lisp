@@ -21,9 +21,25 @@
 			  )
 		))))
 
+(defun compare-version2 (v1 v2)
+  "v1 & v2 format: (1 3 4)"
+  (let ((max-len (max (length v1) (length v2))))
+	(loop for i from 0 below max-len
+		  for x = (if (nth i v1) (nth i v1) 0)
+		  and y = (if (nth i v2) (nth i v2) 0)
+		  do (cond ((> x y) (return-from compare-version2 1))
+				   ((< x y) (return-from compare-version2 -1))))
+	0
+	))
+
 (defun main ()
   (assert (= 0 (compare-version "1.01" "1.001")))
   (assert (= 0 (compare-version "1.0" "1.0.0")))
   (assert (= -1 (compare-version "0.1" "1.1")))
   (assert (= -1 (compare-version "1.1" "1.10")))
+
+  (assert (= 0 (compare-version2 '(1 1) '(1 1))))
+  (assert (= 0 (compare-version2 '(1 0) '(1 0 0))))
+  (assert (= -1 (compare-version2 '(0 1) '(1 1))))
+  (assert (= -1 (compare-version2 '(1 1) '(1 10))))
   )
