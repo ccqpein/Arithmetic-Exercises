@@ -70,7 +70,7 @@ pub fn count_complete_subarrays_bkp(nums: Vec<i32>) -> i32 {
     result as i32
 }
 
-pub fn count_complete_subarrays(nums: Vec<i32>) -> i32 {
+pub fn count_complete_subarrays2(nums: Vec<i32>) -> i32 {
     use std::collections::HashMap;
     use std::collections::HashSet;
     let s = nums.iter().cloned().collect::<HashSet<i32>>();
@@ -80,7 +80,7 @@ pub fn count_complete_subarrays(nums: Vec<i32>) -> i32 {
     'a: while i < nums.len() {
         //'a: for mut i in 0..nums.len() {
         for mut j in i + s.len()..=nums.len() {
-            //println!("{i}, {j}");
+            println!("{i}, {j}");
             //dbg!(&cache);
             if cache.contains(&(i, j)) {
                 continue;
@@ -106,12 +106,14 @@ pub fn count_complete_subarrays(nums: Vec<i32>) -> i32 {
                                     cache.insert((ii + 1, jj));
                                 }
                             } else {
-                                i = ii;
+                                i = ii + 1;
                                 continue 'a;
                                 //break;
                             }
                         }
-                        None => break,
+                        None => {
+                            continue 'a;
+                        }
                     }
                 }
             }
@@ -120,6 +122,32 @@ pub fn count_complete_subarrays(nums: Vec<i32>) -> i32 {
     }
 
     cache.len() as i32
+}
+
+pub fn count_complete_subarrays(nums: Vec<i32>) -> i32 {
+    use std::collections::HashMap;
+    use std::collections::HashSet;
+    let s = nums.iter().cloned().collect::<HashSet<i32>>();
+    let mut result = 0;
+    let mut left = 0;
+    let mut cache: HashMap<i32, usize> = HashMap::new();
+
+    for r in 0..nums.len() {
+        *cache.entry(nums[r]).or_insert(0) += 1;
+        while cache.keys().len() == s.len() {
+            result += nums.len() - r;
+            match cache.get_mut(&nums[left]) {
+                Some(a) => *a -= 1,
+                None => unreachable!(),
+            }
+            if cache.get(&nums[left]).unwrap() == &0_usize {
+                cache.remove(&nums[left]);
+            }
+            left += 1;
+        }
+    }
+
+    result as i32
 }
 
 fn main() {
