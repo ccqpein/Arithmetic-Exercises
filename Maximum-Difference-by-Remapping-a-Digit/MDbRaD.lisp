@@ -1,13 +1,12 @@
 (defun number-to-list (n)
-  (let ((largest (expt 10 (floor (log n 10)))))
-    (loop
-      with base = 10
-      collect (mod n base) into result
-      if (< n 10)
-        return (reverse result)
-      else
-        do (setf n (floor (/ n base)))
-      )))
+  (loop
+    with base = 10
+    collect (mod n base) into result
+    if (< n 10)
+      return (reverse result)
+    else
+      do (setf n (floor (/ n base)))
+    ))
 
 (defun list-number-join (nl)
   (let ((ex (expt 10 (1- (length nl)))))
