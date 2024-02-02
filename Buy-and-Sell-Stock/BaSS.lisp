@@ -14,8 +14,15 @@
         (return-from max-profit (if (numberp min)
                                     result
                                     0)))
+    ;;(format t "~a ~a ~a ~a~%" max min result restL)
     (cond ((< this min)
            (setf min this))
           ((> (- this min) result)
            (setf max this
                  result (- max min))))))
+
+(assert (= (max-profit *test1) 0))
+(assert (= (max-profit *test2) 2))
+(assert (= (max-profit *test3) 0))
+(assert (= (max-profit *test4) 5))
+(assert (= (max-profit *test5) 2))
