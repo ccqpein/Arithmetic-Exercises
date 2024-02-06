@@ -16,8 +16,12 @@ def changCoin(value, coinL, resultL):
     tempResult = []
     for i in [c for c in coinL if c <= value]:
         numCoins = 1 + changCoin(value - i, coinL, resultL)
-        print(numCoins)
+        # print(numCoins)
         tempResult.append(numCoins)
 
     resultL[value] = min(tempResult)
     return min(tempResult)
+
+print(changCoin(100, coinList, {}) == 4)
+print(changCoin(1030, coinList, {}) == 42)
+print(changCoin(302, coinList, {}) == 14)
