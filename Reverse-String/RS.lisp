@@ -1,0 +1,21 @@
+(defun reverse-str (str)
+  (loop with len = (length str)
+        and cb 
+        for i from 0
+        while (< i (- len 1 i))
+        do (setf cb (nth i str)
+                 (nth i str) (nth (- len 1 i) str)
+                 (nth (- len 1 i) str) cb)
+        finally (return str)
+        ))
+
+(defun main ()
+  (assert (equal (reverse-str (concatenate 'list "hello"))
+                 (concatenate 'list "olleh")
+                 ))
+  (assert (equal (reverse-str (concatenate 'list "Hannah"))
+                 (concatenate 'list "hannaH")
+                 ))
+  (assert (equal (reverse-str (concatenate 'list "\""))
+                 (concatenate 'list "\"")
+                 )))
