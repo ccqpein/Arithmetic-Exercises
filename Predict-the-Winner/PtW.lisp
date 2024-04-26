@@ -1,0 +1,22 @@
+(defun predict-the-winner (l)
+  (multiple-value-bind (a b) (helper l 0 (1- (length l)))
+    (>= a b)))
+
+(defun helper (l start end)
+  (cond ((> start end) (values 0 0))
+        ((= start end) (values (nth start l) 0))
+        (t (let ((aa0 (nth start l))
+                 (aa1 (nth end l))
+                 a0 b0
+                 a1 b1)
+             (multiple-value-setq (a0 b0) (helper l (1+ start) end))
+             (multiple-value-setq (a1 b1) (helper l start (1- end)))
+             (if (> (+ aa0 b0) (+ aa1 b1))
+                 (values (+ b0 aa0) a0)
+                 (values (+ b1 aa1) a1))
+             ))))
+
+(defun main ()
+  (assert (not (predict-the-winner '(1 5 2))))
+  (assert (predict-the-winner '(1 5 233 7)))
+  )
