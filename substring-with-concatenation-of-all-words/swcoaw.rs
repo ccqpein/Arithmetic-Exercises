@@ -33,12 +33,30 @@ pub fn find_substring(s: String, words: Vec<String>) -> Vec<i32> {
     let set = (0..words.len()).into_iter().collect::<HashSet<_>>();
 
     (0..s.len())
-        .filter_map(|i| helper(&s, i, set.clone(), &words))
+        .filter_map(|i| {
+            helper(
+                &s,
+                i,
+                set.clone(),
+                &words,
+                words.iter().map(|s| s.len()).sum::<usize>(),
+            )
+        })
         .map(|x| x as i32)
         .collect()
 }
 
-fn helper(s: &str, start: usize, set: HashSet<usize>, words: &Vec<String>) -> Option<usize> {
+fn helper(
+    s: &str,
+    start: usize,
+    set: HashSet<usize>,
+    words: &Vec<String>,
+    fill_len: usize,
+) -> Option<usize> {
+    if fill_len > s.len() - start {
+        return None;
+    }
+
     if set.len() == 0 {
         return Some(start);
     }
@@ -48,7 +66,7 @@ fn helper(s: &str, start: usize, set: HashSet<usize>, words: &Vec<String>) -> Op
             //dbg!(ss);
             let mut set_c = set.clone();
             set_c.remove(ind);
-            if let Some(_) = helper(s, start + ss.len(), set_c, words) {
+            if let Some(_) = helper(s, start + ss.len(), set_c, words, fill_len - ss.len()) {
                 return Some(start);
             }
         }
