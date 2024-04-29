@@ -1,69 +1,52 @@
 pub fn count_characters(words: Vec<String>, chars: String) -> i32 {
-    use std::collections::{HashMap, HashSet};
-    let char_set = {
-        let mut char_table = HashMap::new();
-        for c in chars.chars() {
-            *char_table.entry(c).or_insert(0) += 1
-        }
-        char_table
-    };
-    let words_sets = words
-        .iter()
-        .map(|w| {
-            let mut char_table = HashMap::new();
-            for c in w.chars() {
-                *char_table.entry(c).or_insert(0) += 1
-            }
-            char_table
-        })
-        .collect::<Vec<_>>();
-
-    dbg!(&char_set);
-    dbg!(&words_sets);
-
-    let mut result = 0;
-    for i in 0..words_sets.len() {
-        if words[i].len() > chars.len() {
-            continue;
-        }
-
-        let mut flag = true;
-        for (k, v) in &words_sets[i] {
-            if let Some(n) = char_set.get(k) {
-                if n < v {
-                    flag = false;
-                    break;
-                }
+    let cc = to_bytes(chars);
+    words
+        .into_iter()
+        .filter_map(|w| {
+            let ll = w.len();
+            let ww = to_bytes(w);
+            if match_vec(&ww, &cc) {
+                Some(ll as i32)
             } else {
-                flag = false;
-                break;
+                None
             }
-        }
-        if flag {
-            result += words[i].len()
-        }
+        })
+        .sum()
+}
+
+fn to_bytes(s: String) -> [u8; 26] {
+    let mut result = [0; 26];
+    for x in s.bytes() {
+        result[(x - 97) as usize] += 1
     }
 
-    result as i32
+    result
+}
+
+fn match_vec(word: &[u8; 26], chars: &[u8; 26]) -> bool {
+    (0..26).into_iter().all(|i| word[i] <= chars[i])
 }
 
 fn main() {
-    dbg!(count_characters(
-        vec![
-            "cat".to_string(),
-            "bt".to_string(),
-            "hat".to_string(),
-            "tree".to_string()
-        ],
-        "atach".to_string()
-    ));
+    assert_eq!(
+        count_characters(
+            vec!["cat", "bt", "hat", "tree"]
+                .into_iter()
+                .map(|s| s.to_string())
+                .collect(),
+            "atach".to_string()
+        ),
+        6
+    );
 
-    dbg!(count_characters(
-        vec![
-            "hello".to_string(),
-            "world".to_string(),
-            "leetcode".to_string(),
-        ],
-        "welldonehoneyr".to_string()
-    ));
+    assert_eq!(
+        count_characters(
+            vec!["hello", "world", "leetcode"]
+                .into_iter()
+                .map(|s| s.to_string())
+                .collect(),
+            "welldonehoneyr".to_string()
+        ),
+        10
+    );
 }
