@@ -84,6 +84,7 @@ fn faster_find(all_ind: &[Option<i32>], x: usize) -> (usize, usize) {
     if left.is_none() {
         left = Some(0)
     }
+
     /////////////
 
     let mut right = None;
@@ -117,15 +118,70 @@ fn helper(nums: &[i32]) -> Vec<(i32, Vec<usize>)> {
     result.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
     result
 }
+///////////////////////////////////
 
+pub fn valid_subarray_size2(nums: Vec<i32>, threshold: i32) -> i32 {
+    let cache = helper2(&nums);
+
+    for ind in 0..nums.len() {
+        let (left, right) = cache[ind];
+        if threshold / ((right - left) as i32) < nums[ind] {
+            return (right - left) as i32;
+        }
+    }
+
+    -1
+}
+
+fn helper2(nums: &[i32]) -> Vec<(usize, usize)> {
+    let mut cache = vec![(0, nums.len()); nums.len()];
+
+    for x in 0..nums.len() {
+        let xx = nums[x];
+        for y in x + 1..nums.len() {
+            if nums[y] > xx {
+                cache[y].0 = x + 1
+            } else if nums[y] < xx {
+                cache[x].1 = y;
+                break;
+            }
+        }
+    }
+
+    cache
+}
+
+/////////////////////////////////////
+
+pub fn valid_subarray_size3(nums: Vec<i32>, threshold: i32) -> i32 {
+    let mut cache = vec![(0, nums.len()); nums.len()];
+
+    for x in 0..nums.len() {
+        let xx = nums[x];
+        for y in x + 1..nums.len() {
+            if nums[y] > xx {
+                cache[y].0 = x + 1
+            } else if nums[y] < xx {
+                cache[x].1 = y;
+                break;
+            }
+        }
+        let (left, right) = cache[x];
+        if threshold / ((right - left) as i32) < nums[x] {
+            return (right - left) as i32;
+        }
+    }
+
+    -1
+}
 fn main() {
     //dbg!(helper(&vec![1, 3, 4, 3, 1]));
-    //dbg!(helper(&vec![6, 5, 6, 5, 8]));
+    dbg!(helper2(&vec![6, 5, 6, 5, 8]));
 
     //dbg!(valid_subarray_size(vec![1, 3, 4, 3, 1], 6));
     //dbg!(valid_subarray_size(vec![6, 5, 6, 5, 8], 7));
-    dbg!(valid_subarray_size(
-        vec![818, 232, 595, 418, 608, 229, 37, 330, 876, 774, 931, 939, 479, 884, 354, 328],
-        3790
-    ));
+    // dbg!(valid_subarray_size(
+    //     vec![818, 232, 595, 418, 608, 229, 37, 330, 876, 774, 931, 939, 479, 884, 354, 328],
+    //     3790
+    // ));
 }
