@@ -1,35 +1,35 @@
 use std::collections::{HashMap, HashSet};
 
-pub fn find_subsequences(nums: Vec<i32>) -> Vec<Vec<i32>> {
-    let mut x = 0;
+// pub fn find_subsequences(nums: Vec<i32>) -> Vec<Vec<i32>> {
+//     let mut x = 0;
 
-    let mut a = nums[0];
-    let mut bucket = vec![];
-    for i in 1..nums.len() {
-        if nums[i] < a {
-            bucket.push((x, i));
-            x = i
-        } else {
-            a = nums[i]
-        }
-    }
-    bucket.push((x, nums.len()));
+//     let mut a = nums[0];
+//     let mut bucket = vec![];
+//     for i in 1..nums.len() {
+//         if nums[i] < a {
+//             bucket.push((x, i));
+//             x = i
+//         } else {
+//             a = nums[i]
+//         }
+//     }
+//     bucket.push((x, nums.len()));
 
-    //dbg!(&bucket);
-    //dbg!(pick_some(&nums, bucket[0], (bucket[0].1 - bucket[0].0)));
+//     //dbg!(&bucket);
+//     //dbg!(pick_some(&nums, bucket[0], (bucket[0].1 - bucket[0].0)));
 
-    let mut set = HashSet::new();
-    let mut table = HashMap::new();
-    for b in bucket {
-        if b.1 - b.0 > 1 {
-            for bb in pick_some(&nums, b, b.1 - b.0, &mut table) {
-                set.insert(bb);
-            }
-        }
-    }
+//     let mut set = HashSet::new();
+//     let mut table = HashMap::new();
+//     for b in bucket {
+//         if b.1 - b.0 > 1 {
+//             for bb in pick_some(&nums, b, b.1 - b.0, &mut table) {
+//                 set.insert(bb);
+//             }
+//         }
+//     }
 
-    set.into_iter().collect()
-}
+//     set.into_iter().collect()
+// }
 
 // fn subseq(nums: &Vec<i32>, coops: (usize, usize)) -> Vec<Vec<i32>> {
 //     if coops.1 - coops.0 == 1 {
@@ -92,12 +92,43 @@ fn pick_some(
     result
 }
 
+////////////////////////////////////////////////////////////////
+fn dfs(i: usize, ret: &mut HashSet<Vec<i32>>, t: &mut Vec<i32>, nums: &Vec<i32>) {
+    println!("i: {i}, ret: {:?}, t: {:?}", ret, t);
+    if i == nums.len() {
+        if t.len() > 1 {
+            ret.insert(t.to_vec());
+        }
+        return;
+    }
+
+    //println!("1: i: {i}, ret: {:?}, t: {:?}", ret, t);
+    dfs(i + 1, ret, t, nums);
+    //println!("2: i: {i}, ret: {:?}, t: {:?}", ret, t);
+    match t.last() {
+        Some(&a) if a > nums[i] => (),
+        _ => {
+            t.push(nums[i]);
+            dfs(i + 1, ret, t, nums);
+            t.pop();
+        }
+    }
+}
+
+pub fn find_subsequences(nums: Vec<i32>) -> Vec<Vec<i32>> {
+    let mut ret = HashSet::new();
+    let mut t = vec![];
+    dfs(0, &mut ret, &mut t, &nums);
+    ret.into_iter().collect()
+}
+
 fn main() {
-    //dbg!(find_subsequences(vec![4, 6, 7, 7]));
+    //dbg!(find_subsequences(vec![4, 6, 7]));
+    dbg!(find_subsequences(vec![4, 6, 7, 7]));
     //dbg!(find_subsequences(vec![4, 4, 3, 2, 1]));
-    dbg!(find_subsequences(vec![
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-    ]));
+    // dbg!(find_subsequences(vec![
+    //     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+    // ]));
 
     //dbg!(pick_some(&vec![4, 6, 7, 7], (0, 4), 4));
 }
