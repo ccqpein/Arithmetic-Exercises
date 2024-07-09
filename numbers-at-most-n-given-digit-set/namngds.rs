@@ -4,7 +4,7 @@ pub fn at_most_n_given_digit_set(digits: Vec<String>, n: i32) -> i32 {
         &digits.into_iter().map(|d| d.parse().unwrap()).collect(),
         &n,
         true,
-    ) as i32
+    )
 }
 
 // wrong
@@ -32,19 +32,19 @@ pub fn at_most_n_given_digit_set(digits: Vec<String>, n: i32) -> i32 {
 //     result
 // }
 
-fn helper(digits: &Vec<i32>, n: &[i32], start_with_zero: bool) -> i64 {
+fn helper(digits: &Vec<i32>, n: &[i32], start_with_zero: bool) -> i32 {
     //dbg!(&digits);
     //dbg!(n);
 
     if n.len() == 1 {
-        return (0..=n[0]).filter(|a| digits.contains(a)).count() as i64;
+        return (0..=n[0]).filter(|a| digits.contains(a)).count() as i32;
     }
 
     let mut result = 0;
     let digit_len = digits.len();
 
-    result += (1..n[0]).filter(|a| digits.contains(a)).count() as i64
-        * digit_len.pow((n.len() - 1) as u32) as i64
+    result += (1..n[0]).filter(|a| digits.contains(a)).count() as i32
+        * digit_len.pow((n.len() - 1) as u32) as i32
         + if start_with_zero {
             helper(digits, &vec![9; n.len() - 1], true)
         } else {
