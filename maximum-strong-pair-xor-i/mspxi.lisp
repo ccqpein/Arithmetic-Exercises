@@ -1,0 +1,20 @@
+(defparameter *tests* '(
+                        ((1 2 3 4 5) 7)
+                        ((10 100) 0)
+                        ((1 5 4 1 7) 3)
+                        ((5 6 25 30) 7)
+                        ((5 1 5 4 7) 3)
+                        ))
+
+(defun maximum-strong-pair-xor (nums)
+  (let ((nums (sort nums #'<)))
+    (loop for i from 0 below (1- (length nums))
+          maximize (loop for j from (1+ i) below (length nums)
+                         while (<= (- (nth j nums) (nth i nums))
+                                   (nth i nums))
+                         maximize (logxor (nth j nums) (nth i nums))))
+    ))
+
+(defun main ()
+  (dolist (x *tests*)
+    (assert (= (maximum-strong-pair-xor (first x)) (second x)))))
