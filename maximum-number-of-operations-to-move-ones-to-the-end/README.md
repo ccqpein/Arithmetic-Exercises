@@ -15,7 +15,7 @@ Return the **maximum** number of operations that you can perform.
 
 **Example 1:**
 
-<div class="example-block">
+```
 **Input:** <span class="example-io">s = "1001101"</span>
 
 **Output:** <span class="example-io">4</span>
@@ -30,15 +30,15 @@ We can perform the following operations:
 + Choose index `i = 3`. The resulting string is `s = "001**<u>01</u>**11"`.
 + Choose index `i = 2`. The resulting string is `s = "00**<u>01</u>**111"`.
 
-</div>
+```
 
 **Example 2:**
 
-<div class="example-block">
+```
 **Input:** <span class="example-io">s = "00111"</span>
 
 **Output:** <span class="example-io">0</span>
-</div>
+```
 
 
 **Constraints:**
