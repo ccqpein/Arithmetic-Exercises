@@ -1,0 +1,27 @@
+(defun my_pow (x n)
+  (let ((table (make-hash-table)))
+    (labels ((helper (cache x n)
+               (if (= 0 n) (return-from helper 1))
+               (if (gethash n cache) (return-from helper (gethash n cache)))
+               (let (res)
+                 (if (>= (abs n) 100)
+                     (setf res (* (helper cache x (floor (/ (abs n) 2)))
+                                  (helper cache x (floor (/ (abs n) 2)))
+                                  (helper cache x (- (abs n) (* 2 (floor (/ (abs n) 2)))))))
+                     (setf res (loop with r = 1
+                                     for i from 0 below (abs n)
+                                     do (setf r (* r x))
+                                     finally (return r))))
+                 (if (< n 0)
+                     (if (>= res 1024)
+                         (setf res 0)
+                         (setf res (float (/ 1 res)))))
+
+                 (setf (gethash n cache) res)
+                 res
+                 )
+               ))
+      (helper table x n)
+      )))
+
+(defun main ())
