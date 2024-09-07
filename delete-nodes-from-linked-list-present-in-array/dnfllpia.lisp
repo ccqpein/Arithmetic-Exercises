@@ -1,0 +1,16 @@
+(ql:quickload "alexandria")
+(defun modified-list (nums head)
+  (labels ((helper (set head)
+             (cond ((null head) nil)
+                   ((gethash (car head) set)
+                    (helper set (cdr head)))
+                   (t (cons (car head) (helper set (cdr head)))))))
+    (let ((set (loop with a = (make-hash-table)
+                     for n in nums
+                     do (setf (gethash n a) t)
+                     finally (return a))))
+      ;;(print (alexandria:hash-table-plist set))
+      (helper set head))))
+
+(assert (equal (modified-list '(1 2 3) '(1 2 3 4 5)) '(4 5)))
+(assert (equal (modified-list '(1) '(1 2 1 2 1 2)) '(2 2 2)))
