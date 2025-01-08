@@ -1,0 +1,23 @@
+(ql:quickload "alexandria")
+
+(defun sub-string (s sub)
+  ;;(format t "s: ~a, sub: ~a~%" s sub)
+  (loop for i from 0 to (- (length s) (length sub))
+        do (if (string= sub (subseq s i (+ i (length sub))))
+               (return t))
+        finally (return nil)))
+
+(defun str-matching (words)
+  (let ((result (make-hash-table :test 'equal))
+        (words (sort words (lambda (a b) (<= (length a) (length b))))))
+    (loop for i from 0 below (1- (length words))
+          do (loop for j from (1+ i) below (length words)
+                   if (sub-string (nth j words) (nth i words))
+                     do (setf (gethash (nth i words) result) t)
+                     and return nil))
+    result))
+
+(format t "~a~%" (alexandria:hash-table-keys (str-matching '("mass" "as" "hero" "superhero"))))
+(format t "~a~%" (alexandria:hash-table-keys (str-matching '("leetcode" "et" "code"))))
+(format t "~a~%" (alexandria:hash-table-keys (str-matching '("blue" "green" "bu"))))
+(format t "~a~%" (alexandria:hash-table-keys (str-matching '("leetcoder" "leetcode" "od" "hamlet" "am"))))
