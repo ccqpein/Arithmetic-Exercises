@@ -1,0 +1,31 @@
+(defun minimum-sum (nums)
+  (let ((nums (loop for i from 0 below (length nums) collect (list i (nth i nums)))))
+    (setf nums (sort nums #'< :key #'second))
+    (let (result)
+      (loop for ind from 2 below (length nums)
+            for left = nil
+            and right = nil
+            do (loop for i from 0 below ind
+                     if (and (> (first (nth i nums))
+                                (first (nth ind nums)))
+                             (/= (second (nth i nums))
+                                 (second (nth ind nums))))
+                       do (setf right (nth i nums))
+                       and return nil)
+            do (loop for i from 0 below ind
+                     if (and (< (first (nth i nums))
+                                (first (nth ind nums)))
+                             (/= (second (nth i nums))
+                                 (second (nth ind nums))))
+                       do (setf left (nth i nums))
+                       and return nil)
+            do (if (and left right)
+                   (push (+ (second left) (second right) (second (nth ind nums))) result)))
+      (if result (apply #'min result) -1))))
+
+(defun main ()
+  (assert (equal 13 (minimum-sum '(5 4 8 7 10 2))))
+  (assert (equal 9 (minimum-sum '(8 6 1 5 3))))
+  (assert (equal -1 (minimum-sum '(6 5 4 3 4 5))))
+  (assert (equal -1 (minimum-sum '(2 2 1))))
+  (assert (equal 78 (minimum-sum '(37 29 28 34 25 36 34 19)))))
