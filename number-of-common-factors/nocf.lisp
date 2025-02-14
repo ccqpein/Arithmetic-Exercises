@@ -1,0 +1,5 @@
+(defun common-factors (a b)
+  (loop for i from 1 to (min a b 1000)
+        if (and (= 0 (mod a i))
+                (= 0 (mod b i)))
+          sum 1))
