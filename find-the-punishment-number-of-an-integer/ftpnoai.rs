@@ -28,10 +28,10 @@ fn split_it(mut n: i32) -> Vec<i32> {
 
 fn can_sum_to(n: i32, ns: &[i32], cache: &mut HashMap<(i32, Vec<i32>), bool>) -> bool {
     //println!("{n}, {:?}", ns);
-    match cache.get(&(n, ns.to_vec())) {
-        Some(v) => return *v,
-        None => (),
-    }
+    // match cache.get(&(n, ns.to_vec())) {
+    //     Some(v) => return *v,
+    //     None => (),
+    // }
     if n == 0 && ns.len() == 0 {
         return true;
     }
@@ -40,11 +40,11 @@ fn can_sum_to(n: i32, ns: &[i32], cache: &mut HashMap<(i32, Vec<i32>), bool>) ->
     }
     for i in 1..=ns.len() {
         if can_sum_to(n - merge_number(ns, i), ns.get(i..).unwrap(), cache) {
-            cache.insert((n, ns.to_vec()), true);
+            //cache.insert((n, ns.to_vec()), true);
             return true;
         }
     }
-    cache.insert((n, ns.to_vec()), false);
+    //cache.insert((n, ns.to_vec()), false);
     false
 }
 
