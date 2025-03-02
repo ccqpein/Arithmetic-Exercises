@@ -9,18 +9,32 @@ pub fn shortest_common_supersequence(str1: String, str2: String) -> String {
     // } else {
     //     String::from_utf8(b).unwrap()
     // }
-    String::from_utf8(shortest(str1.as_bytes(), str2.as_bytes())).unwrap()
+    let mut cache = HashMap::new();
+    String::from_utf8(shortest(str1.as_bytes(), str2.as_bytes(), &mut cache)).unwrap()
 }
 
-fn shortest(s1: &[u8], s2: &[u8]) -> Vec<u8> {
-    use std::collections::HashMap;
-    let mut cache = HashMap::new();
-    let a = helper(s1, s2, &mut cache);
-    let b = helper(s2, s1, &mut cache);
+fn shortest(s1: &[u8], s2: &[u8], cache: &mut HashMap<(Vec<u8>, Vec<u8>), Vec<u8>>) -> Vec<u8> {
+    //use std::collections::HashMap;
+    //let mut cache = HashMap::new();
+
+    if let Some(re) = cache.get(&(s1.to_vec(), s2.to_vec())) {
+        return re.to_vec();
+    }
+
+    if let Some(re) = cache.get(&(s2.to_vec(), s1.to_vec())) {
+        return re.to_vec();
+    }
+
+    let a = helper(s1, s2, cache);
+    let b = helper(s2, s1, cache);
 
     if a.len() < b.len() {
+        cache.insert((s1.to_vec(), s2.to_vec()), a.clone());
+        cache.insert((s2.to_vec(), s1.to_vec()), a.clone());
         a
     } else {
+        cache.insert((s1.to_vec(), s2.to_vec()), b.clone());
+        cache.insert((s2.to_vec(), s1.to_vec()), b.clone());
         b
     }
 }
@@ -37,6 +51,10 @@ fn helper(s1: &[u8], s2: &[u8], cache: &mut HashMap<(Vec<u8>, Vec<u8>), Vec<u8>>
         return re.to_vec();
     }
 
+    if let Some(re) = cache.get(&(s2.to_vec(), s1.to_vec())) {
+        return re.to_vec();
+    }
+
     let mut len = s1.len() + s2.len();
     let mut min_re = {
         let mut a = s1.to_vec();
@@ -46,7 +64,7 @@ fn helper(s1: &[u8], s2: &[u8], cache: &mut HashMap<(Vec<u8>, Vec<u8>), Vec<u8>>
 
     for s1ind in 0..s1.len() {
         if s1[s1ind] == s2[0] {
-            let mut a = compare2(s1.get(s1ind..).unwrap(), s2);
+            let mut a = compare2(s1.get(s1ind..).unwrap(), s2, cache);
             // dbg!(s1ind);
             // dbg!(&a);
             // dbg!(s1);
@@ -73,7 +91,7 @@ fn helper(s1: &[u8], s2: &[u8], cache: &mut HashMap<(Vec<u8>, Vec<u8>), Vec<u8>>
             }
         }
     }
-    cache.insert((s1.to_vec(), s2.to_vec()), min_re.clone());
+
     min_re
 }
 
@@ -94,7 +112,11 @@ fn helper(s1: &[u8], s2: &[u8], cache: &mut HashMap<(Vec<u8>, Vec<u8>), Vec<u8>>
 //     }
 // }
 
-fn compare2<'a>(s1: &'a [u8], s2: &'a [u8]) -> Vec<u8> {
+fn compare2<'a>(
+    s1: &'a [u8],
+    s2: &'a [u8],
+    cache: &mut HashMap<(Vec<u8>, Vec<u8>), Vec<u8>>,
+) -> Vec<u8> {
     let mut ind = 0;
     loop {
         match (s1.get(ind), s2.get(ind)) {
@@ -107,6 +129,7 @@ fn compare2<'a>(s1: &'a [u8], s2: &'a [u8]) -> Vec<u8> {
                     a.append(&mut shortest(
                         s1.get(ind..).unwrap(),
                         s2.get(ind..).unwrap(),
+                        cache,
                     ));
                     // let mut b = helper(s1.get(ind..).unwrap(), s2.get(ind..).unwrap());
                     // let mut c = helper(s2.get(ind..).unwrap(), s1.get(ind..).unwrap());
@@ -153,7 +176,7 @@ fn main() {
 
     //dbg!(String::from_utf8(helper("bc".as_bytes(), "aca".as_bytes())));
 
-    dbg!(String::from_utf8(helper(
+    dbg!(String::from_utf8(shortest(
         "bcaaacbbbcbdcaddadcacbdddcdcccdadadcbabaccbccdcdcbcaccacbbdcbabb".as_bytes(),
         "dddbbdcbccaccbababaacbcbacdddcdabadcacddbacadabdabcdbaaabaccbdaa".as_bytes(),
         &mut cache
