@@ -1,0 +1,8 @@
+(defun max-score-sightseeing-pair (values)
+  (let ((max-score 0)
+        (max-i (nth 0 values)))
+    (loop for j from 1 below (length values)
+          for cache = (+ max-i (nth j values) (- j))
+          do (setf max-score (max cache max-score)
+                   max-i (max max-i (+ j (nth j values)))))
+    max-score))
