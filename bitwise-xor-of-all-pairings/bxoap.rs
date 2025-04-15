@@ -14,12 +14,11 @@ pub fn xor_all_nums(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
 }
 
 fn xor_times(v: i32, time: usize) -> i32 {
-    let mut re = v;
-    for _ in 1..time {
-        re ^= v
+    if time % 2 == 0 {
+        0
+    } else {
+        v
     }
-
-    re
 }
 
 fn main() {
