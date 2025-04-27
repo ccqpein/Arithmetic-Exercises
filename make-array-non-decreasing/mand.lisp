@@ -1,0 +1,12 @@
+(defun maximum-possible-size (nums)
+  (let ((hook (nth 0 nums))
+        (num 1))
+    (loop for a from 1 below (length nums)
+          if (>= (nth a nums) hook)
+            do (incf num)
+               (setf hook (nth a nums)))
+    num))
+
+(defun main ()
+  (assert (= (maximum-possible-size '(4 2 5 3 5)) 3))
+  (assert (= (maximum-possible-size '(1 2 3)) 3)))
