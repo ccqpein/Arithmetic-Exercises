@@ -1,0 +1,15 @@
+(defun remove-palindrome-sub (s)
+  (labels ((if-palindrome (s)
+             (let ((s-len (length s)))
+               (loop with s-seq = (concatenate 'list s)
+                     with s-rev-seq = (reverse s-seq)
+                     for ind from 0 to (/ s-len 2)
+                     if (char/= (nth ind s-seq) (nth ind s-rev-seq))
+                       return nil
+                     finally (return t)))))
+    (if (if-palindrome s) 1 2)))
+
+(defun main ()
+  (assert (= 1 (remove-palindrome-sub "ababa")))
+  (assert (= 2 (remove-palindrome-sub "abb")))
+  (assert (= 2 (remove-palindrome-sub "baabb"))))
