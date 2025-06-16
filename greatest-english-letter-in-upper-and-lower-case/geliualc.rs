@@ -19,8 +19,6 @@ pub fn greatest_letter(s: String) -> String {
         .enumerate()
         .collect::<HashMap<_, _>>();
 
-    let mut count = HashMap::new();
-
     for c in s.chars() {
         match lcs.get(&c) {
             Some(n) => ffl[*n] = true,
@@ -31,8 +29,6 @@ pub fn greatest_letter(s: String) -> String {
             Some(n) => ffu[*n] = true,
             None => (),
         }
-
-        *count.entry(c.to_ascii_lowercase()).or_insert(0) += 1
     }
 
     for n in (0..26).rev() {
