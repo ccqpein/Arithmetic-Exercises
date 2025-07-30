@@ -1,0 +1,11 @@
+(defun maximum-median-sum (nums)
+  (let* ((nums (sort nums #'<))
+         (times (/ (length nums) 3))
+         (ind (- (length nums) 2))
+         (sum 0))
+    (dotimes (a times sum)
+      (incf sum (nth ind nums))
+      (decf ind 2))))
+
+(assert (= 5 (maximum-median-sum '(2 1 3 2 1 3))))
+(assert (= 20 (maximum-median-sum '(1 1 10 10 10 10))))
