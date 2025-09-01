@@ -1,0 +1,13 @@
+(defun reverse-int (n)
+  (let ((sl (concatenate 'list (format nil "~a" n))))
+    (cond ((char= #\- (first sl))
+           (- (parse-integer (concatenate 'string (reverse (cdr sl))))))
+          (t (parse-integer (concatenate 'string (reverse sl)))))))
+
+(defun main ()
+  (assert (= (reverse-int 123) 321))
+  (assert (= (reverse-int -123) -321))
+  (assert (= (reverse-int 0) 0))
+  (assert (= (reverse-int 901000) 109))
+  (assert (= (reverse-int 1534236469) 9646324351))
+  )
