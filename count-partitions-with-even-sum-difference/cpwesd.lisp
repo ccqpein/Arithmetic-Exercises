@@ -1,0 +1,5 @@
+(defun count-partitions (nums)
+  (let (x)
+    (setf x (- (first nums)
+               (apply #'+ (cdr nums))))
+    (if (evenp x) (1- (length nums)) 0)))
