@@ -74,7 +74,6 @@ fn validation(inputs: &[u8]) -> Result<bool, String> {
 
 fn main() {
     //println!("{:?}", 0b11111111)
-
     assert_eq!(get_state(&0b10000000), State::OneZero);
     assert_eq!(get_state(&0b10100000), State::OneZero);
     assert_eq!(get_state(&0b10110000), State::OneZero);
@@ -88,6 +87,10 @@ fn main() {
         (false, vec![0b11000000]),
         (true, vec![0b11000000, 0b10101111]),
         (true, vec![0b01000000, 0b11100000, 0b10101111, 0b10101111]),
+        (
+            true,
+            vec![0b01000000, 0b11100000, 0b10101111, 0b10101111, 0b01111111],
+        ),
     ];
 
     for (ind, (res, testcase)) in testcases.into_iter().enumerate() {
