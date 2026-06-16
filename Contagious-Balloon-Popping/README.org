@@ -1,0 +1,25 @@
+#+Title Contagious Balloon Popping
+
+Get the map of ballon. Every 2 gonna make around ballon (1) popped in the next step
+
+Get the solution that return if all ballon gonna popped
+
+like below example will return the true
+
+#+begin_quote
+[
+  [2 1 0 1]
+  [1 1 0 2]
+  [1 0 0 0]
+]
+#+end_quote
+
+below will return false, because the 2 point won't affect those three 1 (island)
+
+#+begin_quote
+[
+  [2 1 1 0 0]
+  [1 1 0 1 1]
+  [1 0 0 0 1]
+]
+#+end_quote
